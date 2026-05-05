@@ -60,127 +60,64 @@
     let target = 'you'; let yItems = []; let tItems = [];
     
     const data = [
-        // GOD TIER & HIGH CURRENCY
+        // TOP TIER
         {n:"skibidi toilet", v:0, u:"N/A", d:"Insane"}, 
         {n:"Brush [1-10]", v:1900, u:"Currency", d:"Good"}, 
         {n:"Blackmarket", v:1400, u:"Currency", d:"Bad"}, 
         {n:"Tetro", v:1100, u:"Currency", d:"Bad"},
         {n:"M134 [1-5]", v:955, u:"Currency", d:"Insane"}, 
-        {n:"M134 [6-10]", v:900, u:"Currency", d:"Insane"}, 
-        {n:"M134 Low [11-36]", v:805, u:"Currency", d:"Insane"}, 
-        {n:"M134 Mid [37-62]", v:735, u:"Currency", d:"Insane"}, 
         {n:"M134 High [63+]", v:655, u:"Currency", d:"Insane"},
         {n:"MP5 [1-5]", v:740, u:"Currency", d:"Insane"}, 
-        {n:"MP5 [6-10]", v:665, u:"Currency", d:"Insane"}, 
-        {n:"MP5 Low [11-39]", v:565, u:"Currency", d:"Insane"}, 
-        {n:"MP5 Mid [40-68]", v:540, u:"Currency", d:"Insane"}, 
         {n:"MP5 High [69+]", v:500, u:"Currency", d:"Insane"},
-        
-        // ELITE SERIALS
-        {n:"BIGGER [1-5]", v:595, u:"Currency", d:"Decent"}, 
-        {n:"BIGGER [6-15]", v:520, u:"Currency", d:"Decent"},
-        {n:"BIGGER Mid [16-70]", v:440, u:"Currency", d:"Decent"},
-        {n:"BIGGER High [71+]", v:355, u:"Currency", d:"Good"},
-        {n:"Runes [1-5]", v:575, u:"Currency", d:"Decent"}, 
-        {n:"Runes [6-20]", v:490, u:"Currency", d:"Decent"},
-        {n:"Runes High [77+]", v:345, u:"Currency", d:"Decent"},
         {n:"Kitty", v:350, u:"Currency", d:"Insane"}, 
         {n:"M1911", v:340, u:"Currency", d:"Good"},
 
-        // HIGH-MID RANGE
-        {n:"Frostbite [1-5]", v:270, u:"Currency", d:"Mid"}, 
-        {n:"Frostbite [6-25]", v:230, u:"Currency", d:"Mid"},
-        {n:"Frostbite High [85+]", v:190, u:"Currency", d:"Mid"},
-        {n:"Freezer [1-5]", v:210, u:"Currency", d:"Decent"}, 
-        {n:"Freezer High [56+]", v:110, u:"Currency", d:"Decent"},
-        {n:"Eradese [1-5]", v:280, u:"Currency", d:"Good"}, 
-        {n:"Eradese High [71-100]", v:195, u:"Currency", d:"Good"},
-        {n:"Vortex [1-5]", v:190, u:"Currency", d:"Bad"}, 
-        {n:"Vortex High [75+]", v:85, u:"Currency", d:"Mid"},
-        {n:"Chainsaw [1-5]", v:295, u:"Currency", d:"Good"}, 
-        {n:"Chainsaw High [106-153]", v:235, u:"Currency", d:"Good"},
-        {n:"X-RAGE [1-5]", v:190, u:"Currency", d:"Decent"}, 
-        {n:"X-RAGE [501+]", v:60, u:"Currency", d:"Good"},
-
-        // MID TIERS
+        // CHOCOS & BEARS (NEW)
         {n:"Chocos", v:65, u:"Currency", d:"Good"}, 
         {n:"Bear [1-10]", v:57.5, u:"Currency", d:"Good"}, 
-        {n:"Bear [11-100]", v:52, u:"Currency", d:"Good"},
+        {n:"Bear [10-100]", v:54, u:"Currency", d:"Good"},
+        {n:"Bear [100-200]", v:51, u:"Currency", d:"Good"},
+        {n:"Bear [200-300]", v:49, u:"Currency", d:"Good"},
         {n:"Bear [300+]", v:47.5, u:"Currency", d:"Good"},
+
+        // NUCLEAR RANGE (NEW)
         {n:"Nuclear [1-10]", v:52.5, u:"Currency", d:"Decent"}, 
-        {n:"Nuclear [11-100]", v:42, u:"Currency", d:"Decent"},
+        {n:"Nuclear [10-50]", v:48, u:"Currency", d:"Decent"},
+        {n:"Nuclear [50-100]", v:45, u:"Currency", d:"Decent"},
+        {n:"Nuclear [100-200]", v:40, u:"Currency", d:"Decent"},
+        {n:"Nuclear [200-300]", v:36, u:"Currency", d:"Decent"},
+        {n:"Nuclear [300-400]", v:33, u:"Currency", d:"Decent"},
         {n:"Nuclear [400+]", v:30, u:"Currency", d:"Decent"},
-        {n:"Cyberfly [BLK]", v:40, u:"Currency", d:"Good"}, 
+
+        // CYBERFLYS & SPECIALS (NEW)
+        {n:"Cyberfly (BLK)", v:40, u:"Currency", d:"Good"}, 
         {n:"Mecha", v:19, u:"Currency", d:"Decent"}, 
         {n:"Cyberfly [RED]", v:20, u:"Currency", d:"Decent"}, 
+        {n:"Cyberfly (BLU)", v:18, u:"Currency", d:"Decent"},
+        {n:"Cyberfly [PUR]", v:18, u:"Currency", d:"Decent"},
+        {n:"Cyberfly [ORG]", v:15, u:"Currency", d:"Mid"},
+        {n:"Cyberfly [PNK]", v:15, u:"Currency", d:"Mid"},
+        {n:"Cyberfly [GRN]", v:12, u:"Currency", d:"Mid"},
+        {n:"Cyberfly [YLW]", v:12, u:"Currency", d:"Mid"},
         {n:"Envoided", v:9.75, u:"Currency", d:"Decent"},
+        {n:"Death", v:15, u:"Currency", d:"Bad"},
         {n:"Runic", v:8, u:"Currency", d:"Decent"}, 
         {n:"Pneumatic", v:7, u:"Currency", d:"Mid"}, 
+        {n:"Everfrost", v:6, u:"Currency", d:"Mid"},
         {n:"Mutation", v:3.5, u:"Currency", d:"Mid"},
 
-        // SERIAL MIDS
+        // OTHERS
         {n:"Korone [1-10]", v:65, u:"Currency", d:"Good"}, 
-        {n:"Korone [11-100]", v:50, u:"Currency", d:"Good"},
-        {n:"Korone [500+]", v:35, u:"Currency", d:"Good"},
-        {n:"Chronos [1-10]", v:45, u:"Currency", d:"Good"}, 
-        {n:"Chronos [400+]", v:32.5, u:"Currency", d:"Good"},
-        {n:"Shrimple [1-10]", v:18.75, u:"Currency", d:"Bad"}, 
-        {n:"Shrimple [400+]", v:10, u:"Currency", d:"Bad"},
-        {n:"Creature [1-10]", v:12.5, u:"Currency", d:"Bad"}, 
-        {n:"Creature [400+]", v:3.75, u:"Currency", d:"Bad"},
-        {n:"Brute", v:4.75, u:"Currency", d:"Good"}, 
-        {n:"Overheaven", v:3.75, u:"Currency", d:"Decent"}, 
-        {n:"The World", v:3.25, u:"Currency", d:"Decent"}, 
-        {n:"Tiki", v:2.75, u:"Currency", d:"Mid"},
-
-        // LOW TIERS
-        {n:"Violin [1-10]", v:10, u:"Currency", d:"Bad"}, 
-        {n:"Violin [200+]", v:2.5, u:"Currency", d:"Bad"},
-        {n:"Roadster", v:3.25, u:"Currency", d:"Good"}, 
-        {n:"Dubstep", v:2.5, u:"Currency", d:"Decent"}, 
-        {n:"Poopatory", v:1.5, u:"Currency", d:"Bad"}, 
-        {n:"Core [BLK]", v:1.5, u:"Currency", d:"Mid"}, 
-        {n:"Purgatory", v:1.25, u:"Currency", d:"Decent"}, 
-        {n:"Motorcycle", v:0.5, u:"Currency", d:"Mid"}, 
-        {n:"Dragon Slayer", v:1, u:"Currency", d:"Mid"}, 
-        {n:"Bloxy", v:0.75, u:"Currency", d:"Decent"}, 
-        {n:"Ciel", v:0.45, u:"Currency", d:"Mid"},
-
-        // MASSIVE SERIALS
         {n:"Big [1-10]", v:13.75, u:"Currency", d:"Mid"}, 
-        {n:"Big [4000+]", v:3, u:"Currency", d:"Mid"},
-        {n:"Spacial [1-10]", v:10, u:"Currency", d:"Bad"}, 
-        {n:"Spacial [3000+]", v:2, u:"Currency", d:"Bad"},
-        {n:"Synth [1-10]", v:8.75, u:"Currency", d:"Bad"}, 
-        {n:"Synth [2000+]", v:2, u:"Currency", d:"Bad"},
-        {n:"Chess [1-10]", v:6.25, u:"Currency", d:"Horrible"}, 
-        {n:"Chess [1400+]", v:0.75, u:"Currency", d:"Horrible"},
-        {n:"X Raw [1-10]", v:5, u:"Currency", d:"Bad"}, 
-        {n:"X Raw [500+]", v:1.5, u:"Currency", d:"Bad"},
+        {n:"Roadster", v:3.25, u:"Currency", d:"Good"}, 
         {n:"Earth", v:1, u:"Currency", d:"Mid"}, 
-        {n:"Reactor", v:1.1, u:"Currency", d:"Good"}, 
-        {n:"Accelerator", v:0.2, u:"Currency", d:"Mid"}, 
-        {n:"PoOp", v:0.3, u:"Currency", d:"Bad"}, 
-        {n:"Aperture", v:0.15, u:"Currency", d:"Bad"},
-        {n:"Wildcard", v:3.75, u:"Currency", d:"Bad"}, 
-        {n:"Primesoul", v:0.25, u:"Currency", d:"Good"}, 
-        {n:"Amethyst", v:0.2, u:"Currency", d:"Bad"},
-
-        // BLOXES (CONVERTED)
+        {n:"Reactor", v:1.1, u:"Currency", d:"Good"},
+        
+        // BLOXES
         {n:"Champion", v:6.25, u:"Bloxes", d:"Good"}, 
         {n:"Gold", v:6.25, u:"Bloxes", d:"Good"}, 
         {n:"Dos", v:5, u:"Bloxes", d:"Decent"}, 
-        {n:"Chains", v:3.5, u:"Bloxes", d:"Good"}, 
-        {n:"Blueprint", v:3.5, u:"Bloxes", d:"Decent"}, 
-        {n:"M68", v:3, u:"Bloxes", d:"Good"}, 
-        {n:"Bobux", v:2, u:"Bloxes", d:"Decent"}, 
-        {n:"Warning", v:1.4, u:"Bloxes", d:"Good"}, 
-        {n:"Neon", v:1.2, u:"Bloxes", d:"Good"}, 
-        {n:"Emerald", v:1, u:"Bloxes", d:"Decent"}, 
-        {n:"Uno", v:0.5, u:"Bloxes", d:"Good"}, 
-        {n:"Full Metal", v:0.5, u:"Bloxes", d:"Good"},
-        {n:"Ruby", v:0.4, u:"Bloxes", d:"Mid"},
-        {n:"Sapphire", v:0.4, u:"Bloxes", d:"Mid"}
+        {n:"Chains", v:3.5, u:"Bloxes", d:"Good"}
     ];
 
     function calc(v, d, u) {
