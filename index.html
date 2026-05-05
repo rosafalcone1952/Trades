@@ -3,99 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GLOVE MASTER ELITE</title>
+    <title>GLOVE GOD CALCULATOR</title>
     <style>
         :root { --primary: #00f2ff; --secondary: #7000ff; --win: #00ff88; --loss: #ff3e3e; --bg: #050505; --card: rgba(255, 255, 255, 0.05); }
-        body { font-family: 'Orbitron', sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 10px; overflow-x: hidden; }
-        .dashboard { max-width: 900px; margin: auto; }
-        .status-banner { width: 100%; padding: 25px; border-radius: 15px; text-align: center; font-size: 2em; font-weight: 900; margin-bottom: 15px; border: 2px solid rgba(255,255,255,0.1); text-transform: uppercase; letter-spacing: 3px; transition: 0.4s; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        .win-glow { background: rgba(0, 255, 136, 0.1); border-color: var(--win); color: var(--win); text-shadow: 0 0 10px var(--win); }
-        .loss-glow { background: rgba(255, 62, 62, 0.1); border-color: var(--loss); color: var(--loss); text-shadow: 0 0 10px var(--loss); }
+        body { font-family: 'Orbitron', sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 10px; }
+        .status-banner { width: 100%; padding: 20px; border-radius: 12px; text-align: center; font-size: 1.8em; font-weight: 900; margin-bottom: 15px; border: 2px solid rgba(255,255,255,0.1); text-transform: uppercase; transition: 0.3s; box-sizing: border-box; }
+        .win-glow { background: rgba(0, 255, 136, 0.1); border-color: var(--win); color: var(--win); box-shadow: 0 0 15px var(--win); }
+        .loss-glow { background: rgba(255, 62, 62, 0.1); border-color: var(--loss); color: var(--loss); box-shadow: 0 0 15px var(--loss); }
         .fair-glow { background: var(--card); border-color: #f39c12; color: #f39c12; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .panel { background: var(--card); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; backdrop-filter: blur(10px); }
-        .total-val { font-size: 2.5em; font-weight: bold; text-align: center; margin: 10px 0; font-family: monospace; }
-        .you-title { color: var(--primary); text-align: center; margin: 0; font-size: 0.9em; letter-spacing: 2px; }
-        .them-title { color: var(--secondary); text-align: center; margin: 0; font-size: 0.9em; letter-spacing: 2px; }
-        .search-area { position: sticky; top: 0; z-index: 100; background: var(--bg); padding-bottom: 10px; }
-        .search-input { width: 100%; padding: 15px; background: rgba(255,255,255,0.07); border: 1px solid var(--primary); border-radius: 8px; color: #fff; font-size: 1.1em; outline: none; box-sizing: border-box; }
-        .toggle-container { display: flex; gap: 10px; margin-top: 10px; }
-        .t-btn { flex: 1; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.3s; }
-        .inventory { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-top: 15px; max-height: 450px; overflow-y: auto; padding-right: 5px; }
-        .glove-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; transition: 0.2s; position: relative; overflow: hidden; }
-        .glove-card:hover { background: rgba(255,255,255,0.08); border-color: var(--primary); transform: translateY(-2px); }
-        .glove-card b { display: block; font-size: 1.1em; margin-top: 5px; color: var(--win); }
-        .glove-card i { font-size: 0.7em; opacity: 0.6; display: block; }
-        .list-item { background: rgba(255,255,255,0.05); padding: 8px; margin: 5px 0; border-radius: 4px; display: flex; justify-content: space-between; font-size: 0.8em; border-left: 3px solid; }
-        .remove-btn { color: var(--loss); cursor: pointer; font-weight: bold; padding: 0 5px; }
-        ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        .grid { display: flex; gap: 10px; margin-bottom: 15px; }
+        .panel { flex: 1; background: var(--card); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; min-height: 200px; }
+        .total-val { font-size: 2.2em; font-weight: bold; text-align: center; margin: 10px 0; font-family: monospace; }
+        .search-input { width: 100%; padding: 15px; background: rgba(255,255,255,0.07); border: 1px solid var(--primary); border-radius: 8px; color: #fff; font-size: 1em; outline: none; box-sizing: border-box; margin-bottom: 10px; }
+        .t-btn { flex: 1; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.3s; margin-bottom: 10px; }
+        .inventory { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; max-height: 450px; overflow-y: auto; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; }
+        .glove-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; transition: 0.15s; font-size: 0.75em; }
+        .glove-card:hover { border-color: var(--primary); background: rgba(255,255,255,0.1); transform: scale(1.02); }
+        .glove-card b { display: block; font-size: 1.1em; color: var(--win); margin-top: 4px; }
+        .unit-tag { font-size: 0.8em; opacity: 0.7; color: #aaa; }
+        .list-item { background: rgba(255,255,255,0.05); padding: 8px; margin: 4px 0; border-radius: 4px; display: flex; justify-content: space-between; font-size: 0.75em; border-left: 3px solid; }
+        .remove-btn { color: var(--loss); cursor: pointer; font-weight: bold; }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
 </head>
 <body>
-
-<div class="dashboard">
     <div id="banner" class="status-banner fair-glow">Elite Calculator</div>
-
     <div class="grid">
         <div class="panel">
-            <p class="you-title">PLAYER OFFER</p>
+            <div style="color:var(--primary); text-align:center; font-size:0.8em;">PLAYER GIVE</div>
             <div id="yTotal" class="total-val" style="color:var(--primary)">0.00</div>
             <div id="yList"></div>
         </div>
         <div class="panel">
-            <p class="them-title">OPPONENT OFFER</p>
+            <div style="color:var(--secondary); text-align:center; font-size:0.8em;">OPPONENT GIVE</div>
             <div id="tTotal" class="total-val" style="color:var(--secondary)">0.00</div>
             <div id="tList"></div>
         </div>
     </div>
-
-    <div class="search-area">
-        <input type="text" id="search" class="search-input" placeholder="SEARCH DATABASE..." onkeyup="render()">
-        <div class="toggle-container">
-            <button id="btnY" class="t-btn" style="background:var(--primary); color:#000;" onclick="setTarget('you')">TO PLAYER</button>
-            <button id="btnT" class="t-btn" style="background:#222; color:#fff;" onclick="setTarget('them')">TO OPPONENT</button>
-        </div>
+    <input type="text" id="search" class="search-input" placeholder="SEARCH DATABASE..." onkeyup="render()">
+    <div style="display:flex; gap:10px;">
+        <button id="btnY" class="t-btn" style="background:var(--primary); color:#000;" onclick="setTarget('you')">PLAYER Offer</button>
+        <button id="btnT" class="t-btn" style="background:#222; color:#fff;" onclick="setTarget('them')">THEM Offer</button>
     </div>
-
     <div id="inv" class="inventory"></div>
-</div>
 
 <script>
     let target = 'you'; let yItems = []; let tItems = [];
-    
-    // FULL DATABASE FROM IMAGES
     const data = [
-        {n:"skibidi toilet", v:1000, d:"Insane"},{n:"Brush [1-10]", v:1900, d:"Good"},{n:"Blackmarket", v:1400, d:"Bad"},{n:"Tetro", v:1100, d:"Bad"},
-        {n:"M134 [1-5]", v:955, d:"Insane"},{n:"M134 [6-10]", v:900, d:"Insane"},{n:"M134 Low [11-36]", v:805, d:"Insane"},{n:"M134 Mid [37-62]", v:735, d:"Insane"},{n:"M134 High [63+]", v:655, d:"Insane"},
-        {n:"MP5 [1-5]", v:740, d:"Insane"},{n:"MP5 [6-10]", v:665, d:"Insane"},{n:"MP5 Low [11-39]", v:565, d:"Insane"},{n:"MP5 Mid [40-68]", v:540, d:"Insane"},{n:"MP5 High [69+]", v:500, d:"Insane"},
-        {n:"BIGGER [1-5]", v:595, d:"Decent"},{n:"BIGGER [6-10]", v:540, d:"Decent"},{n:"BIGGER Low [11-40]", v:490, d:"Decent"},{n:"BIGGER Mid [41-70]", v:425, d:"Good"},{n:"BIGGER High [71+]", v:355, d:"Good"},
-        {n:"Runes [1-5]", v:575, d:"Decent"},{n:"Runes [6-10]", v:515, d:"Decent"},{n:"Runes Low [11-43]", v:465, d:"Decent"},{n:"Runes Mid [44-76]", v:405, d:"Decent"},{n:"Runes High [77+]", v:345, d:"Decent"},
-        {n:"Frostbite [1-5]", v:270, d:"Mid"},{n:"Frostbite [6-10]", v:250, d:"Mid"},{n:"Frostbite Low [11-47]", v:230, d:"Mid"},{n:"Frostbite Mid [48-84]", v:210, d:"Decent"},{n:"Frostbite High [85+]", v:190, d:"Decent"},
-        {n:"Freezer [1-5]", v:210, d:"Decent"},{n:"Freezer [6-10]", v:190, d:"Decent"},{n:"Freezer Low [11-33]", v:160, d:"Decent"},{n:"Freezer Mid [34-55]", v:140, d:"Decent"},{n:"Freezer High [56+]", v:110, d:"Decent"},
-        {n:"Eradese [1-5]", v:280, d:"Good"},{n:"Eradese [6-10]", v:255, d:"Good"},{n:"Eradese Low [11-40]", v:225, d:"Good"},{n:"Eradese Mid [41-70]", v:210, d:"Good"},{n:"Eradese High [71-100]", v:195, d:"Good"},
-        {n:"Vortex [1-5]", v:190, d:"Bad"},{n:"Vortex [6-10]", v:175, d:"Bad"},{n:"Vortex Low [11-42]", v:145, d:"Bad"},{n:"Vortex Mid [43-74]", v:115, d:"Mid"},{n:"Vortex High [75+]", v:85, d:"Mid"},
-        {n:"Chainsaw [1-5]", v:295, d:"Good"},{n:"Chainsaw [6-10]", v:275, d:"Good"},{n:"Chainsaw Low [11-58]", v:260, d:"Good"},{n:"Chainsaw Mid [59-105]", v:250, d:"Good"},{n:"Chainsaw High [106-153]", v:235, d:"Good"},
-        {n:"X-RAGE [1-5]", v:190, d:"Decent"},{n:"X-RAGE [6-10]", v:160, d:"Decent"},{n:"X-RAGE [11-50]", v:125, d:"Decent"},{n:"X-RAGE [51-100]", v:105, d:"Decent"},{n:"X-RAGE [101-200]", v:100, d:"Decent"},{n:"X-RAGE [201-300]", v:90, d:"Good"},{n:"X-RAGE [301-400]", v:80, d:"Good"},{n:"X-RAGE [401-500]", v:70, d:"Good"},{n:"X-RAGE [501+]", v:60, d:"Good"},
-        {n:"Kitty", v:350, d:"Insane"},{n:"M1911", v:340, d:"Good"},{n:"Chocos", v:65, d:"Good"},
-        {n:"Bear [1-10]", v:57.5, d:"Good"},{n:"Bear [10-100]", v:55, d:"Good"},{n:"Bear [100-200]", v:52.5, d:"Good"},{n:"Bear [200-300]", v:50, d:"Good"},{n:"Bear [300+]", v:47.5, d:"Good"},
-        {n:"Nuclear [1-10]", v:52.5, d:"Decent"},{n:"Nuclear [10-50]", v:43.75, d:"Decent"},{n:"Nuclear [50-100]", v:40, d:"Decent"},{n:"Nuclear [100-200]", v:37.5, d:"Decent"},{n:"Nuclear [200-300]", v:35, d:"Decent"},{n:"Nuclear [300-400]", v:32.5, d:"Decent"},{n:"Nuclear [400+]", v:30, d:"Decent"},
-        {n:"Korone [1-10]", v:65, d:"Good"},{n:"Korone [10-100]", v:55, d:"Good"},{n:"Korone [100-500]", v:45, d:"Good"},{n:"Korone [500+]", v:35, d:"Good"},
-        {n:"Chronos [1-10]", v:45, d:"Good"},{n:"Chronos [10-50]", v:40, d:"Good"},{n:"Chronos [400+]", v:32.5, d:"Good"},
-        {n:"Big [1-10]", v:13.75, d:"Mid"},{n:"Big [10-100]", v:10, d:"Mid"},{n:"Big [4000+]", v:3, d:"Mid"},
-        {n:"Violin [1-10]", v:10, d:"Mid"},{n:"Violin [200+]", v:2.5, d:"Mid"},
-        {n:"Death", v:7.5, d:"Mid"},{n:"Brute", v:4.75, d:"Good"},{n:"The World", v:3.25, d:"Decent"},
-        {n:"Champion", v:6.25, type:"Blox"},{n:"Gold", v:6.25, type:"Blox"},{n:"Dos", v:5, type:"Blox"},{n:"Chains", v:3.5, type:"Blox"},{n:"Slaughter", v:2.5, type:"Blox"},{n:"Murder", v:1.6, type:"Blox"},{n:"Full Metal", v:0.5, type:"Blox"}
+        // IMAGE 1
+        {n:"skibidi toilet", v:0, u:"N/A", d:"Insane"}, {n:"Brush [1-10]", v:1900, u:"Currency", d:"Good"}, {n:"Blackmarket", v:1400, u:"Currency", d:"Bad"}, {n:"Tetro", v:1100, u:"Currency", d:"Bad"},
+        {n:"M134 [1-5]", v:955, u:"Currency", d:"Insane"}, {n:"M134 [6-10]", v:900, u:"Currency", d:"Insane"}, {n:"M134 Low [11-36]", v:805, u:"Currency", d:"Insane"}, {n:"M134 Mid [37-62]", v:735, u:"Currency", d:"Insane"}, {n:"M134 High [63+]", v:655, u:"Currency", d:"Insane"},
+        {n:"MP5 [1-5]", v:740, u:"Currency", d:"Insane"}, {n:"MP5 [6-10]", v:665, u:"Currency", d:"Insane"}, {n:"MP5 Low [11-39]", v:565, u:"Currency", d:"Insane"}, {n:"MP5 Mid [40-68]", v:540, u:"Currency", d:"Insane"}, {n:"MP5 High [69+]", v:500, u:"Currency", d:"Insane"},
+        {n:"BIGGER [1-5]", v:595, u:"Currency", d:"Decent"}, {n:"BIGGER [6-10]", v:540, u:"Currency", d:"Decent"}, {n:"BIGGER Low [11-40]", v:490, u:"Currency", d:"Decent"}, {n:"BIGGER Mid [41-70]", v:425, u:"Currency", d:"Good"}, {n:"BIGGER High [71+]", v:355, u:"Currency", d:"Good"},
+        {n:"Runes [1-5]", v:575, u:"Currency", d:"Decent"}, {n:"Runes [6-10]", v:515, u:"Currency", d:"Decent"}, {n:"Runes Low [11-43]", v:465, u:"Currency", d:"Decent"}, {n:"Runes Mid [44-76]", v:405, u:"Currency", d:"Decent"}, {n:"Runes High [77+]", v:345, u:"Currency", d:"Decent"},
+
+        // IMAGE 2
+        {n:"Frostbite [1-5]", v:270, u:"Currency", d:"Mid"}, {n:"Frostbite [6-10]", v:250, u:"Currency", d:"Mid"}, {n:"Frostbite Low [11-47]", v:230, u:"Currency", d:"Mid"}, {n:"Frostbite Mid [48-84]", v:210, u:"Currency", d:"Mid"}, {n:"Frostbite High [85+]", v:190, u:"Currency", d:"Mid"},
+        {n:"Freezer [1-5]", v:210, u:"Currency", d:"Decent"}, {n:"Freezer [6-10]", v:190, u:"Currency", d:"Decent"}, {n:"Freezer Low [11-33]", v:160, u:"Currency", d:"Decent"}, {n:"Freezer Mid [34-55]", v:140, u:"Currency", d:"Decent"}, {n:"Freezer High [56+]", v:110, u:"Currency", d:"Decent"},
+        {n:"Eradese [1-5]", v:280, u:"Currency", d:"Good"}, {n:"Eradese [6-10]", v:255, u:"Currency", d:"Good"}, {n:"Eradese Low [11-40]", v:225, u:"Currency", d:"Good"}, {n:"Eradese Mid [41-70]", v:210, u:"Currency", d:"Good"}, {n:"Eradese High [71-100]", v:195, u:"Currency", d:"Good"},
+        {n:"Vortex [1-5]", v:190, u:"Currency", d:"Bad"}, {n:"Vortex [6-10]", v:175, u:"Currency", d:"Bad"}, {n:"Vortex Low [11-42]", v:145, u:"Currency", d:"Bad"}, {n:"Vortex Mid [43-74]", v:115, u:"Currency", d:"Bad"}, {n:"Vortex High [75+]", v:85, u:"Currency", d:"Mid"},
+        {n:"Chainsaw [1-5]", v:295, u:"Currency", d:"Good"}, {n:"Chainsaw [6-10]", v:275, u:"Currency", d:"Good"}, {n:"Chainsaw Low [11-58]", v:260, u:"Currency", d:"Good"}, {n:"Chainsaw Mid [59-105]", v:250, u:"Currency", d:"Good"}, {n:"Chainsaw High [106-153]", v:235, u:"Currency", d:"Good"},
+        {n:"X-RAGE [1-5]", v:190, u:"Currency", d:"Decent"}, {n:"X-RAGE [6-10]", v:160, u:"Currency", d:"Decent"}, {n:"X-RAGE [11-50]", v:125, u:"Currency", d:"Decent"}, {n:"X-RAGE [51-100]", v:105, u:"Currency", d:"Decent"}, {n:"X-RAGE [101-200]", v:100, u:"Currency", d:"Decent"}, {n:"X-RAGE [201-300]", v:90, u:"Currency", d:"Good"}, {n:"X-RAGE [301-400]", v:80, u:"Currency", d:"Good"}, {n:"X-RAGE [401-500]", v:70, u:"Currency", d:"Good"}, {n:"X-RAGE [501+]", v:60, u:"Currency", d:"Good"},
+        {n:"Kitty", v:350, u:"Currency", d:"Insane"}, {n:"M1911", v:340, u:"Currency", d:"Good"},
+
+        // IMAGE 3
+        {n:"Chocos", v:65, u:"Currency", d:"Good"}, {n:"Bear [1-10]", v:57.5, u:"Currency", d:"Good"}, {n:"Bear [10-100]", v:55, u:"Currency", d:"Good"}, {n:"Bear [100-200]", v:52.5, u:"Currency", d:"Good"}, {n:"Bear [200-300]", v:50, u:"Currency", d:"Good"}, {n:"Bear [300+]", v:47.5, u:"Currency", d:"Good"},
+        {n:"Nuclear [1-10]", v:52.5, u:"Currency", d:"Decent"}, {n:"Nuclear [10-50]", v:43.75, u:"Currency", d:"Decent"}, {n:"Nuclear [400+]", v:30, u:"Currency", d:"Decent"},
+        {n:"Cyberfly [BLK]", v:40, u:"Currency", d:"Good"}, {n:"Mecha", v:19, u:"Currency", d:"Decent"}, {n:"Cyberfly [RED]", v:20, u:"Currency", d:"Decent"}, {n:"Cyberfly [BLU]", v:15, u:"Currency", d:"Decent"}, {n:"Cyberfly [PUR]", v:16, u:"Currency", d:"Decent"}, {n:"Cyberfly [ORG]", v:12, u:"Currency", d:"Decent"}, {n:"Cyberfly [PNK]", v:11, u:"Currency", d:"Decent"}, {n:"Death", v:7.5, u:"Currency", d:"Mid"}, {n:"Runic", v:8, u:"Currency", d:"Decent"}, {n:"Pneumatic", v:7, u:"Currency", d:"Mid"}, {n:"Everfrost", v:4.5, u:"Currency", d:"Mid"},
+
+        // IMAGE 4
+        {n:"Korone [1-10]", v:65, u:"Currency", d:"Good"}, {n:"Korone [10-100]", v:55, u:"Currency", d:"Good"}, {n:"Korone [100-500]", v:45, u:"Currency", d:"Good"}, {n:"Korone [500+]", v:35, u:"Currency", d:"Good"},
+        {n:"Chronos [1-10]", v:45, u:"Currency", d:"Good"}, {n:"Chronos [400+]", v:32.5, u:"Currency", d:"Good"},
+        {n:"Shrimple [1-10]", v:18.75, u:"Currency", d:"Bad"}, {n:"Shrimple [400+]", v:10, u:"Currency", d:"Bad"},
+        {n:"Creature [1-10]", v:12.5, u:"Currency", d:"Bad"}, {n:"Creature [400+]", v:3.75, u:"Currency", d:"Bad"},
+        {n:"Brute", v:4.75, u:"Currency", d:"Good"}, {n:"The World", v:3.25, u:"Currency", d:"Decent"},
+
+        // IMAGE 5
+        {n:"Violin [1-10]", v:10, u:"Currency", d:"Bad"}, {n:"Violin [200+]", v:2.5, u:"Currency", d:"Bad"},
+        {n:"Roadster", v:3.25, u:"Currency", d:"Good"}, {n:"Dubstep", v:2.5, u:"Currency", d:"Decent"}, {n:"Core [BLK]", v:1.5, u:"Currency", d:"Mid"}, {n:"Purgatory", v:1.25, u:"Currency", d:"Decent"}, {n:"Bloxy", v:0.75, u:"Currency", d:"Decent"},
+
+        // IMAGE 6
+        {n:"Big [1-10]", v:13.75, u:"Currency", d:"Mid"}, {n:"Big [4000+]", v:3, u:"Currency", d:"Mid"},
+        {n:"Spacial [1-10]", v:10, u:"Currency", d:"Bad"}, {n:"Spacial [3000+]", v:2, u:"Currency", d:"Bad"},
+        {n:"Synth [1-10]", v:8.75, u:"Currency", d:"Bad"}, {n:"Synth [2000+]", v:2, u:"Currency", d:"Bad"},
+        {n:"Chess [1-10]", v:6.25, u:"Currency", d:"Horrible"}, {n:"Chess [1400+]", v:0.75, u:"Currency", d:"Horrible"},
+        {n:"Earth", v:1, u:"Currency", d:"Mid"}, {n:"Reactor", v:1.1, u:"Currency", d:"Good"},
+
+        // IMAGE 7
+        {n:"Wildcard", v:3.75, u:"Currency", d:"Bad"}, {n:"Champion", v:6.25, u:"Bloxes", d:"Good"}, {n:"Gold", v:6.25, u:"Bloxes", d:"Good"}, {n:"Dos", v:5, u:"Bloxes", d:"Decent"}, {n:"Chains", v:3.5, u:"Bloxes", d:"Good"}, {n:"Slaughter", v:2.5, u:"Bloxes", d:"Good"}, {n:"Murder", v:1.6, u:"Bloxes", d:"Good"}, {n:"Full Metal", v:0.5, u:"Bloxes", d:"Good"}
     ];
 
-    function calc(v, d, type) {
-        if (type === "Blox") return v * 0.01; // Convert Blox units to base currency value for math
+    function calc(v, d, u) {
+        if (u === "N/A") return 0;
+        let base = (u === "Bloxes") ? v * 0.05 : v; // Normalizing Bloxes for math logic
         let m = d.toLowerCase();
-        if (m.includes("insane")) return v + 0.25;
-        if (m.includes("good")) return v + 0.15;
-        if (m.includes("bad")) return v - 0.25;
-        if (m.includes("mid")) return v - 0.10;
-        return v;
+        if (m.includes("insane")) return base * 1.1;
+        if (m.includes("good")) return base * 1.05;
+        if (m.includes("bad") || m.includes("horrible")) return base * 0.9;
+        return base;
     }
 
     function setTarget(t) {
@@ -109,17 +114,16 @@
     function render() {
         const q = document.getElementById('search').value.toLowerCase();
         document.getElementById('inv').innerHTML = data.filter(i => i.n.toLowerCase().includes(q)).map(i => `
-            <div class="glove-card" onclick="add('${i.n}', ${i.v}, '${i.d}', '${i.type||""}')">
-                <i>${i.type === "Blox" ? "Blox" : i.d}</i>
-                ${i.n}
-                <b>${i.type === "Blox" ? i.v : i.v}</b>
+            <div class="glove-card" onclick="add('${i.n}', '${i.v}', '${i.d}', '${i.u}')">
+                ${i.n}<br><b>${i.v}</b> <span class="unit-tag">${i.u}</span>
             </div>
         `).join('');
     }
 
-    function add(n, v, d, type) {
-        const val = calc(v, d, type);
-        if (target === 'you') yItems.push({n, val}); else tItems.push({n, val});
+    function add(n, v, d, u) {
+        const val = calc(parseFloat(v), d, u);
+        const displayVal = u === "N/A" ? "N/A" : val.toFixed(2);
+        if (target === 'you') yItems.push({n, val, u, displayVal}); else tItems.push({n, val, u, displayVal});
         update();
     }
 
@@ -134,17 +138,16 @@
         document.getElementById('yTotal').innerText = yT.toFixed(2);
         document.getElementById('tTotal').innerText = tT.toFixed(2);
         
-        document.getElementById('yList').innerHTML = yItems.map((it, i) => `<div class="list-item" style="border-color:var(--primary)">${it.n} <span class="remove-btn" onclick="remove('y', ${i})">✕</span></div>`).join('');
-        document.getElementById('tList').innerHTML = tItems.map((it, i) => `<div class="list-item" style="border-color:var(--secondary)">${it.n} <span class="remove-btn" onclick="remove('t', ${i})">✕</span></div>`).join('');
+        document.getElementById('yList').innerHTML = yItems.map((it, i) => `<div class="list-item" style="border-left-color:var(--primary)">${it.n} (${it.displayVal}) <span class="unit-tag">${it.u}</span> <span class="remove-btn" onclick="remove('y', ${i})">✕</span></div>`).join('');
+        document.getElementById('tList').innerHTML = tItems.map((it, i) => `<div class="list-item" style="border-left-color:var(--secondary)">${it.n} (${it.displayVal}) <span class="unit-tag">${it.u}</span> <span class="remove-btn" onclick="remove('t', ${i})">✕</span></div>`).join('');
         
-        const b = document.getElementById('banner');
-        const diff = tT - yT;
+        const b = document.getElementById('banner'); const diff = tT - yT;
         if (yT === 0 && tT === 0) { b.innerText = "OFFER SCANNER"; b.className = "status-banner fair-glow"; }
-        else if (diff >= 0.01) { b.innerText = "MASSIVE WIN (+" + diff.toFixed(2) + ")"; b.className = "status-banner win-glow"; }
-        else if (diff <= -0.01) { b.innerText = "TOTAL LOSS (" + diff.toFixed(2) + ")"; b.className = "status-banner loss-glow"; }
+        else if (diff > 0.1) { b.innerText = "PROFIT (+" + diff.toFixed(2) + ")"; b.className = "status-banner win-glow"; }
+        else if (diff < -0.1) { b.innerText = "LOSS (" + diff.toFixed(2) + ")"; b.className = "status-banner loss-glow"; }
         else { b.innerText = "FAIR TRADE"; b.className = "status-banner fair-glow"; }
     }
-    setTarget('you');
+    setTarget('you'); render();
 </script>
 </body>
 </html>
