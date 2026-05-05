@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glove Trade Calculator</title>
+    <style>
+        body { font-family: sans-serif; background: #0f0f0f; color: #fff; padding: 15px; margin: 0; }
+        .calc-box { display: flex; gap: 10px; margin-top: 10px; }
+        .side { flex: 1; background: #1a1a1a; padding: 15px; border-radius: 10px; border: 2px solid #333; min-height: 150px; }
+        .side.you { border-color: #3498db; }
+        .side.them { border-color: #e74c3c; }
+        .total { font-size: 1.8em; font-weight: bold; text-align: center; color: #00ff88; margin: 10px 0; }
+        .banner { width: 100%; padding: 20px; border-radius: 10px; text-align: center; font-size: 1.8em; font-weight: bold; margin-bottom: 15px; box-sizing: border-box; }
+        .win { background: #27ae60; } .loss { background: #c0392b; } .fair { background: #f39c12; }
+        .search { width: 100%; padding: 15px; background: #222; border: none; color: white; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box; font-size: 1.1em; }
+        .inventory { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-top: 15px; }
+        .item-card { background: #222; border: 1px solid #444; padding: 10px; border-radius: 6px; cursor: pointer; text-align: center; }
+        .item-card:hover { background: #333; border-color: #ff3e3e; }
+        .selected-item { background: #333; padding: 8px; margin: 5px 0; border-radius: 5px; display: flex; justify-content: space-between; font-size: 0.9em; }
+        .remove { color: #ff3e3e; font-weight: bold; cursor: pointer; }
+        .toggle-btns { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; }
+        .t-btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="banner" class="banner fair">ADD ITEMS TO START</div>
+
+    <div class="calc-box">
+        <div class="side you">
+            <h3 style="text-align:center; color:#3498db;">YOU GIVE</h3>
+            <div id="yTotal" class="total">0.00</div>
+            <div id="yList"></div>
+        </div>
+        <div class="side them">
+            <h3 style="text-align:center; color:#e74c3c;">THEY GIVE</h3>
+            <div id="tTotal" class="total">0.00</div>
+            <div id="tList"></div>
+        </div>
+    </div>
+
+    <div style="margin-top:20px;">
+        <input type="text" id="search" class="search" placeholder="Search gloves..." onkeyup="render()">
+        <div class="toggle-btns">
+            <button id="btnY" class="t-btn" style="background:#3498db; color:white;" onclick="target='you';render()">Adding to YOU</button>
+            <button id="btnT" class="t-btn" style="background:#444; color:white;" onclick="target='them';render()">Adding to THEM</button>
+        </div>
+        <div id="inv" class="inventory"></div>
+    </div>
+
+<script>
+    let target = 'you';
+    let yItems = [];
+    let tItems = [];
+
+    const data = [
+        // Manually extracted everything from your images:
+        { n: "skibidi toilet", v: 1000, d: "Insane" },
+        { n: "Brush [1-10]", v: 1900, d: "Good/Decent" },
+        { n: "M134 [1-5]", v: 955, d: "Insane" },
+        { n: "M134 [6-10]", v: 900, d: "Insane" },
+        { n: "MP5 [1-5]", v: 740, d: "Insane" },
+        { n: "BIGGER [1-5]", v: 595, d: "Decent" },
+        { n: "Runes [1-5]", v: 575, d: "Mid" },
+        { n: "Kitty", v: 350, d: "Insane" },
+        { n: "M1911", v: 340, d: "Good" },
+        { n: "Frostbite [1-5]", v: 270, d: "Mid" },
+        { n: "Chainsaw [1-5]", v: 295, d: "Good" },
+        { n: "Eradese [1-5]", v: 280, d: "Good" },
+        { n: "Vortex [1-5]", v: 190, d: "Bad" },
+        { n: "Korone [1-10]", v: 65, d: "Good" },
+        { n: "Chocos", v: 65, d: "Good" },
+        { n: "Bear [1-10]", v: 57.5, d: "Good" },
+        { n: "Nuclear [1-10]", v: 52.5, d: "Decent" },
+        { n: "Cyberfly [BLK]", v: 40, d: "Good/Decent" },
+        { n: "Mecha", v: 19, d: "Decent" },
+        { n: "Reactor", v: 1.1, d: "Good/Decent" },
+        { n: "Roadster", v: 3.25, d: "Good" },
+        { n: "Gold (Blox)", v: 0.125, d: "Decent" },
+        { n: "Champion (Blox)", v: 0.125, d: "Decent" },
+        { n: "Chains (Blox)", v: 0.07, d: "Good" }
+    ];
+
+    function calc(v, d) {
+        let dm = d.toLowerCase();
+        if (dm.includes("horrible") || dm === "bad") return v - 0.20;
+        if (dm === "mid/bad") return v - 0.10;
+        if (dm === "mid") return v - 0.05;
+        if (dm.includes("good") || dm.includes("insane")) return dm.includes("insane") ? v + 0.20 : v + 0.10;
+        return v;
+    }
+
+    function render() {
+        const q = document.getElementById('search').value.toLowerCase();
+        document.getElementById('inv').innerHTML = data.filter(i => i.n.toLowerCase().includes(q)).map(i => `
+            <div class="item-card" onclick="add('${i.n}', ${i.v}, '${i.d}')">${i.n}<br><small>${calc(i.v,i.d).toFixed(2)}</small></div>
+        `).join('');
+        document.getElementById('btnY').style.background = target === 'you' ? '#3498db' : '#444';
+        document.getElementById('btnT').style.background = target === 'them' ? '#e74c3c' : '#444';
+    }
+
+    function add(n, v, d) {
+        const val = calc(v, d);
+        if (target === 'you') yItems.push({n, val}); else tItems.push({n, val});
+        update();
+    }
+
+    function remove(side, i) {
+        if (side === 'y') yItems.splice(i, 1); else tItems.splice(i, 1);
+        update();
+    }
+
+    function update() {
+        const yT = yItems.reduce((a, b) => a + b.val, 0);
+        const tT = tItems.reduce((a, b) => a + b.val, 0);
+        document.getElementById('yTotal').innerText = yT.toFixed(2);
+        document.getElementById('tTotal').innerText = tT.toFixed(2);
+        document.getElementById('yList').innerHTML = yItems.map((it, i) => `<div class="selected-item">${it.n} <span class="remove" onclick="remove('y', ${i})">X</span></div>`).join('');
+        document.getElementById('tList').innerHTML = tItems.map((it, i) => `<div class="selected-item">${it.n} <span class="remove" onclick="remove('t', ${i})">X</span></div>`).join('');
+        
+        const b = document.getElementById('banner');
+        const diff = tT - yT;
+        if (yT === 0 && tT === 0) { b.innerText = "ADD ITEMS"; b.className = "banner fair"; }
+        else if (diff > 0.1) { b.innerText = "WIN (W)"; b.className = "banner win"; }
+        else if (diff < -0.1) { b.innerText = "LOSS (L)"; b.className = "banner loss"; }
+        else { b.innerText = "FAIR TRADE"; b.className = "banner fair"; }
+    }
+    render();
+</script>
+</body>
+</html>
