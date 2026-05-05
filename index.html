@@ -15,7 +15,7 @@
         .win { background: #27ae60; } .loss { background: #c0392b; } .fair { background: #f39c12; }
         .search { width: 100%; padding: 15px; background: #222; border: none; color: white; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box; font-size: 1.1em; }
         .inventory { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-top: 15px; }
-        .item-card { background: #222; border: 1px solid #444; padding: 10px; border-radius: 6px; cursor: pointer; text-align: center; }
+        .item-card { background: #222; border: 1px solid #444; padding: 10px; border-radius: 6px; cursor: pointer; text-align: center; font-size: 0.85em;}
         .item-card:hover { background: #333; border-color: #ff3e3e; }
         .selected-item { background: #333; padding: 8px; margin: 5px 0; border-radius: 5px; display: flex; justify-content: space-between; font-size: 0.9em; }
         .remove { color: #ff3e3e; font-weight: bold; cursor: pointer; }
@@ -55,31 +55,61 @@
     let tItems = [];
 
     const data = [
-        // Manually extracted everything from your images:
         { n: "skibidi toilet", v: 1000, d: "Insane" },
         { n: "Brush [1-10]", v: 1900, d: "Good/Decent" },
+        { n: "Blackmarket", v: 1400, d: "Bad" },
+        { n: "Tetro", v: 1100, d: "Bad/Horrible" },
         { n: "M134 [1-5]", v: 955, d: "Insane" },
         { n: "M134 [6-10]", v: 900, d: "Insane" },
+        { n: "M134 Low [11-36]", v: 805, d: "Insane" },
+        { n: "M134 Mid [37-62]", v: 735, d: "Insane" },
+        { n: "M134 High [63+]", v: 655, d: "Insane" },
         { n: "MP5 [1-5]", v: 740, d: "Insane" },
+        { n: "MP5 [6-10]", v: 665, d: "Insane" },
+        { n: "MP5 Low [11-39]", v: 565, d: "Insane" },
+        { n: "MP5 Mid [40-68]", v: 540, d: "Insane" },
+        { n: "MP5 High [69+]", v: 500, d: "Insane" },
         { n: "BIGGER [1-5]", v: 595, d: "Decent" },
-        { n: "Runes [1-5]", v: 575, d: "Mid" },
-        { n: "Kitty", v: 350, d: "Insane" },
-        { n: "M1911", v: 340, d: "Good" },
+        { n: "BIGGER [6-10]", v: 540, d: "Decent" },
+        { n: "BIGGER Low [11-40]", v: 490, d: "Decent" },
+        { n: "BIGGER Mid [41-70]", v: 425, d: "Good/Decent" },
+        { n: "BIGGER High [71+]", v: 355, d: "Good/Decent" },
+        { n: "Runes [1-5]", v: 575, d: "Decent/Mid" },
         { n: "Frostbite [1-5]", v: 270, d: "Mid" },
-        { n: "Chainsaw [1-5]", v: 295, d: "Good" },
+        { n: "Frostbite High [85+]", v: 190, d: "Decent/Mid" },
+        { n: "Freezer [1-5]", v: 210, d: "Decent" },
         { n: "Eradese [1-5]", v: 280, d: "Good" },
         { n: "Vortex [1-5]", v: 190, d: "Bad" },
-        { n: "Korone [1-10]", v: 65, d: "Good" },
+        { n: "Chainsaw [1-5]", v: 295, d: "Good" },
+        { n: "Kitty", v: 350, d: "Insane" },
+        { n: "M1911", v: 340, d: "Good" },
         { n: "Chocos", v: 65, d: "Good" },
         { n: "Bear [1-10]", v: 57.5, d: "Good" },
         { n: "Nuclear [1-10]", v: 52.5, d: "Decent" },
         { n: "Cyberfly [BLK]", v: 40, d: "Good/Decent" },
         { n: "Mecha", v: 19, d: "Decent" },
-        { n: "Reactor", v: 1.1, d: "Good/Decent" },
+        { n: "Death", v: 7.5, d: "Decent/Mid" },
+        { n: "Korone [1-10]", v: 65, d: "Good" },
+        { n: "Chronos [1-10]", v: 45, d: "Good/Decent" },
+        { n: "Shrimple [1-10]", v: 18.75, d: "Mid/Bad" },
+        { n: "Creature [1-10]", v: 12.5, d: "Mid/Bad" },
+        { n: "Brute", v: 4.75, d: "Good/Decent" },
+        { n: "Violin [1-10]", v: 10, d: "Mid/Bad" },
         { n: "Roadster", v: 3.25, d: "Good" },
-        { n: "Gold (Blox)", v: 0.125, d: "Decent" },
+        { n: "Dubstep", v: 2.5, d: "Decent" },
+        { n: "Purgatory", v: 1.25, d: "Decent" },
+        { n: "Big [1-10]", v: 13.75, d: "Mid" },
+        { n: "Spacial [1-10]", v: 10, d: "Mid/Bad" },
+        { n: "Synth [1-10]", v: 8.75, d: "Bad" },
+        { n: "Reactor", v: 1.1, d: "Good/Decent" },
+        { n: "Earth", v: 1, d: "Decent/Mid" },
+        { n: "Wildcard", v: 3.75, d: "Mid/Bad" },
         { n: "Champion (Blox)", v: 0.125, d: "Decent" },
-        { n: "Chains (Blox)", v: 0.07, d: "Good" }
+        { n: "Gold (Blox)", v: 0.125, d: "Decent" },
+        { n: "Dos (Blox)", v: 0.10, d: "Mid" },
+        { n: "Chains (Blox)", v: 0.07, d: "Good" },
+        { n: "Murder (Blox)", v: 0.03, d: "Good" },
+        { n: "Full Metal (Blox)", v: 0.01, d: "Good" }
     ];
 
     function calc(v, d) {
@@ -94,7 +124,7 @@
     function render() {
         const q = document.getElementById('search').value.toLowerCase();
         document.getElementById('inv').innerHTML = data.filter(i => i.n.toLowerCase().includes(q)).map(i => `
-            <div class="item-card" onclick="add('${i.n}', ${i.v}, '${i.d}')">${i.n}<br><small>${calc(i.v,i.d).toFixed(2)}</small></div>
+            <div class="item-card" onclick="add('${i.n}', ${i.v}, '${i.d}')">${i.n}<br><b>${calc(i.v,i.d).toFixed(2)}</b></div>
         `).join('');
         document.getElementById('btnY').style.background = target === 'you' ? '#3498db' : '#444';
         document.getElementById('btnT').style.background = target === 'them' ? '#e74c3c' : '#444';
@@ -121,9 +151,11 @@
         
         const b = document.getElementById('banner');
         const diff = tT - yT;
+        
+        // Math fix is right here: Now anything over a 0.01 difference triggers Win/Loss
         if (yT === 0 && tT === 0) { b.innerText = "ADD ITEMS"; b.className = "banner fair"; }
-        else if (diff > 0.1) { b.innerText = "WIN (W)"; b.className = "banner win"; }
-        else if (diff < -0.1) { b.innerText = "LOSS (L)"; b.className = "banner loss"; }
+        else if (diff >= 0.02) { b.innerText = "WIN (W)"; b.className = "banner win"; }
+        else if (diff <= -0.02) { b.innerText = "LOSS (L)"; b.className = "banner loss"; }
         else { b.innerText = "FAIR TRADE"; b.className = "banner fair"; }
     }
     render();
