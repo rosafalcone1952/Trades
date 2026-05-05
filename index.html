@@ -60,41 +60,72 @@
     let target = 'you'; let yItems = []; let tItems = [];
     
     const data = [
-        {n:"skibidi toilet", v:0, u:"N/A", d:"Insane"}, 
-        {n:"Brush [1-10]", v:1900, u:"Currency", d:"Good"}, 
-        {n:"Blackmarket", v:1400, u:"Currency", d:"Bad"}, 
-        {n:"Tetro", v:1100, u:"Currency", d:"Bad"},
-        {n:"M134 [1-5]", v:955, u:"Currency", d:"Insane"}, 
-        {n:"M134 High [63+]", v:655, u:"Currency", d:"Insane"},
-        {n:"MP5 [1-5]", v:740, u:"Currency", d:"Insane"}, 
-        {n:"MP5 High [69+]", v:500, u:"Currency", d:"Insane"},
-        {n:"Kitty", v:350, u:"Currency", d:"Insane"}, 
-        {n:"M1911", v:340, u:"Currency", d:"Good"},
-        {n:"Chocos", v:65, u:"Currency", d:"Good"}, 
-        {n:"Bear [1-10]", v:57.5, u:"Currency", d:"Good"}, 
-        {n:"Nuclear [1-10]", v:52.5, u:"Currency", d:"Decent"}, 
-        {n:"Cyberfly [BLK]", v:40, u:"Currency", d:"Good"}, 
-        {n:"Mecha", v:19, u:"Currency", d:"Decent"}, 
-        {n:"Cyberfly [RED]", v:20, u:"Currency", d:"Decent"}, 
-        {n:"Envoided", v:9.75, u:"Currency", d:"Decent"},
-        {n:"Runic", v:8, u:"Currency", d:"Decent"}, 
-        {n:"Pneumatic", v:7, u:"Currency", d:"Mid"}, 
-        {n:"Mutation", v:3.5, u:"Currency", d:"Mid"},
-        {n:"Earth", v:1, u:"Currency", d:"Mid"}, 
-        {n:"Reactor", v:1.1, u:"Currency", d:"Good"}, 
-        {n:"Champion", v:6.25, u:"Bloxes", d:"Good"}, 
-        {n:"Gold", v:6.25, u:"Bloxes", d:"Good"}
-    ];
+        // BIG SERIES
+        {n:"Big [1-10]", v:13.75, u:"Currency"},
+        {n:"Big [10-100]", v:10, u:"Currency"},
+        {n:"Big [100-500]", v:8.75, u:"Currency"},
+        {n:"Big [500-1000]", v:6.75, u:"Currency"},
+        {n:"Big [1000-2000]", v:5, u:"Currency"},
+        {n:"Big [2000-3000]", v:4.25, u:"Currency"},
+        {n:"Big [3000-4000]", v:3.75, u:"Currency"},
+        {n:"Big [4000+]", v:3, u:"Currency"},
 
-    function calc(v, d, u) {
-        if (u === "N/A") return 0;
-        let base = (u === "Bloxes") ? v * 0.05 : v;
-        let m = d.toLowerCase();
-        if (m.includes("insane")) return base * 1.1;
-        if (m.includes("good")) return base * 1.05;
-        if (m.includes("bad") || m.includes("horrible")) return base * 0.9;
-        return base;
-    }
+        // SPACIAL SERIES
+        {n:"Spacial [1-10]", v:10, u:"Currency"},
+        {n:"Spacial [10-100]", v:7.5, u:"Currency"},
+        {n:"Spacial [100-500]", v:6.25, u:"Currency"},
+        {n:"Spacial [500-1000]", v:4, u:"Currency"},
+        {n:"Spacial [1000-2000]", v:3.75, u:"Currency"},
+        {n:"Spacial [2000-3000]", v:2.5, u:"Currency"},
+        {n:"Spacial [3000+]", v:2, u:"Currency"},
+
+        // SYNTHWAVE SERIES
+        {n:"Synthwave [1-10]", v:8.75, u:"Currency"},
+        {n:"Synthwave [10-100]", v:6.25, u:"Currency"},
+        {n:"Synthwave [100-500]", v:4.5, u:"Currency"},
+        {n:"Synthwave [500-1000]", v:3.5, u:"Currency"},
+        {n:"Synthwave [1000-2000]", v:2.5, u:"Currency"},
+        {n:"Synthwave [2000+]", v:2, u:"Currency"},
+
+        // CHESS SERIES
+        {n:"Chess [1-10]", v:6.25, u:"Currency"},
+        {n:"Chess [10-100]", v:3.75, u:"Currency"},
+        {n:"Chess [100-500]", v:2.5, u:"Currency"},
+        {n:"Chess [500-1000]", v:1.75, u:"Currency"},
+        {n:"Chess [1000-4000]", v:1.25, u:"Currency"},
+        {n:"Chess [4000+]", v:0.75, u:"Currency"},
+
+        // X RAW SERIES
+        {n:"X Raw [1-10]", v:5, u:"Currency"},
+        {n:"X Raw [10-100]", v:3.5, u:"Currency"},
+        {n:"X Raw [100-500]", v:2, u:"Currency"},
+        {n:"X Raw [500+]", v:1.5, u:"Currency"},
+
+        // MISC GLOVES
+        {n:"Earth", v:1, u:"Currency"},
+        {n:"Reactor", v:1.1, u:"Currency"},
+        {n:"Chains", v:0.45, u:"Currency"},
+        {n:"Platinum", v:0.4, u:"Currency"},
+        {n:"Za Warudo", v:0.4, u:"Currency"},
+        {n:"Accelerator", v:0.2, u:"Currency"},
+        {n:"Chaser", v:0.3, u:"Currency"},
+        {n:"Danger", v:0.35, u:"Currency"},
+        {n:"The Po0p", v:0.3, u:"Currency"},
+        {n:"Dumbfounded", v:0.2, u:"Currency"},
+        {n:"Poison", v:0.25, u:"Currency"},
+        {n:"Spooky Slash", v:0.25, u:"Currency"},
+        {n:"Spooky Splash", v:0.2, u:"Currency"},
+        {n:"Diamond", v:0.2, u:"Currency"},
+        {n:"Roux Vuitton", v:0.2, u:"Currency"},
+        {n:"Meltdown", v:0.2, u:"Currency"},
+        {n:"Aperture", v:0.15, u:"Currency"},
+        {n:"Enchanted", v:0.15, u:"Currency"},
+
+        // CORE PRESETS
+        {n:"skibidi toilet", v:0, u:"N/A"},
+        {n:"Kitty", v:350, u:"Currency"},
+        {n:"Chocos", v:65, u:"Currency"}
+    ];
 
     function setT(t) {
         target = t;
@@ -107,16 +138,15 @@
     function render() {
         const q = document.getElementById('search').value.toLowerCase();
         document.getElementById('inv').innerHTML = data.filter(i => i.n.toLowerCase().includes(q)).sort((a,b)=>b.v-a.v).map(i => `
-            <div class="card" onclick="add('${i.n}', '${i.v}', '${i.d}', '${i.u}')">
+            <div class="card" onclick="add('${i.n}', ${i.v}, '${i.u}')">
                 <span class="tag">${i.u}</span><br>
                 ${i.n}<br><b>${i.v}</b>
             </div>
         `).join('');
     }
 
-    function add(n, v, d, u) {
-        const val = calc(parseFloat(v), d, u);
-        if (target === 'you') yItems.push({n, val, u}); else tItems.push({n, val, u});
+    function add(n, v, u) {
+        if (target === 'you') yItems.push({n, v, u}); else tItems.push({n, v, u});
         upd();
     }
 
@@ -126,19 +156,19 @@
     }
 
     function upd() {
-        const yT = yItems.reduce((a, b) => a + b.val, 0);
-        const tT = tItems.reduce((a, b) => a + b.val, 0);
+        const yT = yItems.reduce((a, b) => a + b.v, 0);
+        const tT = tItems.reduce((a, b) => a + b.v, 0);
         document.getElementById('yTotal').innerText = yT.toFixed(2);
         document.getElementById('tTotal').innerText = tT.toFixed(2);
         
-        document.getElementById('yList').innerHTML = yItems.map((it, i) => `<div class="item" style="border-left-color:var(--p)">${it.n} <span class="tag">${it.u}</span> <span class="rem" onclick="remove('y', ${i})">✕</span></div>`).join('');
-        document.getElementById('tList').innerHTML = tItems.map((it, i) => `<div class="item" style="border-left-color:var(--s)">${it.n} <span class="tag">${it.u}</span> <span class="rem" onclick="remove('t', ${i})">✕</span></div>`).join('');
+        document.getElementById('yList').innerHTML = yItems.map((it, i) => `<div class="item" style="border-left-color:var(--p)">${it.n} <span class="tag">${it.v}</span> <span class="rem" onclick="remove('y', ${i})">✕</span></div>`).join('');
+        document.getElementById('tList').innerHTML = tItems.map((it, i) => `<div class="item" style="border-left-color:var(--s)">${it.n} <span class="tag">${it.v}</span> <span class="rem" onclick="remove('t', ${i})">✕</span></div>`).join('');
         
         const b = document.getElementById('banner'); const d = tT - yT;
-        if (yT === 0 && tT === 0) { b.innerText = "Scanner Offline"; b.className = "banner"; }
-        else if (d > 0.1) { b.innerText = "PROFIT DETECTED (+" + d.toFixed(2) + ")"; b.className = "banner win-glow"; }
-        else if (d < -0.1) { b.innerText = "DEFICIT WARNING (" + d.toFixed(2) + ")"; b.className = "banner loss-glow"; }
-        else { b.innerText = "STABLE TRADE"; b.className = "banner fair-glow"; }
+        if (yT === 0 && tT === 0) { b.innerText = "System Ready"; b.className = "banner"; }
+        else if (d > 0.01) { b.innerText = "PROFIT DETECTED (+" + d.toFixed(2) + ")"; b.className = "banner win-glow"; }
+        else if (d < -0.01) { b.innerText = "DEFICIT WARNING (" + d.toFixed(2) + ")"; b.className = "banner loss-glow"; }
+        else { b.innerText = "STABLE TRADE"; b.className = "banner"; }
     }
     setT('you'); render();
 </script>
