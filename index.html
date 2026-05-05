@@ -3,60 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GLOVE ANALYST PRO v7</title>
+    <title>GLOVE ANALYST PRO v8</title>
     <style>
         :root { --p: #00f2ff; --s: #7000ff; --win: #00ff88; --loss: #ff3e3e; --bg: #08080a; --card: #121216; --blox: #ffb800; }
-        body { font-family: 'Inter', 'Segoe UI', sans-serif; background: var(--bg); color: #e0e0e0; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #e0e0e0; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
         
         .header { width: 100%; max-width: 900px; text-align: center; margin-bottom: 20px; }
         .meter-container { width: 100%; height: 8px; background: #1a1a1f; border-radius: 10px; margin: 15px 0; overflow: hidden; display: flex; border: 1px solid #222; }
-        #meter-left { width: 50%; background: var(--p); transition: 0.6s cubic-bezier(0.2, 1, 0.3, 1); box-shadow: 0 0 10px rgba(0,242,255,0.3); }
-        #meter-right { width: 50%; background: var(--s); transition: 0.6s cubic-bezier(0.2, 1, 0.3, 1); box-shadow: 0 0 10px rgba(112,0,255,0.3); }
+        #meter-left { width: 50%; background: var(--p); transition: 0.6s cubic-bezier(0.2, 1, 0.3, 1); }
+        #meter-right { width: 50%; background: var(--s); transition: 0.6s cubic-bezier(0.2, 1, 0.3, 1); }
         
-        .status-pill { padding: 8px 24px; border-radius: 30px; font-weight: 800; font-size: 0.8em; letter-spacing: 1.5px; border: 1px solid #333; display: inline-block; background: #000; color: #666; }
-        .win-state { color: var(--win); border-color: var(--win); text-shadow: 0 0 10px rgba(0,255,136,0.3); }
-        .loss-state { color: var(--loss); border-color: var(--loss); text-shadow: 0 0 10px rgba(255,62,62,0.3); }
+        .status-pill { padding: 8px 24px; border-radius: 30px; font-weight: 800; font-size: 0.8em; letter-spacing: 1.5px; border: 1px solid #333; display: inline-block; background: #000; }
+        .win-state { color: var(--win); border-color: var(--win); box-shadow: 0 0 15px rgba(0,255,136,0.2); }
+        .loss-state { color: var(--loss); border-color: var(--loss); box-shadow: 0 0 15px rgba(255,62,62,0.2); }
 
         .workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 900px; }
-        .side-panel { background: var(--card); border-radius: 16px; padding: 15px; border: 1px solid #222; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .side-header { font-size: 0.65em; font-weight: 900; color: #555; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 2px; }
-        .total-display { font-size: 2.4em; font-weight: 900; color: #fff; margin-bottom: 15px; font-variant-numeric: tabular-nums; }
+        .side-panel { background: var(--card); border-radius: 16px; padding: 15px; border: 1px solid #222; }
+        .total-display { font-size: 2.4em; font-weight: 900; color: #fff; margin-bottom: 10px; font-variant-numeric: tabular-nums; }
         
-        .item-list { display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto; }
-        .trade-item { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85em; border: 1px solid rgba(255,255,255,0.05); }
-        .item-val { font-weight: 700; color: #aaa; }
-        .item-val.is-blox { color: var(--blox); }
-        .btn-rm { color: #ff3e3e; cursor: pointer; font-weight: bold; padding: 0 5px; opacity: 0.6; }
+        .item-list { display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; }
+        .trade-item { background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 8px; display: flex; justify-content: space-between; font-size: 0.85em; border: 1px solid rgba(255,255,255,0.05); }
+        .btn-rm { color: var(--loss); cursor: pointer; font-weight: bold; margin-left: 10px; }
 
         .db-section { width: 100%; max-width: 900px; margin-top: 25px; }
-        .controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
-        .search-input { flex: 1; min-width: 200px; padding: 14px; background: var(--card); border: 1px solid #333; border-radius: 12px; color: #fff; outline: none; }
+        .search-input { width: 100%; padding: 14px; background: var(--card); border: 1px solid #333; border-radius: 12px; color: #fff; box-sizing: border-box; margin-bottom: 15px; }
         
-        .side-toggle { display: flex; background: #000; border-radius: 10px; padding: 4px; border: 1px solid #333; }
-        .toggle-btn { padding: 10px 20px; border: none; border-radius: 7px; cursor: pointer; font-weight: 800; color: #444; background: transparent; transition: 0.2s; }
-        .toggle-btn.active.you { background: var(--p); color: #000; }
-        .toggle-btn.active.them { background: var(--s); color: #fff; }
-
-        .filter-bar { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0 15px 0; width: 100%; scrollbar-width: none; }
-        .f-tag { padding: 6px 14px; background: #16161c; border: 1px solid #222; border-radius: 8px; font-size: 0.7em; cursor: pointer; white-space: nowrap; color: #777; font-weight: 700; text-transform: uppercase; }
+        .filter-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none; }
+        .f-tag { padding: 8px 16px; background: #16161c; border: 1px solid #222; border-radius: 8px; font-size: 0.75em; cursor: pointer; white-space: nowrap; color: #777; font-weight: 700; }
         .f-tag.active { border-color: var(--p); color: var(--p); background: rgba(0,242,255,0.1); }
 
-        .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; background: #000; padding: 15px; border-radius: 16px; max-height: 350px; overflow-y: auto; border: 1px solid #222; }
+        .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; background: #000; padding: 15px; border-radius: 16px; max-height: 400px; overflow-y: auto; border: 1px solid #222; }
         .card { background: var(--card); border: 1px solid #222; padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
-        .card:hover { border-color: #555; transform: translateY(-3px); background: #1a1a20; }
-        .card b { display: block; font-size: 1.4em; margin: 4px 0; }
-        .card b.curr { color: var(--win); }
-        .card b.blox { color: var(--blox); }
-        .card span { font-size: 0.6em; color: #555; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; }
-        
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        .card:hover { transform: translateY(-2px); border-color: #444; }
+        .card b { display: block; font-size: 1.2em; margin-bottom: 4px; }
+        .card.is-blox b { color: var(--blox); }
+        .card.is-curr b { color: var(--win); }
+        .card span { font-size: 0.7em; opacity: 0.6; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .side-switcher { display: flex; gap: 5px; margin-bottom: 15px; background: #000; padding: 5px; border-radius: 10px; border: 1px solid #222; }
+        .side-btn { flex: 1; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 800; background: transparent; color: #444; }
+        .side-btn.active.y { background: var(--p); color: #000; }
+        .side-btn.active.t { background: var(--s); color: #fff; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div id="status" class="status-pill">ANALYZER READY</div>
+        <div id="status" class="status-pill">SYSTEM LOADED</div>
         <div class="meter-container">
             <div id="meter-left"></div>
             <div id="meter-right"></div>
@@ -65,129 +58,119 @@
 
     <div class="workspace">
         <div class="side-panel">
-            <div class="side-header">YOUR OFFER</div>
+            <div style="font-size: 0.7em; color: #555; font-weight: 900;">YOUR OFFER</div>
             <div id="yTotal" class="total-display">0</div>
             <div id="yList" class="item-list"></div>
         </div>
         <div class="side-panel">
-            <div class="side-header">THEIR OFFER</div>
+            <div style="font-size: 0.7em; color: #555; font-weight: 900;">THEIR OFFER</div>
             <div id="tTotal" class="total-display">0</div>
             <div id="tList" class="item-list"></div>
         </div>
     </div>
 
     <div class="db-section">
-        <div class="controls">
-            <input type="text" id="search" class="search-input" placeholder="Search items..." onkeyup="render()">
-            <div class="side-toggle">
-                <button id="btnY" class="toggle-btn active you" onclick="setSide('you')">YOU</button>
-                <button id="btnT" class="toggle-btn them" onclick="setSide('them')">THEM</button>
-            </div>
+        <div class="side-switcher">
+            <button id="btnY" class="side-btn active y" onclick="setSide('y')">ADDING TO YOU</button>
+            <button id="btnT" class="side-btn t" onclick="setSide('t')">ADDING TO THEM</button>
         </div>
         
-        <div class="filter-bar" id="filters">
-            <div class="f-tag active" onclick="setFilter('all', this)">ALL</div>
-            <div class="f-tag" onclick="setFilter('blox', this)">BLOX ITEMS</div>
-            <div class="f-tag" onclick="setFilter('god', this)">GOD-TIER</div>
-            <div class="f-tag" onclick="setFilter('low', this)">LOW-TIER</div>
+        <input type="text" id="search" class="search-input" placeholder="Search any glove..." onkeyup="render()">
+        
+        <div class="filter-bar">
+            <div class="f-tag active" onclick="setFilter('all', this)">ALL GLOVES</div>
+            <div class="f-tag" onclick="setFilter('god', this)">GOD TIERS</div>
+            <div class="f-tag" onclick="setFilter('blox', this)">BLOX CURRENCY</div>
+            <div class="f-tag" onclick="setFilter('serials', this)">SERIALS</div>
         </div>
 
         <div id="inv" class="inventory-grid"></div>
     </div>
 
 <script>
-    let activeSide = 'you';
-    let currentFilter = 'all';
+    let activeSide = 'y';
+    let filter = 'all';
     let yItems = [];
     let tItems = [];
 
-    // Currency values are handled as base. Blox are stored with isBlox: true
     const data = [
-        {n:"Wildcard", v:3.75, c:"low"}, {n:"Primesoul", v:0.25, c:"low"}, {n:"Void", v:0.25, c:"low"}, {n:"Amethyst", v:0.2, c:"low"},
-        {n:"Champion", v:6.25, c:"blox", isB:true}, {n:"Gold", v:6.25, c:"blox", isB:true}, {n:"Dos", v:5, c:"blox", isB:true},
-        {n:"Chains", v:3.5, c:"blox", isB:true}, {n:"Blueprint", v:3.5, c:"blox", isB:true}, {n:"Flashstep", v:3, c:"blox", isB:true},
-        {n:"Cursed", v:3, c:"blox", isB:true}, {n:"M68", v:3, c:"blox", isB:true}, {n:"Scales", v:2.5, c:"blox", isB:true},
-        {n:"Builderman", v:2.5, c:"blox", isB:true}, {n:"Slaughter", v:2.5, c:"blox", isB:true}, {n:"Sapphire", v:2.25, c:"blox", isB:true},
-        {n:"All Sys Color", v:1.6, c:"blox", isB:true}, {n:"Grim", v:2, c:"blox", isB:true}, {n:"Vampy", v:2, c:"blox", isB:true},
-        {n:"Robux", v:2, c:"blox", isB:true}, {n:"Tux", v:2, c:"blox", isB:true}, {n:"Magnetron", v:1.8, c:"blox", isB:true},
-        {n:"Desolate", v:1.8, c:"blox", isB:true}, {n:"Exodus", v:1.8, c:"blox", isB:true}, {n:"Evilseer", v:1.6, c:"blox", isB:true},
-        {n:"Megalodon", v:1.6, c:"blox", isB:true}, {n:"Murder", v:1.6, c:"blox", isB:true}, {n:"Pumpky", v:1.6, c:"blox", isB:true},
-        {n:"Mirage", v:1.5, c:"blox", isB:true}, {n:"Warning", v:1.4, c:"blox", isB:true}, {n:"Hologram", v:1.4, c:"blox", isB:true},
-        {n:"Gifty", v:1.4, c:"blox", isB:true}, {n:"Fleurs", v:1.4, c:"blox", isB:true}, {n:"Beeeee", v:1.4, c:"blox", isB:true},
-        {n:"Neon", v:1.2, c:"blox", isB:true}, {n:"Banana", v:1.2, c:"blox", isB:true}, {n:"Pixel", v:1.2, c:"blox", isB:true},
-        {n:"BloxVuitton", v:1, c:"blox", isB:true}, {n:"Flames", v:1, c:"blox", isB:true}, {n:"Yin Yang", v:1, c:"blox", isB:true},
-        {n:"Vozenilek", v:1, c:"blox", isB:true}, {n:"Emerald", v:1, c:"blox", isB:true}, {n:"Ruby", v:0.75, c:"blox", isB:true},
-        {n:"Punk", v:0.75, c:"blox", isB:true}, {n:"Uno", v:0.5, c:"blox", isB:true}, {n:"Full Metal", v:0.5, c:"blox", isB:true},
-        // Re-adding God-tiers for calculation
-        {n:"Brush [1–10]", v:1900, c:"god"}, {n:"Blackmarket", v:1400, c:"god"}, {n:"Tetro", v:1100, c:"god"}
+        // GODS
+        {n:"Brush [1-10]", v:1900, c:"god"}, {n:"Blackmarket", v:1400, c:"god"}, {n:"Tetro", v:1100, c:"god"},
+        // BLOX
+        {n:"Champion", v:6.25, c:"blox", b:true}, {n:"Gold", v:6.25, c:"blox", b:true}, {n:"Dos", v:5, c:"blox", b:true},
+        {n:"Chains", v:3.5, c:"blox", b:true}, {n:"Blueprint", v:3.5, c:"blox", b:true}, {n:"Flashstep", v:3, c:"blox", b:true},
+        // SERIALS / MID
+        {n:"Wildcard", v:3.75, c:"serials"}, {n:"Violin [1-10]", v:10, c:"serials"}, {n:"Bear [1-10]", v:57.5, c:"serials"},
+        {n:"Chocos", v:65, c:"god"}, {n:"Kitty", v:350, c:"god"}, {n:"M1911", v:340, c:"god"},
+        // ADDING RECENT LOWS
+        {n:"Primesoul", v:0.25, c:"low"}, {n:"Void", v:0.25, c:"low"}, {n:"Amethyst", v:0.2, c:"low"},
+        {n:"Cursed", v:3, c:"blox", b:true}, {n:"M68", v:3, c:"blox", b:true}, {n:"Scales", v:2.5, c:"blox", b:true},
+        {n:"Slaughter", v:2.5, c:"blox", b:true}, {n:"Sapphire", v:2.25, c:"blox", b:true}
     ];
 
+    function setSide(s) {
+        activeSide = s;
+        document.getElementById('btnY').classList.toggle('active', s==='y');
+        document.getElementById('btnT').classList.toggle('active', s==='t');
+    }
+
     function setFilter(f, el) {
-        currentFilter = f;
+        filter = f;
         document.querySelectorAll('.f-tag').forEach(t => t.classList.remove('active'));
         el.classList.add('active');
         render();
     }
 
-    function setSide(side) {
-        activeSide = side;
-        document.getElementById('btnY').classList.toggle('active', side === 'you');
-        document.getElementById('btnT').classList.toggle('active', side === 'them');
-    }
-
     function render() {
         const q = document.getElementById('search').value.toLowerCase();
         document.getElementById('inv').innerHTML = data
-            .filter(i => (currentFilter === 'all' || i.c === currentFilter) && i.n.toLowerCase().includes(q))
+            .filter(i => (filter==='all' || i.c === filter) && i.n.toLowerCase().includes(q))
             .sort((a,b) => b.v - a.v)
             .map(i => `
-                <div class="card" onclick="addItem('${i.n}', ${i.v}, ${i.isB || false})">
-                    <span>${i.isB ? 'BLOX' : 'CURRENCY'}</span>
-                    <b class="${i.isB ? 'blox' : 'curr'}">${i.v}</b>
-                    <div style="font-size:0.8em;">${i.n}</div>
+                <div class="card ${i.b ? 'is-blox':'is-curr'}" onclick="add('${i.n}', ${i.v}, ${i.b||false})">
+                    <b>${i.v}${i.b ? 'B' : ''}</b>
+                    <span>${i.n}</span>
                 </div>
             `).join('');
     }
 
-    function addItem(n, v, isB) {
-        const item = {n, v, isB};
-        if (activeSide === 'you') yItems.push(item); else tItems.push(item);
+    function add(n, v, b) {
+        const list = activeSide === 'y' ? yItems : tItems;
+        list.push({n, v, b});
         update();
     }
 
-    function removeItem(side, index) {
-        if (side === 'y') yItems.splice(index, 1); else tItems.splice(index, 1);
+    function rm(side, idx) {
+        if(side==='y') yItems.splice(idx,1); else tItems.splice(idx,1);
         update();
     }
 
     function update() {
-        const yT = yItems.reduce((a, b) => a + b.v, 0);
-        const tT = tItems.reduce((a, b) => a + b.v, 0);
+        const sum = (arr) => arr.reduce((a,b) => a + b.v, 0);
+        const yT = sum(yItems);
+        const tT = sum(tItems);
         
         document.getElementById('yTotal').innerText = yT.toLocaleString();
         document.getElementById('tTotal').innerText = tT.toLocaleString();
         
-        const total = yT + tT;
-        document.getElementById('meter-left').style.width = total === 0 ? "50%" : (yT/total)*100 + "%";
-        document.getElementById('meter-right').style.width = total === 0 ? "50%" : (tT/total)*100 + "%";
+        const tot = yT + tT;
+        document.getElementById('meter-left').style.width = tot ? (yT/tot*100)+'%' : '50%';
+        document.getElementById('meter-right').style.width = tot ? (tT/tot*100)+'%' : '50%';
 
-        const mapList = (it, i, side) => `
+        const buildList = (arr, s) => arr.map((it, i) => `
             <div class="trade-item">
-                <span>${it.n}</span>
-                <span class="item-val ${it.isB ? 'is-blox' : ''}">${it.v}${it.isB ? 'B' : ''} 
-                    <span class="btn-rm" onclick="removeItem('${side}', ${i})">✕</span>
-                </span>
-            </div>`;
+                ${it.n} <span style="color:${it.b?'var(--blox)':'var(--win)'}">${it.v}${it.b?'B':''} <span class="btn-rm" onclick="rm('${s}',${i})">✕</span></span>
+            </div>`).join('');
 
-        document.getElementById('yList').innerHTML = yItems.map((it, i) => mapList(it, i, 'y')).join('');
-        document.getElementById('tList').innerHTML = tItems.map((it, i) => mapList(it, i, 't')).join('');
+        document.getElementById('yList').innerHTML = buildList(yItems, 'y');
+        document.getElementById('tList').innerHTML = buildList(tItems, 't');
 
         const status = document.getElementById('status');
         const diff = tT - yT;
-        if (total === 0) status.innerText = "ANALYZER READY";
+        if(!tot) { status.innerText = "READY"; status.className = "status-pill"; }
         else if (diff > 0) { status.innerText = "PROFIT: +" + diff.toLocaleString(); status.className = "status-pill win-state"; }
         else if (diff < 0) { status.innerText = "LOSS: " + diff.toLocaleString(); status.className = "status-pill loss-state"; }
-        else { status.innerText = "EQUAL EXCHANGE"; status.className = "status-pill"; }
+        else { status.innerText = "EQUAL"; status.className = "status-pill"; }
     }
     render();
 </script>
