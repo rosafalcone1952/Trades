@@ -60,64 +60,72 @@
     let target = 'you'; let yItems = []; let tItems = [];
     
     const data = [
-        // TOP TIER
-        {n:"skibidi toilet", v:0, u:"N/A", d:"Insane"}, 
-        {n:"Brush [1-10]", v:1900, u:"Currency", d:"Good"}, 
-        {n:"Blackmarket", v:1400, u:"Currency", d:"Bad"}, 
-        {n:"Tetro", v:1100, u:"Currency", d:"Bad"},
-        {n:"M134 [1-5]", v:955, u:"Currency", d:"Insane"}, 
-        {n:"M134 High [63+]", v:655, u:"Currency", d:"Insane"},
-        {n:"MP5 [1-5]", v:740, u:"Currency", d:"Insane"}, 
-        {n:"MP5 High [69+]", v:500, u:"Currency", d:"Insane"},
-        {n:"Kitty", v:350, u:"Currency", d:"Insane"}, 
-        {n:"M1911", v:340, u:"Currency", d:"Good"},
+        // BIG SERIES
+        {n:"Big [1–10]", v:13.75, u:"Currency", d:"Mid"},
+        {n:"Big [10–100]", v:10.5, u:"Currency", d:"Mid"},
+        {n:"Big [100–500]", v:8.25, u:"Currency", d:"Mid"},
+        {n:"Big [500–1000]", v:6.75, u:"Currency", d:"Mid"},
+        {n:"Big [1000–2000]", v:5.5, u:"Currency", d:"Mid"},
+        {n:"Big [2000–3000]", v:4.25, u:"Currency", d:"Mid"},
+        {n:"Big [3000–4000]", v:3.5, u:"Currency", d:"Mid"},
+        {n:"Big [4000– ]", v:3, u:"Currency", d:"Mid"},
 
-        // CHOCOS & BEARS (NEW)
-        {n:"Chocos", v:65, u:"Currency", d:"Good"}, 
-        {n:"Bear [1-10]", v:57.5, u:"Currency", d:"Good"}, 
-        {n:"Bear [10-100]", v:54, u:"Currency", d:"Good"},
-        {n:"Bear [100-200]", v:51, u:"Currency", d:"Good"},
-        {n:"Bear [200-300]", v:49, u:"Currency", d:"Good"},
-        {n:"Bear [300+]", v:47.5, u:"Currency", d:"Good"},
+        // SPACIAL SERIES
+        {n:"Spacial [1–10]", v:10, u:"Currency", d:"Bad"},
+        {n:"Spacial [10–100]", v:7.5, u:"Currency", d:"Bad"},
+        {n:"Spacial [100–500]", v:5.25, u:"Currency", d:"Bad"},
+        {n:"Spacial [500–1000]", v:4.1, u:"Currency", d:"Bad"},
+        {n:"Spacial [1000–2000]", v:3.25, u:"Currency", d:"Bad"},
+        {n:"Spacial [2000–3000]", v:2.5, u:"Currency", d:"Bad"},
+        {n:"Spacial [3000– ]", v:2, u:"Currency", d:"Bad"},
 
-        // NUCLEAR RANGE (NEW)
-        {n:"Nuclear [1-10]", v:52.5, u:"Currency", d:"Decent"}, 
-        {n:"Nuclear [10-50]", v:48, u:"Currency", d:"Decent"},
-        {n:"Nuclear [50-100]", v:45, u:"Currency", d:"Decent"},
-        {n:"Nuclear [100-200]", v:40, u:"Currency", d:"Decent"},
-        {n:"Nuclear [200-300]", v:36, u:"Currency", d:"Decent"},
-        {n:"Nuclear [300-400]", v:33, u:"Currency", d:"Decent"},
-        {n:"Nuclear [400+]", v:30, u:"Currency", d:"Decent"},
+        // SYNTH SERIES
+        {n:"Synth [1–10]", v:8.75, u:"Currency", d:"Bad"},
+        {n:"Synth [10–100]", v:6.2, u:"Currency", d:"Bad"},
+        {n:"Synth [100–500]", v:4.5, u:"Currency", d:"Bad"},
+        {n:"Synth [500–1000]", v:3.1, u:"Currency", d:"Bad"},
+        {n:"Synth [1000–2000]", v:2, u:"Currency", d:"Bad"},
 
-        // CYBERFLYS & SPECIALS (NEW)
-        {n:"Cyberfly (BLK)", v:40, u:"Currency", d:"Good"}, 
-        {n:"Mecha", v:19, u:"Currency", d:"Decent"}, 
-        {n:"Cyberfly [RED]", v:20, u:"Currency", d:"Decent"}, 
-        {n:"Cyberfly (BLU)", v:18, u:"Currency", d:"Decent"},
-        {n:"Cyberfly [PUR]", v:18, u:"Currency", d:"Decent"},
-        {n:"Cyberfly [ORG]", v:15, u:"Currency", d:"Mid"},
-        {n:"Cyberfly [PNK]", v:15, u:"Currency", d:"Mid"},
-        {n:"Cyberfly [GRN]", v:12, u:"Currency", d:"Mid"},
-        {n:"Cyberfly [YLW]", v:12, u:"Currency", d:"Mid"},
-        {n:"Envoided", v:9.75, u:"Currency", d:"Decent"},
-        {n:"Death", v:15, u:"Currency", d:"Bad"},
-        {n:"Runic", v:8, u:"Currency", d:"Decent"}, 
-        {n:"Pneumatic", v:7, u:"Currency", d:"Mid"}, 
-        {n:"Everfrost", v:6, u:"Currency", d:"Mid"},
-        {n:"Mutation", v:3.5, u:"Currency", d:"Mid"},
+        // CHESS SERIES
+        {n:"Chess [1–10]", v:6.25, u:"Currency", d:"Horrible"},
+        {n:"Chess [10–100]", v:4.1, u:"Currency", d:"Horrible"},
+        {n:"Chess [100–500]", v:2.75, u:"Currency", d:"Horrible"},
+        {n:"Chess [500–1000]", v:1.8, u:"Currency", d:"Horrible"},
+        {n:"Chess [1000–1400]", v:1.1, u:"Currency", d:"Horrible"},
+        {n:"Chess [1400– ]", v:0.75, u:"Currency", d:"Horrible"},
 
-        // OTHERS
-        {n:"Korone [1-10]", v:65, u:"Currency", d:"Good"}, 
-        {n:"Big [1-10]", v:13.75, u:"Currency", d:"Mid"}, 
-        {n:"Roadster", v:3.25, u:"Currency", d:"Good"}, 
-        {n:"Earth", v:1, u:"Currency", d:"Mid"}, 
+        // X RAW SERIES
+        {n:"X Raw [1–10]", v:5, u:"Currency", d:"Bad"},
+        {n:"X Raw [10–100]", v:3.8, u:"Currency", d:"Bad"},
+        {n:"X Raw [100–500]", v:2.2, u:"Currency", d:"Bad"},
+        {n:"X Raw [500– ]", v:1.5, u:"Currency", d:"Bad"},
+
+        // NEW STANDALONES
+        {n:"Earth", v:1, u:"Currency", d:"Mid"},
         {n:"Reactor", v:1.1, u:"Currency", d:"Good"},
-        
-        // BLOXES
-        {n:"Champion", v:6.25, u:"Bloxes", d:"Good"}, 
-        {n:"Gold", v:6.25, u:"Bloxes", d:"Good"}, 
-        {n:"Dos", v:5, u:"Bloxes", d:"Decent"}, 
-        {n:"Chains", v:3.5, u:"Bloxes", d:"Good"}
+        {n:"Chains", v:3.5, u:"Bloxes", d:"Good"},
+        {n:"Karat", v:4.2, u:"Currency", d:"Good"},
+        {n:"Platinum", v:3.8, u:"Currency", d:"Good"},
+        {n:"Za Warudo", v:3.25, u:"Currency", d:"Decent"},
+        {n:"Accelerator", v:0.2, u:"Currency", d:"Mid"},
+        {n:"Chaser", v:1.45, u:"Currency", d:"Decent"},
+        {n:"Aoi", v:0.9, u:"Currency", d:"Mid"},
+        {n:"PopP", v:0.3, u:"Currency", d:"Bad"},
+        {n:"Dumbfounded", v:0.15, u:"Currency", d:"Bad"},
+        {n:"Poison", v:0.8, u:"Currency", d:"Mid"},
+        {n:"Spooky Slash", v:1.2, u:"Currency", d:"Good"},
+        {n:"Diamond", v:0.65, u:"Currency", d:"Mid"},
+        {n:"Roux Vuitton", v:12.5, u:"Currency", d:"Insane"},
+        {n:"Meltdown", v:2.1, u:"Currency", d:"Good"},
+        {n:"Aperture", v:0.15, u:"Currency", d:"Bad"},
+        {n:"Enchanted", v:4.75, u:"Currency", d:"Good"},
+
+        // PREVIOUS ESSENTIALS
+        {n:"skibidi toilet", v:0, u:"N/A", d:"Insane"},
+        {n:"Kitty", v:350, u:"Currency", d:"Insane"},
+        {n:"Chocos", v:65, u:"Currency", d:"Good"},
+        {n:"Bear [1-10]", v:57.5, u:"Currency", d:"Good"},
+        {n:"Nuclear [1-10]", v:52.5, u:"Currency", d:"Decent"}
     ];
 
     function calc(v, d, u) {
@@ -150,8 +158,7 @@
 
     function add(n, v, d, u) {
         const val = calc(parseFloat(v), d, u);
-        const disp = u === "N/A" ? "N/A" : val.toFixed(2);
-        if (target === 'you') yItems.push({n, val, u, disp}); else tItems.push({n, val, u, disp});
+        if (target === 'you') yItems.push({n, val, u}); else tItems.push({n, val, u});
         upd();
     }
 
