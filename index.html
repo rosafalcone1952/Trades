@@ -3,201 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GLOVE ANALYST PRO v8</title>
+    <title>GLOVE MASTER: CYBER-VOID</title>
     <style>
-        :root { --p: #00f2ff; --s: #7000ff; --win: #00ff88; --loss: #ff3e3e; --bg: #08080a; --card: #121216; --blox: #ffb800; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #e0e0e0; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
-        
-        .header { width: 100%; max-width: 900px; text-align: center; margin-bottom: 20px; }
-        .meter-container { width: 100%; height: 8px; background: #1a1a1f; border-radius: 10px; margin: 15px 0; overflow: hidden; display: flex; border: 1px solid #222; }
-        #meter-left { width: 50%; background: var(--p); transition: 0.6s cubic-bezier(0.2, 1, 0.3, 1); }
-        #meter-right { width: 50%; background: var(--s); transition: 0.6s cubic-bezier(0.2, 1, 0.3, 1); }
-        
-        .status-pill { padding: 8px 24px; border-radius: 30px; font-weight: 800; font-size: 0.8em; letter-spacing: 1.5px; border: 1px solid #333; display: inline-block; background: #000; }
-        .win-state { color: var(--win); border-color: var(--win); box-shadow: 0 0 15px rgba(0,255,136,0.2); }
-        .loss-state { color: var(--loss); border-color: var(--loss); box-shadow: 0 0 15px rgba(255,62,62,0.2); }
-
-        .workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 900px; }
-        .side-panel { background: var(--card); border-radius: 16px; padding: 15px; border: 1px solid #222; }
-        .total-display { font-size: 2.4em; font-weight: 900; color: #fff; margin-bottom: 10px; font-variant-numeric: tabular-nums; }
-        
-        .item-list { display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; }
-        .trade-item { background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 8px; display: flex; justify-content: space-between; font-size: 0.85em; border: 1px solid rgba(255,255,255,0.05); }
-        .btn-rm { color: var(--loss); cursor: pointer; font-weight: bold; margin-left: 10px; }
-
-        .db-section { width: 100%; max-width: 900px; margin-top: 25px; }
-        .search-input { width: 100%; padding: 14px; background: var(--card); border: 1px solid #333; border-radius: 12px; color: #fff; box-sizing: border-box; margin-bottom: 15px; }
-        
-        .filter-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none; }
-        .f-tag { padding: 8px 16px; background: #16161c; border: 1px solid #222; border-radius: 8px; font-size: 0.75em; cursor: pointer; white-space: nowrap; color: #777; font-weight: 700; }
-        .f-tag.active { border-color: var(--p); color: var(--p); background: rgba(0,242,255,0.1); }
-
-        .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; background: #000; padding: 15px; border-radius: 16px; max-height: 400px; overflow-y: auto; border: 1px solid #222; }
-        .card { background: var(--card); border: 1px solid #222; padding: 12px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
-        .card:hover { transform: translateY(-2px); border-color: #444; }
-        .card b { display: block; font-size: 1.2em; margin-bottom: 4px; }
-        .card.is-blox b { color: var(--blox); }
-        .card.is-curr b { color: var(--win); }
-        .card span { font-size: 0.7em; opacity: 0.6; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-        .side-switcher { display: flex; gap: 5px; margin-bottom: 15px; background: #000; padding: 5px; border-radius: 10px; border: 1px solid #222; }
-        .side-btn { flex: 1; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 800; background: transparent; color: #444; }
-        .side-btn.active.y { background: var(--p); color: #000; }
-        .side-btn.active.t { background: var(--s); color: #fff; }
+        :root { --p: #00f2ff; --s: #7000ff; --win: #00ff88; --loss: #ff3e3e; --bg: #030303; }
+        body { font-family: 'Orbitron', sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 15px; letter-spacing: 1px; }
+        .banner { width: 100%; padding: 30px; border-radius: 20px; text-align: center; font-size: 2.2em; font-weight: 900; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); text-transform: uppercase; transition: 0.5s; position: relative; overflow: hidden; }
+        .banner::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(transparent, var(--p), transparent 30%); animation: rotate 4s linear infinite; z-index: -1; opacity: 0.3; }
+        @keyframes rotate { 100% { transform: rotate(360deg); } }
+        .win-glow { border-color: var(--win); color: var(--win); box-shadow: 0 0 30px rgba(0,255,136,0.2); }
+        .loss-glow { border-color: var(--loss); color: var(--loss); box-shadow: 0 0 30px rgba(255,62,62,0.2); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; backdrop-filter: blur(15px); box-shadow: inset 0 0 20px rgba(255,255,255,0.02); }
+        .val { font-size: 3em; font-weight: 900; text-align: center; margin: 10px 0; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .search-box { width: 100%; padding: 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--p); border-radius: 15px; color: #fff; font-size: 1.2em; outline: none; margin-bottom: 15px; transition: 0.3s; }
+        .search-box:focus { box-shadow: 0 0 15px var(--p); }
+        .t-row { display: flex; gap: 10px; margin-bottom: 20px; }
+        .btn { flex: 1; padding: 15px; border: none; border-radius: 10px; cursor: pointer; font-weight: 900; text-transform: uppercase; transition: 0.3s; }
+        .inv { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; max-height: 500px; overflow-y: auto; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 15px; }
+        .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .card:hover { transform: translateY(-5px); border-color: var(--p); background: rgba(0,242,255,0.05); }
+        .card b { display: block; font-size: 1.3em; color: var(--win); margin: 5px 0; }
+        .tag { font-size: 0.7em; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); color: #aaa; text-transform: uppercase; }
+        .item { background: rgba(255,255,255,0.05); padding: 12px; margin: 8px 0; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid; font-size: 0.9em; }
+        .rem { color: var(--loss); font-weight: 900; cursor: pointer; font-size: 1.2em; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-thumb { background: var(--p); border-radius: 10px; }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="header">
-        <div id="status" class="status-pill">SYSTEM LOADED</div>
-        <div class="meter-container">
-            <div id="meter-left"></div>
-            <div id="meter-right"></div>
+    <div id="banner" class="banner">System Ready</div>
+
+    <div class="grid">
+        <div class="panel">
+            <p style="text-align:center; color:var(--p); margin:0; font-size:0.8em;">PLAYER INGRESS</p>
+            <div id="yTotal" class="val" style="color:var(--p)">0.00</div>
+            <div id="yList"></div>
+        </div>
+        <div class="panel">
+            <p style="text-align:center; color:var(--s); margin:0; font-size:0.8em;">TARGET OFFER</p>
+            <div id="tTotal" class="val" style="color:var(--s)">0.00</div>
+            <div id="tList"></div>
         </div>
     </div>
 
-    <div class="workspace">
-        <div class="side-panel">
-            <div style="font-size: 0.7em; color: #555; font-weight: 900;">YOUR OFFER</div>
-            <div id="yTotal" class="total-display">0</div>
-            <div id="yList" class="item-list"></div>
-        </div>
-        <div class="side-panel">
-            <div style="font-size: 0.7em; color: #555; font-weight: 900;">THEIR OFFER</div>
-            <div id="tTotal" class="total-display">0</div>
-            <div id="tList" class="item-list"></div>
-        </div>
+    <input type="text" id="search" class="search-box" placeholder="SCANNING DATABASE..." onkeyup="render()">
+    
+    <div class="t-row">
+        <button id="btnY" class="btn" style="background:var(--p); color:#000;" onclick="setT('you')">PLAYER SIDE</button>
+        <button id="btnT" class="btn" style="background:#222; color:#fff;" onclick="setT('them')">TARGET SIDE</button>
     </div>
 
-    <div class="db-section">
-        <div class="side-switcher">
-            <button id="btnY" class="side-btn active y" onclick="setSide('y')">ADDING TO YOU</button>
-            <button id="btnT" class="side-btn t" onclick="setSide('t')">ADDING TO THEM</button>
-        </div>
-        
-        <input type="text" id="search" class="search-input" placeholder="Search any glove..." onkeyup="render()">
-        
-        <div class="filter-bar">
-            <div class="f-tag active" onclick="setFilter('all', this)">ALL GLOVES</div>
-            <div class="f-tag" onclick="setFilter('god', this)">GOD TIERS</div>
-            <div class="f-tag" onclick="setFilter('blox', this)">BLOX CURRENCY</div>
-            <div class="f-tag" onclick="setFilter('low', this)">LOW-TIER</div>
-        </div>
-
-        <div id="inv" class="inventory-grid"></div>
-    </div>
+    <div id="inv" class="inv"></div>
 
 <script>
-    let activeSide = 'y';
-    let filter = 'all';
-    let yItems = [];
-    let tItems = [];
-
+    let target = 'you'; let yItems = []; let tItems = [];
+    
     const data = [
-        // GOD TIERS / HIGHEST CURRENCY
-        {n:"Brush [1-10]", v:1900, c:"god"}, {n:"Blackmarket", v:1400, c:"god"}, {n:"Tetro", v:1100, c:"god"},
-        {n:"M134 [1-5]", v:955, c:"god"}, {n:"M134 [6-10]", v:900, c:"god"}, {n:"M134 Low [11-36]", v:805, c:"god"},
-        {n:"M134 Mid [37-62]", v:735, c:"god"}, {n:"M134 High [63+]", v:655, c:"god"},
-        {n:"MP5 [1-5]", v:740, c:"god"}, {n:"MP5 [6-10]", v:665, c:"god"}, {n:"MP5 Low [11-39]", v:565, c:"god"},
-        {n:"MP5 Mid [40-68]", v:540, c:"god"}, {n:"MP5 High [69+]", v:500, c:"god"},
-        {n:"BIGGER [1-5]", v:595, c:"god"}, {n:"BIGGER [6-10]", v:540, c:"god"}, {n:"BIGGER Low [11-40]", v:490, c:"god"},
-        {n:"Runes [1-5]", v:575, c:"god"}, {n:"Kitty", v:350, c:"god"}, {n:"M1911", v:340, c:"god"},
-        
-        // FROST / ERADESE / CHAINSAW
-        {n:"Chainsaw [1-5]", v:295, c:"god"}, {n:"Chainsaw [6-10]", v:275, c:"god"},
-        {n:"Eradese [1-5]", v:280, c:"god"}, {n:"Eradese [6-10]", v:255, c:"god"},
-        {n:"Frostbite [1-5]", v:270, c:"god"}, {n:"Frostbite [6-10]", v:250, c:"god"},
-
-        // BLOX CURRENCY ITEMS
-        {n:"Champion", v:6.25, c:"blox", b:true}, {n:"Gold", v:6.25, c:"blox", b:true}, {n:"Dos", v:5, c:"blox", b:true},
-        {n:"Chains", v:3.5, c:"blox", b:true}, {n:"Blueprint", v:3.5, c:"blox", b:true}, {n:"Flashstep", v:3, c:"blox", b:true},
-        {n:"Cursed", v:3, c:"blox", b:true}, {n:"M68", v:3, c:"blox", b:true}, {n:"Scales", v:2.5, c:"blox", b:true},
-        {n:"Builderman", v:2.5, c:"blox", b:true}, {n:"Slaughter", v:2.5, c:"blox", b:true}, {n:"Sapphire", v:2.25, c:"blox", b:true},
-        {n:"Grim", v:2, c:"blox", b:true}, {n:"Vampy", v:2, c:"blox", b:true}, {n:"Robux", v:2, c:"blox", b:true},
-        {n:"Tux", v:2, c:"blox", b:true}, {n:"Magnetron", v:1.8, c:"blox", b:true}, {n:"Desolate", v:1.8, c:"blox", b:true},
-        {n:"Exodus", v:1.8, c:"blox", b:true}, {n:"Evilseer", v:1.6, c:"blox", b:true}, {n:"Megalodon", v:1.6, c:"blox", b:true},
-        {n:"Murder", v:1.6, c:"blox", b:true}, {n:"Pumpky", v:1.6, c:"blox", b:true}, {n:"Mirage", v:1.5, c:"blox", b:true},
-        {n:"Warning", v:1.4, c:"blox", b:true}, {n:"Hologram", v:1.4, c:"blox", b:true}, {n:"Gifty", v:1.4, c:"blox", b:true},
-        {n:"Fleurs", v:1.4, c:"blox", b:true}, {n:"Beeeee", v:1.4, c:"blox", b:true}, {n:"Neon", v:1.2, c:"blox", b:true},
-        {n:"Banana", v:1.2, c:"blox", b:true}, {n:"Pixel", v:1.2, c:"blox", b:true}, {n:"BloxVuitton", v:1, c:"blox", b:true},
-        {n:"Flames", v:1, c:"blox", b:true}, {n:"Yin Yang", v:1, c:"blox", b:true}, {n:"Vozenilek", v:1, c:"blox", b:true},
-        {n:"Emerald", v:1, c:"blox", b:true}, {n:"Ruby", v:0.75, c:"blox", b:true}, {n:"Punk", v:0.75, c:"blox", b:true},
-        {n:"Uno", v:0.5, c:"blox", b:true}, {n:"Full Metal", v:0.5, c:"blox", b:true},
-
-        // SERIALS / LOW-TIER
-        {n:"Violin [1-10]", v:10, c:"low"}, {n:"Violin [10-50]", v:6.25, c:"low"}, {n:"Violin [50-100]", v:5, c:"low"},
-        {n:"Violin [100-200]", v:3.75, c:"low"}, {n:"Violin [200+]", v:2.5, c:"low"},
-        {n:"Wildcard", v:3.75, c:"low"}, {n:"Roadster", v:3.25, c:"low"}, {n:"Dubstep", v:2.5, c:"low"},
-        {n:"Poopatary", v:1.5, c:"low"}, {n:"Core [BLK]", v:1.5, c:"low"}, {n:"Purgatory", v:1.25, c:"low"},
-        {n:"Dragon Slayer", v:1, c:"low"}, {n:"Bloxy", v:0.75, c:"low"}, {n:"Primesoul", v:0.25, c:"low"},
-        {n:"Void", v:0.25, c:"low"}, {n:"Amethyst", v:0.2, c:"low"}, {n:"Ciel", v:0.45, c:"low"}
+        {n:"skibidi toilet", v:0, u:"N/A", d:"Insane"}, 
+        {n:"Brush [1-10]", v:1900, u:"Currency", d:"Good"}, 
+        {n:"Blackmarket", v:1400, u:"Currency", d:"Bad"}, 
+        {n:"Tetro", v:1100, u:"Currency", d:"Bad"},
+        {n:"M134 [1-5]", v:955, u:"Currency", d:"Insane"}, 
+        {n:"M134 High [63+]", v:655, u:"Currency", d:"Insane"},
+        {n:"MP5 [1-5]", v:740, u:"Currency", d:"Insane"}, 
+        {n:"MP5 High [69+]", v:500, u:"Currency", d:"Insane"},
+        {n:"Kitty", v:350, u:"Currency", d:"Insane"}, 
+        {n:"M1911", v:340, u:"Currency", d:"Good"},
+        {n:"Chocos", v:65, u:"Currency", d:"Good"}, 
+        {n:"Bear [1-10]", v:57.5, u:"Currency", d:"Good"}, 
+        {n:"Nuclear [1-10]", v:52.5, u:"Currency", d:"Decent"}, 
+        {n:"Cyberfly [BLK]", v:40, u:"Currency", d:"Good"}, 
+        {n:"Mecha", v:19, u:"Currency", d:"Decent"}, 
+        {n:"Cyberfly [RED]", v:20, u:"Currency", d:"Decent"}, 
+        {n:"Envoided", v:9.75, u:"Currency", d:"Decent"},
+        {n:"Runic", v:8, u:"Currency", d:"Decent"}, 
+        {n:"Pneumatic", v:7, u:"Currency", d:"Mid"}, 
+        {n:"Mutation", v:3.5, u:"Currency", d:"Mid"},
+        {n:"Earth", v:1, u:"Currency", d:"Mid"}, 
+        {n:"Reactor", v:1.1, u:"Currency", d:"Good"}, 
+        {n:"Champion", v:6.25, u:"Bloxes", d:"Good"}, 
+        {n:"Gold", v:6.25, u:"Bloxes", d:"Good"}
     ];
 
-    function setSide(s) {
-        activeSide = s;
-        document.getElementById('btnY').classList.toggle('active', s==='y');
-        document.getElementById('btnT').classList.toggle('active', s==='t');
+    function calc(v, d, u) {
+        if (u === "N/A") return 0;
+        let base = (u === "Bloxes") ? v * 0.05 : v;
+        let m = d.toLowerCase();
+        if (m.includes("insane")) return base * 1.1;
+        if (m.includes("good")) return base * 1.05;
+        if (m.includes("bad") || m.includes("horrible")) return base * 0.9;
+        return base;
     }
 
-    function setFilter(f, el) {
-        filter = f;
-        document.querySelectorAll('.f-tag').forEach(t => t.classList.remove('active'));
-        el.classList.add('active');
+    function setT(t) {
+        target = t;
+        document.getElementById('btnY').style.background = target === 'you' ? 'var(--p)' : '#222';
+        document.getElementById('btnY').style.color = target === 'you' ? '#000' : '#fff';
+        document.getElementById('btnT').style.background = target === 'them' ? 'var(--s)' : '#222';
         render();
     }
 
     function render() {
         const q = document.getElementById('search').value.toLowerCase();
-        document.getElementById('inv').innerHTML = data
-            .filter(i => (filter==='all' || i.c === filter) && i.n.toLowerCase().includes(q))
-            .sort((a,b) => b.v - a.v)
-            .map(i => `
-                <div class="card ${i.b ? 'is-blox':'is-curr'}" onclick="add('${i.n}', ${i.v}, ${i.b||false})">
-                    <b>${i.v}${i.b ? 'B' : ''}</b>
-                    <span>${i.n}</span>
-                </div>
-            `).join('');
+        document.getElementById('inv').innerHTML = data.filter(i => i.n.toLowerCase().includes(q)).sort((a,b)=>b.v-a.v).map(i => `
+            <div class="card" onclick="add('${i.n}', '${i.v}', '${i.d}', '${i.u}')">
+                <span class="tag">${i.u}</span><br>
+                ${i.n}<br><b>${i.v}</b>
+            </div>
+        `).join('');
     }
 
-    function add(n, v, b) {
-        const list = activeSide === 'y' ? yItems : tItems;
-        list.push({n, v, b});
-        update();
+    function add(n, v, d, u) {
+        const val = calc(parseFloat(v), d, u);
+        if (target === 'you') yItems.push({n, val, u}); else tItems.push({n, val, u});
+        upd();
     }
 
-    function rm(side, idx) {
-        if(side==='y') yItems.splice(idx,1); else tItems.splice(idx,1);
-        update();
+    function remove(side, i) {
+        if (side === 'y') yItems.splice(i, 1); else tItems.splice(i, 1);
+        upd();
     }
 
-    function update() {
-        const sum = (arr) => arr.reduce((a,b) => a + b.v, 0);
-        const yT = sum(yItems);
-        const tT = sum(tItems);
+    function upd() {
+        const yT = yItems.reduce((a, b) => a + b.val, 0);
+        const tT = tItems.reduce((a, b) => a + b.val, 0);
+        document.getElementById('yTotal').innerText = yT.toFixed(2);
+        document.getElementById('tTotal').innerText = tT.toFixed(2);
         
-        document.getElementById('yTotal').innerText = yT.toLocaleString();
-        document.getElementById('tTotal').innerText = tT.toLocaleString();
+        document.getElementById('yList').innerHTML = yItems.map((it, i) => `<div class="item" style="border-left-color:var(--p)">${it.n} <span class="tag">${it.u}</span> <span class="rem" onclick="remove('y', ${i})">✕</span></div>`).join('');
+        document.getElementById('tList').innerHTML = tItems.map((it, i) => `<div class="item" style="border-left-color:var(--s)">${it.n} <span class="tag">${it.u}</span> <span class="rem" onclick="remove('t', ${i})">✕</span></div>`).join('');
         
-        const tot = yT + tT;
-        document.getElementById('meter-left').style.width = tot ? (yT/tot*100)+'%' : '50%';
-        document.getElementById('meter-right').style.width = tot ? (tT/tot*100)+'%' : '50%';
-
-        const buildList = (arr, s) => arr.map((it, i) => `
-            <div class="trade-item">
-                ${it.n} <span style="color:${it.b?'var(--blox)':'var(--win)'}">${it.v}${it.b?'B':''} <span class="btn-rm" onclick="rm('${s}',${i})">✕</span></span>
-            </div>`).join('');
-
-        document.getElementById('yList').innerHTML = buildList(yItems, 'y');
-        document.getElementById('tList').innerHTML = buildList(tItems, 't');
-
-        const status = document.getElementById('status');
-        const diff = tT - yT;
-        if(!tot) { status.innerText = "READY"; status.className = "status-pill"; }
-        else if (diff > 0) { status.innerText = "PROFIT: +" + diff.toLocaleString(); status.className = "status-pill win-state"; }
-        else if (diff < 0) { status.innerText = "LOSS: " + diff.toLocaleString(); status.className = "status-pill loss-state"; }
-        else { status.innerText = "EQUAL"; status.className = "status-pill"; }
+        const b = document.getElementById('banner'); const d = tT - yT;
+        if (yT === 0 && tT === 0) { b.innerText = "Scanner Offline"; b.className = "banner"; }
+        else if (d > 0.1) { b.innerText = "PROFIT DETECTED (+" + d.toFixed(2) + ")"; b.className = "banner win-glow"; }
+        else if (d < -0.1) { b.innerText = "DEFICIT WARNING (" + d.toFixed(2) + ")"; b.className = "banner loss-glow"; }
+        else { b.innerText = "STABLE TRADE"; b.className = "banner fair-glow"; }
     }
-    render();
+    setT('you'); render();
 </script>
 </body>
 </html>
