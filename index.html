@@ -3,144 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GLOVE GOD V13: TITAN</title>
+    <title>GLOVE GOD V14: OVERDRIVE</title>
     <style>
-        :root { --p: #00f2ff; --s: #7000ff; --win: #00ff88; --loss: #ff3e3e; --bg: #020202; --card: #0a0a0a; }
+        :root { --p: #00f2ff; --s: #bc00ff; --win: #00ffa2; --loss: #ff2e5b; --bg: #050506; --card: rgba(20, 20, 22, 0.8); }
         * { box-sizing: border-box; font-family: 'Orbitron', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: #fff; margin: 0; padding: 10px; overflow-x: hidden; }
+        
+        body { 
+            background: radial-gradient(circle at top, #101015 0%, var(--bg) 100%); 
+            color: #fff; margin: 0; padding: 15px; overflow-x: hidden; min-height: 100vh;
+        }
 
-        .banner { width: 100%; padding: 20px; border-radius: 12px; text-align: center; font-size: 1.4rem; font-weight: 900; margin-bottom: 15px; border: 2px solid #222; text-transform: uppercase; transition: 0.4s; letter-spacing: 2px; }
-        .win-glow { border-color: var(--win); color: var(--win); box-shadow: 0 0 20px rgba(0,255,136,0.2); background: rgba(0,255,136,0.05); }
-        .loss-glow { border-color: var(--loss); color: var(--loss); box-shadow: 0 0 20px rgba(255,62,62,0.2); background: rgba(255,62,62,0.05); }
-        .fair-glow { border-color: var(--p); color: var(--p); box-shadow: 0 0 20px rgba(0,242,255,0.1); }
+        /* Smooth Scanner Header */
+        .scanner-top {
+            width: 100%; padding: 25px; border-radius: 20px; text-align: center;
+            font-size: 1.6rem; font-weight: 900; margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1); background: var(--card);
+            backdrop-filter: blur(10px); transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            letter-spacing: 4px; text-transform: uppercase; position: relative; overflow: hidden;
+        }
+        .scanner-top::after {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.03), transparent);
+            transform: rotate(45deg); animation: shine 3s infinite;
+        }
+        @keyframes shine { 0% { transform: translateX(-100%) rotate(45deg); } 100% { transform: translateX(100%) rotate(45deg); } }
+        
+        .win-glow { border-color: var(--win); color: var(--win); box-shadow: 0 0 30px rgba(0,255,162,0.2); }
+        .loss-glow { border-color: var(--loss); color: var(--loss); box-shadow: 0 0 30px rgba(255,46,91,0.2); }
+        .fair-glow { border-color: var(--p); color: var(--p); box-shadow: 0 0 30px rgba(0,242,255,0.2); }
 
-        .trade-layout { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
-        .side { flex: 1; min-width: 280px; background: var(--card); border: 1px solid #1a1a1a; border-radius: 15px; padding: 15px; border-top: 3px solid #333; }
-        .val-display { font-size: 2.8rem; text-align: center; font-weight: 900; margin: 5px 0; font-family: monospace; text-shadow: 0 0 8px currentColor; }
+        /* Trade Panels */
+        .trade-grid { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; }
+        .panel { 
+            flex: 1; min-width: 300px; background: var(--card); border: 1px solid rgba(255,255,255,0.05); 
+            border-radius: 24px; padding: 20px; transition: 0.4s; position: relative;
+        }
+        .val-text { font-size: 3.5rem; text-align: center; font-weight: 900; margin: 10px 0; font-family: 'monospace'; }
 
-        .controls { position: sticky; top: 0; z-index: 1000; background: var(--bg); padding: 5px 0; margin-bottom: 15px; }
-        .search-field { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #333; background: #000; color: #fff; font-size: 1rem; margin-bottom: 10px; }
-        .btn-grp { display: flex; gap: 8px; }
-        .side-btn { flex: 1; padding: 14px; border-radius: 8px; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; transition: 0.2s; font-size: 0.8rem; }
+        /* Floating Controls */
+        .search-area { position: sticky; top: 10px; z-index: 100; margin-bottom: 25px; }
+        .search-input { 
+            width: 100%; padding: 20px; border-radius: 15px; border: 1px solid #333; 
+            background: rgba(0,0,0,0.8); color: #fff; font-size: 1.1rem; backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .side-toggle { display: flex; gap: 10px; margin-top: 10px; }
+        .tgl-btn { 
+            flex: 1; padding: 18px; border-radius: 12px; border: none; font-weight: 900; 
+            text-transform: uppercase; cursor: pointer; transition: 0.3s;
+        }
 
-        .inv-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; padding-bottom: 40px; }
-        .card { background: #080808; border: 1px solid #151515; padding: 12px; border-radius: 10px; text-align: center; cursor: pointer; }
-        .card b { display: block; font-size: 1.1rem; color: var(--win); margin: 4px 0; }
-        .tag { font-size: 0.5rem; padding: 2px 6px; background: #1a1a1a; border-radius: 3px; color: #888; text-transform: uppercase; }
+        /* Item Cards */
+        .inventory { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+        .item { 
+            background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 18px; 
+            border-radius: 18px; text-align: center; transition: 0.2s; cursor: pointer;
+        }
+        .item:hover { transform: translateY(-5px); border-color: var(--p); background: rgba(255,255,255,0.05); }
+        .item b { display: block; font-size: 1.4rem; color: var(--win); margin: 5px 0; }
+        .u-tag { font-size: 0.6rem; color: #666; text-transform: uppercase; border: 1px solid #333; padding: 2px 6px; border-radius: 4px; }
 
-        .list-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 6px; margin-top: 5px; font-size: 0.75rem; border-left: 3px solid; }
-        .del-btn { color: var(--loss); font-weight: 900; cursor: pointer; padding-left: 8px; }
+        .list-item { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: rgba(255,255,255,0.03); padding: 12px; border-radius: 10px; margin-top: 8px;
+            font-size: 0.85rem; border-left: 4px solid; animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        .rm-btn { color: var(--loss); font-weight: 900; cursor: pointer; padding: 5px; }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div id="status" class="banner fair-glow">TITAN SCANNER ACTIVE</div>
+    <div id="status" class="scanner-top fair-glow">Initializing System...</div>
 
-    <div class="trade-layout">
-        <div class="side" style="border-color: var(--p);">
-            <div id="yVal" class="val-display" style="color:var(--p)">0.00</div>
+    <div class="trade-grid">
+        <div class="panel" style="border-bottom: 5px solid var(--p);">
+            <div style="font-size: 0.7rem; color: #555; text-align: center; letter-spacing: 2px;">PLAYER SIDE</div>
+            <div id="yVal" class="val-text" style="color:var(--p)">0.00</div>
             <div id="yList"></div>
         </div>
-        <div class="side" style="border-color: var(--s);">
-            <div id="tVal" class="val-display" style="color:var(--s)">0.00</div>
+        <div class="panel" style="border-bottom: 5px solid var(--s);">
+            <div style="font-size: 0.7rem; color: #555; text-align: center; letter-spacing: 2px;">OPPONENT SIDE</div>
+            <div id="tVal" class="val-text" style="color:var(--s)">0.00</div>
             <div id="tList"></div>
         </div>
     </div>
 
-    <div class="controls">
-        <input type="text" id="query" class="search-field" placeholder="SEARCH CLASS X, S, AND MORE..." onkeyup="render()">
-        <div class="btn-grp">
-            <button id="btnY" class="side-btn" style="background:var(--p); color:#000" onclick="setSide('y')">Player Offer</button>
-            <button id="btnT" class="side-btn" style="background:#1a1a1a; color:#fff" onclick="setSide('t')">Them Offer</button>
+    <div class="search-area">
+        <input type="text" id="query" class="search-input" placeholder="SEARCH DATABASE (CLASS X/S/FLY)..." onkeyup="render()">
+        <div class="side-toggle">
+            <button id="btnY" class="tgl-btn" style="background:var(--p); color:#000" onclick="setSide('y')">Player</button>
+            <button id="btnT" class="tgl-btn" style="background:#151515; color:#fff" onclick="setSide('t')">Opponent</button>
         </div>
     </div>
 
-    <div id="inv" class="inv-container"></div>
+    <div id="inv" class="inventory"></div>
 
 <script>
     let side = 'y'; let yItems = []; let tItems = [];
     
-    // FULL DATABASE: CLASS X, S, A, B, C, D
     const data = [
-        // CLASS X / GOD TIER
+        // CLASS X - THE HEAVIES
         {n:"skibidi toilet", v:0, u:"N/A", d:"Insane"},
         {n:"Brush [1-10]", v:1900, u:"Currency", d:"Good"},
         {n:"Blackmarket", v:1400, u:"Currency", d:"Bad"},
         {n:"Tetro", v:1100, u:"Currency", d:"Bad"},
         {n:"M134 [1-5]", v:1015, u:"Currency", d:"Insane"},
-        {n:"M134 [6-10]", v:950, u:"Currency", d:"Insane"},
-        {n:"M134 Low [11-36]", v:890, u:"Currency", d:"Insane"},
-        {n:"M134 Mid [37-62]", v:800, u:"Currency", d:"Insane"},
         {n:"M134 High [63+]", v:700, u:"Currency", d:"Insane"},
-        
-        // CLASS S / ELITE TIER
         {n:"MP5 [1-5]", v:760, u:"Currency", d:"Insane"},
-        {n:"MP5 [6-10]", v:685, u:"Currency", d:"Insane"},
-        {n:"MP5 Low [11-39]", v:590, u:"Currency", d:"Insane"},
-        {n:"MP5 Mid [40-68]", v:550, u:"Currency", d:"Insane"},
         {n:"MP5 High [69+]", v:525, u:"Currency", d:"Insane"},
+        
+        // CLASS S - ELITES
         {n:"BIGGER [1-5]", v:625, u:"Currency", d:"Decent"},
-        {n:"BIGGER [6-10]", v:580, u:"Currency", d:"Decent"},
-        {n:"BIGGER Low [11-40]", v:525, u:"Currency", d:"Decent"},
-        {n:"BIGGER Mid [41-70]", v:425, u:"Currency", d:"Good"},
         {n:"BIGGER High [71+]", v:400, u:"Currency", d:"Good"},
         {n:"Runes [1-5]", v:575, u:"Currency", d:"Decent"},
-        {n:"Runes [6-10]", v:515, u:"Currency", d:"Decent"},
-        {n:"Runes Low [11-43]", v:465, u:"Currency", d:"Decent"},
-        {n:"Runes Mid [44-76]", v:405, u:"Currency", d:"Decent"},
         {n:"Runes High [77+]", v:345, u:"Currency", d:"Decent"},
-        
-        // MID-HIGH / CLASS A
+        {n:"Chainsaw [1-5]", v:340, u:"Currency", d:"Good"},
+        {n:"Chainsaw High [106+]", v:245, u:"Currency", d:"Good"},
         {n:"Kitty", v:400, u:"Currency", d:"Good"},
         {n:"M1911", v:350, u:"Currency", d:"Decent"},
-        {n:"Chainsaw [1-5]", v:340, u:"Currency", d:"Good"},
-        {n:"Chainsaw Low [11-58]", v:280, u:"Currency", d:"Good"},
         {n:"Frostbite [1-5]", v:300, u:"Currency", d:"Mid"},
-        {n:"Frostbite Low [11-47]", v:230, u:"Currency", d:"Mid"},
-        {n:"Eradese [1-5]", v:280, u:"Currency", d:"Good"},
-        {n:"Eradese High [71-100]", v:195, u:"Currency", d:"Good"},
-        {n:"Freezer [1-5]", v:210, u:"Currency", d:"Decent"},
-        {n:"Vortex [1-5]", v:190, u:"Currency", d:"Bad"},
-        {n:"X-RAGE [1-5]", v:190, u:"Currency", d:"Decent"},
-        {n:"X-RAGE [501+]", v:60, u:"Currency", d:"Good"},
         
-        // CLASS B / COLLECTOR
+        // THE CYBERFLY SPECTRUM
+        {n:"Cyberfly [BLK]", v:40, u:"Currency", d:"Good"},
+        {n:"Cyberfly [RED]", v:25, u:"Currency", d:"Decent"},
+        {n:"Cyberfly [CYAN]", v:35, u:"Currency", d:"Good"},
+        {n:"Cyberfly [LIME]", v:20, u:"Currency", d:"Decent"},
+        {n:"Cyberfly [PINK]", v:30, u:"Currency", d:"Good"},
+        {n:"Cyberfly [GOLD]", v:55, u:"Currency", d:"Insane"},
+        {n:"Cyberfly [WHITE]", v:45, u:"Currency", d:"Good"},
+        {n:"Cyberfly [PURP]", v:22, u:"Currency", d:"Mid"},
+        
+        // MIDS & LOWS
         {n:"Chocos", v:80, u:"Currency", d:"Good"},
         {n:"Korone [1-10]", v:70, u:"Currency", d:"Good"},
-        {n:"Korone [500+]", v:40, u:"Currency", d:"Good"},
-        {n:"Bear [1-10]", v:62.5, u:"Currency", d:"Good"},
         {n:"Nuclear [1-10]", v:52.5, u:"Currency", d:"Decent"},
-        {n:"Chronos [1-10]", v:45, u:"Currency", d:"Good"},
-        {n:"Cyberfly [BLK]", v:40, u:"Currency", d:"Good"},
-        {n:"Cyberfly [RED]", v:20, u:"Currency", d:"Decent"},
+        {n:"Chronos", v:45, u:"Currency", d:"Good"},
         {n:"Mecha", v:18, u:"Currency", d:"Decent"},
-        
-        // CLASS C & D / LOW TIER
         {n:"Big [1-10]", v:13.75, u:"Currency", d:"Mid"},
-        {n:"Spacial [1-10]", v:10, u:"Currency", d:"Bad"},
         {n:"Synth [1-10]", v:8.75, u:"Currency", d:"Bad"},
-        {n:"Violin [1-10]", v:10, u:"Currency", d:"Bad"},
-        {n:"Death", v:7.5, u:"Currency", d:"Mid"},
         {n:"Runic", v:8, u:"Currency", d:"Decent"},
-        {n:"Pneumatic", v:7, u:"Currency", d:"Mid"},
-        {n:"Everfrost", v:4.5, u:"Currency", d:"Mid"},
-        {n:"Roadster", v:3.25, u:"Currency", d:"Good"},
-        {n:"Dubstep", v:2.5, u:"Currency", d:"Decent"},
         {n:"Reactor", v:1.1, u:"Currency", d:"Good"},
         {n:"Earth", v:1, u:"Currency", d:"Mid"},
-        {n:"Aperture", v:0.15, u:"Currency", d:"Bad"},
-        {n:"Enchanted", v:0.15, u:"Currency", d:"Bad"},
         
-        // BLOXES (5% MULTIPLIER)
+        // BLOXES
         {n:"Champion", v:6.25, u:"Bloxes", d:"Good"},
         {n:"Gold", v:6.25, u:"Bloxes", d:"Good"},
         {n:"Dos", v:5, u:"Bloxes", d:"Decent"},
         {n:"Chains", v:3.5, u:"Bloxes", d:"Good"},
-        {n:"Wildcard", v:3.75, u:"Currency", d:"Bad"},
-        {n:"Slaughter", v:2.5, u:"Bloxes", d:"Good"},
-        {n:"Murder", v:1.6, u:"Bloxes", d:"Good"},
-        {n:"Full Metal", v:0.5, u:"Bloxes", d:"Good"}
+        {n:"Slaughter", v:2.5, u:"Bloxes", d:"Good"}
     ];
 
     function calculate(v, d, u) {
@@ -149,24 +161,24 @@
         let m = d.toLowerCase();
         if (m.includes("insane")) return base * 1.1;
         if (m.includes("good")) return base * 1.05;
-        if (m.includes("bad") || m.includes("horrible")) return base * 0.9;
+        if (m.includes("bad")) return base * 0.9;
         return base;
     }
 
     function setSide(s) {
         side = s;
-        document.getElementById('btnY').style.background = side === 'y' ? 'var(--p)' : '#1a1a1a';
+        document.getElementById('btnY').style.background = side === 'y' ? 'var(--p)' : '#151515';
         document.getElementById('btnY').style.color = side === 'y' ? '#000' : '#fff';
-        document.getElementById('btnT').style.background = side === 't' ? 'var(--s)' : '#1a1a1a';
+        document.getElementById('btnT').style.background = side === 't' ? 'var(--s)' : '#151515';
     }
 
     function render() {
         const q = document.getElementById('query').value.toLowerCase();
         document.getElementById('inv').innerHTML = data.filter(i => i.n.toLowerCase().includes(q)).sort((a,b)=>b.v-a.v).map(i => `
-            <div class="card" onclick="add('${i.n}', ${i.v}, '${i.d}', '${i.u}')">
-                <span class="tag">${i.u}</span>
+            <div class="item" onclick="add('${i.n}', ${i.v}, '${i.d}', '${i.u}')">
+                <span class="u-tag">${i.u}</span>
                 <b>${i.v}</b>
-                <div style="font-size:0.65rem; color:#888">${i.n}</div>
+                <div style="font-size:0.7rem; color:#888">${i.n}</div>
             </div>
         `).join('');
     }
@@ -183,14 +195,14 @@
         document.getElementById('yVal').innerText = yT.toFixed(2);
         document.getElementById('tVal').innerText = tT.toFixed(2);
         
-        document.getElementById('yList').innerHTML = yItems.map((it, i) => `<div class="list-row" style="border-color:var(--p)">${it.n} <span class="del-btn" onclick="yItems.splice(${i},1);update()">✕</span></div>`).join('');
-        document.getElementById('tList').innerHTML = tItems.map((it, i) => `<div class="list-row" style="border-color:var(--s)">${it.n} <span class="del-btn" onclick="tItems.splice(${i},1);update()">✕</span></div>`).join('');
+        document.getElementById('yList').innerHTML = yItems.map((it, i) => `<div class="list-item" style="border-color:var(--p)">${it.n} <span class="rm-btn" onclick="yItems.splice(${i},1);update()">✕</span></div>`).join('');
+        document.getElementById('tList').innerHTML = tItems.map((it, i) => `<div class="list-item" style="border-color:var(--s)">${it.n} <span class="rm-btn" onclick="tItems.splice(${i},1);update()">✕</span></div>`).join('');
         
         const b = document.getElementById('status'); const diff = tT - yT;
-        if (yT + tT === 0) { b.innerText = "TITAN SCANNER ACTIVE"; b.className = "banner fair-glow"; }
-        else if (diff > 0.05) { b.innerText = "PROFIT (+" + diff.toFixed(2) + ")"; b.className = "banner win-glow"; }
-        else if (diff < -0.05) { b.innerText = "LOSS (" + diff.toFixed(2) + ")"; b.className = "banner loss-glow"; }
-        else { b.innerText = "FAIR TRADE"; b.className = "banner fair-glow"; }
+        if (yT + tT === 0) { b.innerText = "OVERDRIVE SCANNER"; b.className = "scanner-top fair-glow"; }
+        else if (diff > 0.01) { b.innerText = "PROFIT (+" + diff.toFixed(2) + ")"; b.className = "scanner-top win-glow"; }
+        else if (diff < -0.01) { b.innerText = "LOSS (" + diff.toFixed(2) + ")"; b.className = "scanner-top loss-glow"; }
+        else { b.innerText = "FAIR OFFER"; b.className = "scanner-top fair-glow"; }
     }
     setSide('y'); render();
 </script>
