@@ -3,103 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GLOVE GOD V10: FULL ARSENAL</title>
+    <title>GLOVE GOD V13: TITAN</title>
     <style>
-        :root { --p: #00f2ff; --s: #7000ff; --win: #00ff88; --loss: #ff3e3e; --bg: #050505; --card: #121212; }
+        :root { --p: #00f2ff; --s: #7000ff; --win: #00ff88; --loss: #ff3e3e; --bg: #020202; --card: #0a0a0a; }
         * { box-sizing: border-box; font-family: 'Orbitron', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: #fff; margin: 0; padding: 10px; line-height: 1.4; }
-        
-        .header { position: sticky; top: 0; z-index: 100; background: rgba(5,5,5,0.9); backdrop-filter: blur(12px); padding: 10px 0; border-bottom: 1px solid #333; }
-        .status-box { width: 100%; padding: 18px; border-radius: 12px; text-align: center; font-size: 1.3rem; font-weight: 900; border: 2px solid #222; text-transform: uppercase; transition: 0.4s; }
-        .win { border-color: var(--win); color: var(--win); box-shadow: 0 0 20px rgba(0,255,136,0.2); }
-        .loss { border-color: var(--loss); color: var(--loss); box-shadow: 0 0 20px rgba(255,62,62,0.2); }
+        body { background: var(--bg); color: #fff; margin: 0; padding: 10px; overflow-x: hidden; }
 
-        .trade-container { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 15px; }
-        .side-panel { flex: 1; min-width: 280px; background: var(--card); border: 1px solid #222; border-radius: 16px; padding: 15px; }
-        .side-label { font-size: 0.7rem; letter-spacing: 2px; color: #666; text-align: center; margin-bottom: 5px; }
-        .total-val { font-size: 2.5rem; text-align: center; font-weight: 900; margin: 5px 0; font-family: monospace; }
+        .banner { width: 100%; padding: 20px; border-radius: 12px; text-align: center; font-size: 1.4rem; font-weight: 900; margin-bottom: 15px; border: 2px solid #222; text-transform: uppercase; transition: 0.4s; letter-spacing: 2px; }
+        .win-glow { border-color: var(--win); color: var(--win); box-shadow: 0 0 20px rgba(0,255,136,0.2); background: rgba(0,255,136,0.05); }
+        .loss-glow { border-color: var(--loss); color: var(--loss); box-shadow: 0 0 20px rgba(255,62,62,0.2); background: rgba(255,62,62,0.05); }
+        .fair-glow { border-color: var(--p); color: var(--p); box-shadow: 0 0 20px rgba(0,242,255,0.1); }
 
-        .controls { margin: 15px 0; }
-        .search-bar { width: 100%; padding: 16px; border-radius: 12px; border: 1px solid #333; background: #111; color: #fff; font-size: 1rem; margin-bottom: 10px; }
-        .btn-row { display: flex; gap: 8px; }
-        .mode-btn { flex: 1; padding: 14px; border-radius: 10px; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.75rem; transition: 0.2s; }
+        .trade-layout { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
+        .side { flex: 1; min-width: 280px; background: var(--card); border: 1px solid #1a1a1a; border-radius: 15px; padding: 15px; border-top: 3px solid #333; }
+        .val-display { font-size: 2.8rem; text-align: center; font-weight: 900; margin: 5px 0; font-family: monospace; text-shadow: 0 0 8px currentColor; }
 
-        .inv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(125px, 1fr)); gap: 10px; padding-bottom: 40px; }
-        .item-card { background: var(--card); border: 1px solid #222; padding: 12px; border-radius: 12px; text-align: center; cursor: pointer; }
-        .item-card:active { transform: scale(0.95); }
-        .item-card b { display: block; color: var(--win); font-size: 1.2rem; margin: 4px 0; }
-        .unit-pill { font-size: 0.55rem; color: #aaa; background: #000; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; border: 1px solid #222; }
+        .controls { position: sticky; top: 0; z-index: 1000; background: var(--bg); padding: 5px 0; margin-bottom: 15px; }
+        .search-field { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #333; background: #000; color: #fff; font-size: 1rem; margin-bottom: 10px; }
+        .btn-grp { display: flex; gap: 8px; }
+        .side-btn { flex: 1; padding: 14px; border-radius: 8px; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; transition: 0.2s; font-size: 0.8rem; }
 
-        .trade-list-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px; margin-top: 6px; font-size: 0.8rem; border-left: 4px solid; }
-        .x-btn { color: var(--loss); font-weight: 900; cursor: pointer; padding-left: 10px; }
+        .inv-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; padding-bottom: 40px; }
+        .card { background: #080808; border: 1px solid #151515; padding: 12px; border-radius: 10px; text-align: center; cursor: pointer; }
+        .card b { display: block; font-size: 1.1rem; color: var(--win); margin: 4px 0; }
+        .tag { font-size: 0.5rem; padding: 2px 6px; background: #1a1a1a; border-radius: 3px; color: #888; text-transform: uppercase; }
+
+        .list-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 6px; margin-top: 5px; font-size: 0.75rem; border-left: 3px solid; }
+        .del-btn { color: var(--loss); font-weight: 900; cursor: pointer; padding-left: 8px; }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="header">
-        <div id="status" class="status-box">System Ready</div>
-    </div>
+    <div id="status" class="banner fair-glow">TITAN SCANNER ACTIVE</div>
 
-    <div class="trade-container">
-        <div class="side-panel">
-            <div class="side-label">YOU GIVE</div>
-            <div id="yVal" class="total-val" style="color:var(--p)">0.00</div>
+    <div class="trade-layout">
+        <div class="side" style="border-color: var(--p);">
+            <div id="yVal" class="val-display" style="color:var(--p)">0.00</div>
             <div id="yList"></div>
         </div>
-        <div class="side-panel">
-            <div class="side-label">THEY GIVE</div>
-            <div id="tVal" class="total-val" style="color:var(--s)">0.00</div>
+        <div class="side" style="border-color: var(--s);">
+            <div id="tVal" class="val-display" style="color:var(--s)">0.00</div>
             <div id="tList"></div>
         </div>
     </div>
 
     <div class="controls">
-        <div class="btn-row">
-            <button id="btnY" class="mode-btn" style="background:var(--p); color:#000" onclick="setSide('y')">Add to You</button>
-            <button id="btnT" class="mode-btn" style="background:#222; color:#fff" onclick="setSide('t')">Add to Them</button>
+        <input type="text" id="query" class="search-field" placeholder="SEARCH CLASS X, S, AND MORE..." onkeyup="render()">
+        <div class="btn-grp">
+            <button id="btnY" class="side-btn" style="background:var(--p); color:#000" onclick="setSide('y')">Player Offer</button>
+            <button id="btnT" class="side-btn" style="background:#1a1a1a; color:#fff" onclick="setSide('t')">Them Offer</button>
         </div>
-        <input type="text" id="query" class="search-bar" placeholder="Search all gloves..." onkeyup="render()">
     </div>
 
-    <div id="inv" class="inv-grid"></div>
+    <div id="inv" class="inv-container"></div>
 
 <script>
     let side = 'y'; let yItems = []; let tItems = [];
     
-    // FULL DATABASE RESTORED
+    // FULL DATABASE: CLASS X, S, A, B, C, D
     const data = [
-        {n:"Brush [1-10]", v:1900, u:"Currency", d:"Good"}, {n:"Blackmarket", v:1400, u:"Currency", d:"Bad"}, {n:"Tetro", v:1100, u:"Currency", d:"Bad"},
-        {n:"M134 [1-5]", v:1015, u:"Currency", d:"Insane"}, {n:"M134 High [63+]", v:700, u:"Currency", d:"Insane"},
-        {n:"MP5 [1-5]", v:760, u:"Currency", d:"Insane"}, {n:"MP5 High [69+]", v:525, u:"Currency", d:"Insane"},
-        {n:"BIGGER [1-5]", v:625, u:"Currency", d:"Decent"}, {n:"BIGGER High [71+]", v:400, u:"Currency", d:"Good"},
-        {n:"Runes [1-5]", v:575, u:"Currency", d:"Decent"}, {n:"Runes High [77+]", v:345, u:"Currency", d:"Decent"},
-        {n:"Chainsaw [1-5]", v:340, u:"Currency", d:"Good"}, {n:"Chainsaw High [106+]", v:245, u:"Currency", d:"Good"},
-        {n:"Kitty", v:400, u:"Currency", d:"Good"}, {n:"M1911", v:350, u:"Currency", d:"Decent"},
-        {n:"Chocos", v:80, u:"Currency", d:"Good"}, {n:"Bear [1-10]", v:62.5, u:"Currency", d:"Good"}, {n:"Bear [300+]", v:50, u:"Currency", d:"Good"},
-        {n:"Nuclear [1-10]", v:52.5, u:"Currency", d:"Decent"}, {n:"Nuclear [400+]", v:30, u:"Currency", d:"Decent"},
-        {n:"Korone [1-10]", v:70, u:"Currency", d:"Good"}, {n:"Korone [500+]", v:40, u:"Currency", d:"Good"},
-        {n:"Chronos", v:45, u:"Currency", d:"Good"}, {n:"Mecha", v:18, u:"Currency", d:"Decent"},
-        {n:"Cyberfly [BLK]", v:40, u:"Currency", d:"Good"}, {n:"Cyberfly [RED]", v:20, u:"Currency", d:"Decent"},
-        {n:"Violin [1-10]", v:10, u:"Currency", d:"Bad"}, {n:"Violin [200+]", v:2.5, u:"Currency", d:"Bad"},
-        {n:"Big [1-10]", v:13.75, u:"Currency", d:"Mid"}, {n:"Big [4000+]", v:3, u:"Currency", d:"Mid"},
-        {n:"Spacial [1-10]", v:10, u:"Currency", d:"Bad"}, {n:"Spacial [3000+]", v:2, u:"Currency", d:"Bad"},
-        {n:"Synth [1-10]", v:8.75, u:"Currency", d:"Bad"}, {n:"Synth [2000+]", v:2, u:"Currency", d:"Bad"},
-        {n:"Death", v:7.5, u:"Currency", d:"Mid"}, {n:"Runic", v:8, u:"Currency", d:"Decent"},
-        {n:"Chess [1-10]", v:6.25, u:"Currency", d:"Horrible"}, {n:"Chess [1400+]", v:0.75, u:"Currency", d:"Horrible"},
-        {n:"Everfrost", v:4.5, u:"Currency", d:"Mid"}, {n:"Roadster", v:3.25, u:"Currency", d:"Good"},
-        {n:"The World", v:3.25, u:"Currency", d:"Decent"}, {n:"Dubstep", v:2.5, u:"Currency", d:"Decent"},
-        {n:"Reactor", v:1.1, u:"Currency", d:"Good"}, {n:"Earth", v:1, u:"Currency", d:"Mid"},
-        {n:"Bloxy", v:0.75, u:"Currency", d:"Decent"}, {n:"Motorcycle", v:0.5, u:"Currency", d:"Mid"},
-        {n:"PoOp", v:0.3, u:"Currency", d:"Bad"}, {n:"Accelerator", v:0.2, u:"Currency", d:"Mid"},
-        {n:"Aperture", v:0.15, u:"Currency", d:"Bad"}, {n:"Enchanted", v:0.15, u:"Currency", d:"Bad"},
-        {n:"Wildcard", v:3.75, u:"Currency", d:"Bad"}, {n:"Champion", v:6.25, u:"Bloxes", d:"Good"},
-        {n:"Gold", v:6.25, u:"Bloxes", d:"Good"}, {n:"Dos", v:5, u:"Bloxes", d:"Decent"},
-        {n:"Chains", v:3.5, u:"Bloxes", d:"Good"}, {n:"Slaughter", v:2.5, u:"Bloxes", d:"Good"},
-        {n:"Murder", v:1.6, u:"Bloxes", d:"Good"}, {n:"Full Metal", v:0.5, u:"Bloxes", d:"Good"}
+        // CLASS X / GOD TIER
+        {n:"skibidi toilet", v:0, u:"N/A", d:"Insane"},
+        {n:"Brush [1-10]", v:1900, u:"Currency", d:"Good"},
+        {n:"Blackmarket", v:1400, u:"Currency", d:"Bad"},
+        {n:"Tetro", v:1100, u:"Currency", d:"Bad"},
+        {n:"M134 [1-5]", v:1015, u:"Currency", d:"Insane"},
+        {n:"M134 [6-10]", v:950, u:"Currency", d:"Insane"},
+        {n:"M134 Low [11-36]", v:890, u:"Currency", d:"Insane"},
+        {n:"M134 Mid [37-62]", v:800, u:"Currency", d:"Insane"},
+        {n:"M134 High [63+]", v:700, u:"Currency", d:"Insane"},
+        
+        // CLASS S / ELITE TIER
+        {n:"MP5 [1-5]", v:760, u:"Currency", d:"Insane"},
+        {n:"MP5 [6-10]", v:685, u:"Currency", d:"Insane"},
+        {n:"MP5 Low [11-39]", v:590, u:"Currency", d:"Insane"},
+        {n:"MP5 Mid [40-68]", v:550, u:"Currency", d:"Insane"},
+        {n:"MP5 High [69+]", v:525, u:"Currency", d:"Insane"},
+        {n:"BIGGER [1-5]", v:625, u:"Currency", d:"Decent"},
+        {n:"BIGGER [6-10]", v:580, u:"Currency", d:"Decent"},
+        {n:"BIGGER Low [11-40]", v:525, u:"Currency", d:"Decent"},
+        {n:"BIGGER Mid [41-70]", v:425, u:"Currency", d:"Good"},
+        {n:"BIGGER High [71+]", v:400, u:"Currency", d:"Good"},
+        {n:"Runes [1-5]", v:575, u:"Currency", d:"Decent"},
+        {n:"Runes [6-10]", v:515, u:"Currency", d:"Decent"},
+        {n:"Runes Low [11-43]", v:465, u:"Currency", d:"Decent"},
+        {n:"Runes Mid [44-76]", v:405, u:"Currency", d:"Decent"},
+        {n:"Runes High [77+]", v:345, u:"Currency", d:"Decent"},
+        
+        // MID-HIGH / CLASS A
+        {n:"Kitty", v:400, u:"Currency", d:"Good"},
+        {n:"M1911", v:350, u:"Currency", d:"Decent"},
+        {n:"Chainsaw [1-5]", v:340, u:"Currency", d:"Good"},
+        {n:"Chainsaw Low [11-58]", v:280, u:"Currency", d:"Good"},
+        {n:"Frostbite [1-5]", v:300, u:"Currency", d:"Mid"},
+        {n:"Frostbite Low [11-47]", v:230, u:"Currency", d:"Mid"},
+        {n:"Eradese [1-5]", v:280, u:"Currency", d:"Good"},
+        {n:"Eradese High [71-100]", v:195, u:"Currency", d:"Good"},
+        {n:"Freezer [1-5]", v:210, u:"Currency", d:"Decent"},
+        {n:"Vortex [1-5]", v:190, u:"Currency", d:"Bad"},
+        {n:"X-RAGE [1-5]", v:190, u:"Currency", d:"Decent"},
+        {n:"X-RAGE [501+]", v:60, u:"Currency", d:"Good"},
+        
+        // CLASS B / COLLECTOR
+        {n:"Chocos", v:80, u:"Currency", d:"Good"},
+        {n:"Korone [1-10]", v:70, u:"Currency", d:"Good"},
+        {n:"Korone [500+]", v:40, u:"Currency", d:"Good"},
+        {n:"Bear [1-10]", v:62.5, u:"Currency", d:"Good"},
+        {n:"Nuclear [1-10]", v:52.5, u:"Currency", d:"Decent"},
+        {n:"Chronos [1-10]", v:45, u:"Currency", d:"Good"},
+        {n:"Cyberfly [BLK]", v:40, u:"Currency", d:"Good"},
+        {n:"Cyberfly [RED]", v:20, u:"Currency", d:"Decent"},
+        {n:"Mecha", v:18, u:"Currency", d:"Decent"},
+        
+        // CLASS C & D / LOW TIER
+        {n:"Big [1-10]", v:13.75, u:"Currency", d:"Mid"},
+        {n:"Spacial [1-10]", v:10, u:"Currency", d:"Bad"},
+        {n:"Synth [1-10]", v:8.75, u:"Currency", d:"Bad"},
+        {n:"Violin [1-10]", v:10, u:"Currency", d:"Bad"},
+        {n:"Death", v:7.5, u:"Currency", d:"Mid"},
+        {n:"Runic", v:8, u:"Currency", d:"Decent"},
+        {n:"Pneumatic", v:7, u:"Currency", d:"Mid"},
+        {n:"Everfrost", v:4.5, u:"Currency", d:"Mid"},
+        {n:"Roadster", v:3.25, u:"Currency", d:"Good"},
+        {n:"Dubstep", v:2.5, u:"Currency", d:"Decent"},
+        {n:"Reactor", v:1.1, u:"Currency", d:"Good"},
+        {n:"Earth", v:1, u:"Currency", d:"Mid"},
+        {n:"Aperture", v:0.15, u:"Currency", d:"Bad"},
+        {n:"Enchanted", v:0.15, u:"Currency", d:"Bad"},
+        
+        // BLOXES (5% MULTIPLIER)
+        {n:"Champion", v:6.25, u:"Bloxes", d:"Good"},
+        {n:"Gold", v:6.25, u:"Bloxes", d:"Good"},
+        {n:"Dos", v:5, u:"Bloxes", d:"Decent"},
+        {n:"Chains", v:3.5, u:"Bloxes", d:"Good"},
+        {n:"Wildcard", v:3.75, u:"Currency", d:"Bad"},
+        {n:"Slaughter", v:2.5, u:"Bloxes", d:"Good"},
+        {n:"Murder", v:1.6, u:"Bloxes", d:"Good"},
+        {n:"Full Metal", v:0.5, u:"Bloxes", d:"Good"}
     ];
 
     function calculate(v, d, u) {
+        if (u === "N/A") return 0;
         let base = (u === "Bloxes") ? v * 0.05 : v;
         let m = d.toLowerCase();
         if (m.includes("insane")) return base * 1.1;
@@ -110,16 +155,16 @@
 
     function setSide(s) {
         side = s;
-        document.getElementById('btnY').style.background = side === 'y' ? 'var(--p)' : '#222';
+        document.getElementById('btnY').style.background = side === 'y' ? 'var(--p)' : '#1a1a1a';
         document.getElementById('btnY').style.color = side === 'y' ? '#000' : '#fff';
-        document.getElementById('btnT').style.background = side === 't' ? 'var(--s)' : '#222';
+        document.getElementById('btnT').style.background = side === 't' ? 'var(--s)' : '#1a1a1a';
     }
 
     function render() {
         const q = document.getElementById('query').value.toLowerCase();
         document.getElementById('inv').innerHTML = data.filter(i => i.n.toLowerCase().includes(q)).sort((a,b)=>b.v-a.v).map(i => `
-            <div class="item-card" onclick="add('${i.n}', ${i.v}, '${i.d}', '${i.u}')">
-                <span class="unit-pill">${i.u}</span>
+            <div class="card" onclick="add('${i.n}', ${i.v}, '${i.d}', '${i.u}')">
+                <span class="tag">${i.u}</span>
                 <b>${i.v}</b>
                 <div style="font-size:0.65rem; color:#888">${i.n}</div>
             </div>
@@ -138,14 +183,14 @@
         document.getElementById('yVal').innerText = yT.toFixed(2);
         document.getElementById('tVal').innerText = tT.toFixed(2);
         
-        document.getElementById('yList').innerHTML = yItems.map((it, i) => `<div class="trade-list-item" style="border-color:var(--p)">${it.n} <span class="x-btn" onclick="yItems.splice(${i},1);update()">✕</span></div>`).join('');
-        document.getElementById('tList').innerHTML = tItems.map((it, i) => `<div class="trade-list-item" style="border-color:var(--s)">${it.n} <span class="x-btn" onclick="tItems.splice(${i},1);update()">✕</span></div>`).join('');
+        document.getElementById('yList').innerHTML = yItems.map((it, i) => `<div class="list-row" style="border-color:var(--p)">${it.n} <span class="del-btn" onclick="yItems.splice(${i},1);update()">✕</span></div>`).join('');
+        document.getElementById('tList').innerHTML = tItems.map((it, i) => `<div class="list-row" style="border-color:var(--s)">${it.n} <span class="del-btn" onclick="tItems.splice(${i},1);update()">✕</span></div>`).join('');
         
         const b = document.getElementById('status'); const diff = tT - yT;
-        if (yT + tT === 0) { b.innerText = "System Ready"; b.className = "status-box"; }
-        else if (diff > 0.05) { b.innerText = "PROFIT (+" + diff.toFixed(2) + ")"; b.className = "status-box win"; }
-        else if (diff < -0.05) { b.innerText = "LOSS (" + diff.toFixed(2) + ")"; b.className = "status-box loss"; }
-        else { b.innerText = "FAIR TRADE"; b.className = "status-box"; }
+        if (yT + tT === 0) { b.innerText = "TITAN SCANNER ACTIVE"; b.className = "banner fair-glow"; }
+        else if (diff > 0.05) { b.innerText = "PROFIT (+" + diff.toFixed(2) + ")"; b.className = "banner win-glow"; }
+        else if (diff < -0.05) { b.innerText = "LOSS (" + diff.toFixed(2) + ")"; b.className = "banner loss-glow"; }
+        else { b.innerText = "FAIR TRADE"; b.className = "banner fair-glow"; }
     }
     setSide('y'); render();
 </script>
