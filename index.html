@@ -1,404 +1,890 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GLOVE MASTER: CYBER-VOID</title>
-    <style>
-        :root { --p: #00f2ff; --s: #7000ff; --win: #00ff88; --loss: #ff3e3e; --bg: #030303; }
-        body { font-family: 'Orbitron', sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 15px; letter-spacing: 1px; }
-        .banner { width: 100%; padding: 30px; border-radius: 20px; text-align: center; font-size: 2.2em; font-weight: 900; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); text-transform: uppercase; transition: 0.5s; position: relative; overflow: hidden; box-sizing: border-box; }
-        .banner::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(transparent, var(--p), transparent 30%); animation: rotate 4s linear infinite; z-index: -1; opacity: 0.3; }
-        @keyframes rotate { 100% { transform: rotate(360deg); } }
-        .win-glow { border-color: var(--win); color: var(--win); box-shadow: 0 0 30px rgba(0,255,136,0.2); }
-        .loss-glow { border-color: var(--loss); color: var(--loss); box-shadow: 0 0 30px rgba(255,62,62,0.2); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-        .panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; backdrop-filter: blur(15px); box-shadow: inset 0 0 20px rgba(255,255,255,0.02); }
-        .val { font-size: 3em; font-weight: 900; text-align: center; margin: 10px 0; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
-        .search-box { width: 100%; padding: 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--p); border-radius: 15px; color: #fff; font-size: 1.2em; outline: none; margin-bottom: 15px; transition: 0.3s; box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
-        .search-box:focus { box-shadow: 0 0 15px var(--p); }
-        .t-row { display: flex; gap: 10px; margin-bottom: 15px; }
-        .btn { flex: 1; padding: 15px; border: none; border-radius: 10px; cursor: pointer; font-weight: 900; text-transform: uppercase; transition: 0.3s; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
-        .tier-row { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-        .tier-btn { padding: 10px 16px; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; cursor: pointer; font-weight: 900; text-transform: uppercase; transition: 0.3s; font-family: 'Orbitron', sans-serif; font-size: 0.75em; letter-spacing: 1px; background: rgba(255,255,255,0.04); color: #aaa; }
-        .tier-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
-        .tier-btn.active { color: #000 !important; }
-        .tier-btn.t-all.active  { background: #fff; border-color: #fff; color: #000; }
-        .tier-btn.t-x.active   { background: linear-gradient(90deg,#ff0000,#ff7700,#ffff00,#00ff00,#00ffff,#0000ff,#ff00ff,#ff0000); background-size: 200% 100%; animation: rgbShift 2s linear infinite; border-color: transparent; box-shadow: 0 0 16px rgba(255,0,255,0.5); }
-        @keyframes rgbShift { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
-        .tier-btn.t-ss.active  { background: #ff6600; border-color: #ff6600; box-shadow: 0 0 12px rgba(255,102,0,0.5); }
-        .tier-btn.t-s.active   { background: #ffcc00; border-color: #ffcc00; box-shadow: 0 0 12px rgba(255,204,0,0.5); }
-        .tier-btn.t-a.active   { background: #00ff88; border-color: #00ff88; box-shadow: 0 0 12px rgba(0,255,136,0.5); }
-        .tier-btn.t-b.active   { background: #00f2ff; border-color: #00f2ff; box-shadow: 0 0 12px rgba(0,242,255,0.5); }
-        .tier-btn.t-c.active   { background: #7000ff; border-color: #7000ff; box-shadow: 0 0 12px rgba(112,0,255,0.5); }
-        .tier-btn.t-d.active   { background: #555; border-color: #888; color: #fff !important; }
-        .tier-label { font-size: 0.65em; padding: 2px 6px; border-radius: 4px; font-weight: 900; margin-bottom: 4px; display: inline-block; }
-        .lx  { background: linear-gradient(90deg,#ff0000,#ff7700,#ffff00,#00ff00,#00ffff,#0000ff,#ff00ff,#ff0000); background-size: 200% 100%; animation: rgbShift 2s linear infinite; color: #000; }
-        .lss { background: #ff6600; color: #000; }
-        .ls  { background: #ffcc00; color: #000; }
-        .la  { background: #00ff88; color: #000; }
-        .lb  { background: #00f2ff; color: #000; }
-        .lc  { background: #7000ff; color: #fff; }
-        .ld  { background: #444; color: #ccc; }
-        .inv { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; max-height: 500px; overflow-y: auto; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 15px; }
-        .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .card:hover { transform: translateY(-5px); border-color: var(--p); background: rgba(0,242,255,0.05); }
-        .card b { display: block; font-size: 1.3em; color: var(--win); margin: 5px 0; }
-        .tag { font-size: 0.7em; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); color: #aaa; text-transform: uppercase; }
-        .item { background: rgba(255,255,255,0.05); padding: 12px; margin: 8px 0; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid; font-size: 0.9em; }
-        .rem { color: var(--loss); font-weight: 900; cursor: pointer; font-size: 1.2em; }
-        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-thumb { background: var(--p); border-radius: 10px; }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MadeByLoro's Value List — Boxing League</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p:#00f2ff;--s:#bf00ff;--win:#00ff88;--loss:#ff3e3e;--gold:#ffd700;
+  --bg:#020208;--bg2:#06060f;--text:#e8f4ff;--subtext:#5a7a99;--muted:#2a3a4a;
+  --panel:rgba(0,242,255,0.03);--panel-b:rgba(0,242,255,0.1);
+  --card:rgba(255,255,255,0.03);--card-b:rgba(255,255,255,0.07);
+  --inv:rgba(0,0,0,0.6);--item:rgba(255,255,255,0.04);
+  --gp:rgba(0,242,255,0.12);--gs:rgba(191,0,255,0.12);
+}
+body.light{
+  --bg:#edf2f8;--bg2:#e2eaf4;--text:#0d1520;--subtext:#5566aa;--muted:#b0c0d0;
+  --panel:rgba(0,160,210,0.06);--panel-b:rgba(0,160,210,0.18);
+  --card:rgba(0,0,0,0.03);--card-b:rgba(0,0,0,0.09);
+  --inv:rgba(255,255,255,0.5);--item:rgba(0,0,0,0.04);
+  --gp:rgba(0,160,210,0.1);--gs:rgba(130,0,200,0.08);
+  --p:#0088aa;--s:#8800cc;--win:#008844;--loss:#cc2222;--gold:#cc9900;
+}
+body.cb{--p:#0077BB;--s:#EE7733;--win:#009988;--loss:#CC3311;--gp:rgba(0,119,187,0.15);--gs:rgba(238,119,51,0.15);}
+body.light.cb{--p:#005588;--s:#BB5500;--win:#007766;--loss:#991100;}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;}
+
+/* ── NOISE OVERLAY ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:0.6;
+}
+
+/* ── BG GRID ── */
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,242,255,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,242,255,0.025) 1px,transparent 1px);
+  background-size:50px 50px;
+  animation:gridScroll 25s linear infinite;
+}
+body.light .bg-grid{background-image:linear-gradient(rgba(0,140,200,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,140,200,0.05) 1px,transparent 1px);}
+@keyframes gridScroll{to{background-position:50px 50px}}
+
+/* ── CORNER ORBS ── */
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;}
+.orb1{width:700px;height:700px;top:-300px;right:-300px;background:radial-gradient(circle,rgba(191,0,255,0.08) 0%,transparent 65%);animation:pulse 7s ease-in-out infinite;}
+.orb2{width:600px;height:600px;bottom:-250px;left:-250px;background:radial-gradient(circle,rgba(0,242,255,0.07) 0%,transparent 65%);animation:pulse 9s ease-in-out infinite reverse;}
+.orb3{width:300px;height:300px;top:40%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(0,242,255,0.04) 0%,transparent 70%);animation:pulse 5s ease-in-out infinite 2s;}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.08);opacity:1}}
+.orb2{animation:pulse2 9s ease-in-out infinite reverse;}
+@keyframes pulse2{0%,100%{opacity:.7}50%{opacity:1}}
+
+/* ── SCANLINE ── */
+.scanline{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent 0%,var(--p) 50%,transparent 100%);opacity:.15;z-index:999;pointer-events:none;animation:scan 10s linear infinite;}
+@keyframes scan{0%{transform:translateY(-3px)}100%{transform:translateY(100vh)}}
+
+/* ── WRAP ── */
+.wrap{position:relative;z-index:1;padding:20px;max-width:1440px;margin:0 auto;}
+
+/* ── FADE ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+[data-fade]{opacity:0;animation:fadeUp .5s ease both;}
+[data-fade="1"]{animation-delay:.05s}[data-fade="2"]{animation-delay:.1s}
+[data-fade="3"]{animation-delay:.15s}[data-fade="4"]{animation-delay:.2s}
+[data-fade="5"]{animation-delay:.25s}[data-fade="6"]{animation-delay:.3s}
+[data-fade="7"]{animation-delay:.35s}[data-fade="8"]{animation-delay:.4s}
+[data-fade="9"]{animation-delay:.45s}[data-fade="10"]{animation-delay:.5s}
+
+/* ── HEADER ── */
+.header{
+  display:grid;grid-template-columns:1fr auto;
+  align-items:start;gap:16px;margin-bottom:20px;
+}
+.header-left{}
+.site-eyebrow{
+  font-family:'Share Tech Mono',monospace;
+  font-size:.7em;letter-spacing:4px;color:var(--p);
+  text-transform:uppercase;margin-bottom:8px;
+  display:flex;align-items:center;gap:10px;
+}
+.site-eyebrow::before{content:'';width:30px;height:1px;background:var(--p);}
+.site-title{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(1.4em,4vw,2.8em);letter-spacing:2px;line-height:1;
+  background:linear-gradient(135deg,#fff 0%,var(--p) 40%,var(--s) 80%,#fff 100%);
+  background-size:300% 300%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:titleShimmer 5s ease infinite;
+  text-transform:uppercase;
+}
+@keyframes titleShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.site-sub{
+  font-family:'Rajdhani',sans-serif;font-size:.85em;
+  color:var(--subtext);letter-spacing:3px;text-transform:uppercase;margin-top:6px;
+}
+.credits-line{
+  margin-top:10px;display:flex;align-items:center;gap:8px;
+  font-size:.72em;color:var(--subtext);letter-spacing:1px;font-family:'Share Tech Mono',monospace;
+}
+.credits-line .cred-name{
+  color:var(--gold);font-weight:700;
+  text-shadow:0 0 12px rgba(255,215,0,.4);
+}
+
+/* ── MODE BUTTONS ── */
+.mode-bar{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
+.mdbtn{
+  padding:9px 14px;border-radius:8px;
+  border:1px solid var(--card-b);background:var(--card);
+  color:var(--subtext);font-family:'Orbitron',sans-serif;
+  font-size:.6em;font-weight:700;cursor:pointer;
+  text-transform:uppercase;letter-spacing:1px;transition:.2s;
+}
+.mdbtn:hover{border-color:var(--p);color:var(--p);}
+.mdbtn.on{background:var(--p);color:#000;border-color:var(--p);box-shadow:0 0 16px var(--gp);}
+
+/* ── META STRIP ── */
+.meta-strip{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+.mbadge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:9px 18px;border-radius:40px;
+  border:1px solid var(--panel-b);background:var(--panel);
+  font-size:.72em;font-family:'Orbitron',sans-serif;letter-spacing:1px;
+  color:var(--subtext);text-decoration:none;transition:.25s;
+}
+a.mbadge:hover{border-color:var(--p);color:var(--p);box-shadow:0 0 20px var(--gp);transform:translateY(-1px);}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--win);box-shadow:0 0 8px var(--win);animation:blink 2s ease-in-out infinite;flex-shrink:0;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.mbadge svg{flex-shrink:0;}
+
+/* ── STAT CARDS ── */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:20px;}
+.stat-card{
+  background:var(--panel);border:1px solid var(--panel-b);
+  border-radius:16px;padding:16px;text-align:center;
+  position:relative;overflow:hidden;transition:.25s;
+}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--p),transparent);
+  animation:statScan 3s linear infinite;
+}
+@keyframes statScan{to{left:200%}}
+.stat-card:hover{border-color:var(--p);box-shadow:0 0 24px var(--gp);transform:translateY(-2px);}
+.stat-label{font-size:.62em;letter-spacing:2px;color:var(--subtext);text-transform:uppercase;font-family:'Orbitron',sans-serif;margin-bottom:6px;}
+.stat-val{font-family:'Orbitron',sans-serif;font-size:1.5em;font-weight:900;color:var(--p);}
+
+/* ── BANNER ── */
+.banner{
+  width:100%;padding:28px 24px;border-radius:20px;text-align:center;
+  font-family:'Orbitron',sans-serif;font-size:clamp(.9em,3vw,1.9em);font-weight:900;
+  margin-bottom:20px;border:1px solid var(--card-b);text-transform:uppercase;
+  transition:all .5s;position:relative;overflow:hidden;background:var(--panel);
+  letter-spacing:3px;
+}
+.banner::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(transparent,var(--p),transparent 25%,var(--s),transparent 50%);animation:rotate 6s linear infinite;z-index:-1;opacity:.12;}
+@keyframes rotate{100%{transform:rotate(360deg)}}
+.banner::after{content:'';position:absolute;bottom:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--p),transparent);}
+.win-glow{border-color:var(--win)!important;color:var(--win)!important;box-shadow:0 0 50px rgba(0,255,136,.15),inset 0 0 50px rgba(0,255,136,.03)!important;}
+.loss-glow{border-color:var(--loss)!important;color:var(--loss)!important;box-shadow:0 0 50px rgba(255,62,62,.15),inset 0 0 50px rgba(255,62,62,.03)!important;}
+.stable-glow{border-color:var(--gold)!important;color:var(--gold)!important;box-shadow:0 0 50px rgba(255,215,0,.15)!important;}
+
+/* ── TRADE PANELS ── */
+.trade-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.panel{
+  background:var(--panel);border-radius:20px;padding:20px;
+  position:relative;overflow:hidden;transition:.3s;
+}
+.panel-you{border:1px solid rgba(0,242,255,.18);}
+.panel-them{border:1px solid rgba(191,0,255,.18);}
+.panel-you::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--p),transparent);}
+.panel-them::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--s),transparent);}
+.panel-you::after{content:'';position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(transparent,rgba(0,242,255,.03));pointer-events:none;}
+.panel-them::after{content:'';position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(transparent,rgba(191,0,255,.03));pointer-events:none;}
+.panel-label{
+  font-family:'Orbitron',sans-serif;font-size:.65em;letter-spacing:4px;
+  text-align:center;margin-bottom:6px;text-transform:uppercase;
+}
+.panel-val{
+  font-family:'Orbitron',sans-serif;font-size:clamp(2em,4vw,3.2em);
+  font-weight:900;text-align:center;margin:8px 0 14px;line-height:1;
+}
+.panel-empty{text-align:center;color:var(--muted);font-size:.78em;padding:16px;letter-spacing:1px;font-family:'Share Tech Mono',monospace;}
+.item{
+  background:var(--item);padding:10px 14px;margin:6px 0;
+  border-radius:10px;display:flex;justify-content:space-between;align-items:center;
+  border-left:3px solid;font-size:.88em;font-family:'Rajdhani',sans-serif;font-weight:600;
+  transition:.2s;
+}
+.item:hover{background:rgba(255,255,255,.07);}
+.item-info{display:flex;align-items:center;gap:8px;flex:1;min-width:0;}
+.item-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.itag{font-size:.65em;padding:2px 7px;border-radius:4px;background:rgba(255,255,255,.07);color:var(--subtext);text-transform:uppercase;letter-spacing:1px;flex-shrink:0;}
+.rem{color:var(--loss);cursor:pointer;font-size:1.1em;opacity:.6;transition:.2s;flex-shrink:0;margin-left:8px;background:none;border:none;font-family:inherit;}
+.rem:hover{opacity:1;transform:scale(1.2);}
+
+/* ── CONTROLS ── */
+.search-wrap{position:relative;margin-bottom:14px;}
+.search-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--p);pointer-events:none;}
+.search-box{
+  width:100%;padding:18px 20px 18px 50px;
+  background:rgba(0,242,255,.05);border:1px solid var(--p);
+  border-radius:14px;color:var(--text);font-size:1.05em;outline:none;
+  transition:.3s;font-family:'Orbitron',sans-serif;letter-spacing:1px;
+}
+.search-box::placeholder{color:var(--subtext);}
+.search-box:focus{box-shadow:0 0 25px var(--gp);}
+
+.t-row{display:flex;gap:10px;margin-bottom:14px;}
+.side-btn{
+  flex:1;padding:15px;border-radius:12px;cursor:pointer;
+  font-weight:700;text-transform:uppercase;transition:.25s;
+  font-family:'Orbitron',sans-serif;letter-spacing:2px;font-size:.75em;
+  border:1px solid transparent;
+}
+.side-btn-you{background:var(--p);color:#000;box-shadow:0 4px 20px var(--gp);}
+.side-btn-you:hover{box-shadow:0 4px 35px var(--gp);transform:translateY(-1px);}
+.side-btn-them{background:var(--card);color:var(--subtext);border-color:var(--card-b);}
+.side-btn-them:hover{border-color:var(--s);color:var(--s);}
+.side-btn-them.them-active{background:var(--s);color:#fff;border-color:var(--s);box-shadow:0 4px 20px var(--gs);}
+.clear-btn{
+  padding:14px 18px;border-radius:12px;border:1px solid rgba(255,62,62,.3);
+  background:rgba(255,62,62,.07);color:var(--loss);font-family:'Orbitron',sans-serif;
+  font-size:.6em;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:.2s;
+}
+.clear-btn:hover{background:rgba(255,62,62,.15);box-shadow:0 0 16px rgba(255,62,62,.25);}
+
+/* ── TIER FILTER ── */
+.tier-row{display:flex;gap:7px;margin-bottom:18px;flex-wrap:wrap;}
+.tier-btn{
+  padding:9px 16px;border:1px solid var(--card-b);border-radius:10px;
+  cursor:pointer;font-weight:700;text-transform:uppercase;transition:.2s;
+  font-family:'Orbitron',sans-serif;font-size:.68em;letter-spacing:1px;
+  background:var(--card);color:var(--subtext);
+}
+.tier-btn:hover{color:var(--text);border-color:var(--p);}
+.tier-btn.active{color:#000!important;}
+.tier-btn.t-all.active{background:#fff;border-color:#fff;}
+body.light .tier-btn.t-all.active{background:#111;border-color:#111;color:#fff!important;}
+.tier-btn.t-x.active{background:linear-gradient(90deg,#ff0000,#ff7700,#ffff00,#00ff00,#00ffff,#0000ff,#ff00ff,#ff0000);background-size:200% 100%;animation:rgb 2s linear infinite;border-color:transparent;box-shadow:0 0 18px rgba(255,0,255,.35);}
+@keyframes rgb{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+.tier-btn.t-ss.active{background:#ff6600;border-color:#ff6600;box-shadow:0 0 14px rgba(255,102,0,.45);}
+.tier-btn.t-s.active{background:#ffcc00;border-color:#ffcc00;box-shadow:0 0 14px rgba(255,204,0,.45);}
+.tier-btn.t-a.active{background:#00ff88;border-color:#00ff88;box-shadow:0 0 14px rgba(0,255,136,.45);}
+body.cb .tier-btn.t-a.active{background:#009988;border-color:#009988;}
+.tier-btn.t-b.active{background:#00f2ff;border-color:#00f2ff;box-shadow:0 0 14px rgba(0,242,255,.45);}
+body.cb .tier-btn.t-b.active{background:#0077BB;border-color:#0077BB;}
+.tier-btn.t-c.active{background:#bf00ff;border-color:#bf00ff;box-shadow:0 0 14px rgba(191,0,255,.45);}
+body.cb .tier-btn.t-c.active{background:#EE7733;border-color:#EE7733;color:#000!important;}
+.tier-btn.t-d.active{background:#445566;border-color:#667788;color:#ccd!important;}
+
+/* ── TIER LABELS ── */
+.tier-label{font-size:.58em;padding:2px 7px;border-radius:4px;font-weight:900;margin-bottom:4px;display:inline-block;font-family:'Orbitron',sans-serif;letter-spacing:1px;}
+.lx{background:linear-gradient(90deg,#f00,#f70,#ff0,#0f0,#0ff,#00f,#f0f,#f00);background-size:200% 100%;animation:rgb 2s linear infinite;color:#000;}
+.lss{background:#ff6600;color:#000;}
+.ls{background:#ffcc00;color:#000;}
+.la{background:#00ff88;color:#000;}
+body.cb .la{background:#009988;}
+.lb{background:#00f2ff;color:#000;}
+body.cb .lb{background:#0077BB;color:#fff;}
+.lc{background:#bf00ff;color:#fff;}
+body.cb .lc{background:#EE7733;color:#000;}
+.ld{background:#334455;color:#8899aa;}
+
+/* ── INVENTORY ── */
+.inv{max-height:580px;overflow-y:auto;padding:12px;background:var(--inv);border-radius:16px;border:1px solid var(--card-b);}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:10px;}
+
+/* ── SECTION HEADERS ── */
+.sec-header{
+  display:flex;align-items:center;gap:12px;
+  font-family:'Orbitron',sans-serif;font-size:.7em;font-weight:900;
+  letter-spacing:3px;text-transform:uppercase;
+  padding:8px 14px;border-radius:9px;
+  margin:20px 0 10px;
+}
+.sec-header:first-child{margin-top:0;}
+.sec-header .sh-line{flex:1;height:1px;background:currentColor;opacity:.2;}
+.sh-x{background:linear-gradient(90deg,#f00,#f70,#ff0,#0f0,#0ff,#00f,#f0f,#f00);background-size:200% 100%;animation:rgb 2s linear infinite;color:#000;}
+.sh-ss{background:#ff6600;color:#000;}
+.sh-s{background:#ffcc00;color:#000;}
+.sh-a{background:#00ff88;color:#000;}
+body.cb .sh-a{background:#009988;}
+.sh-b{background:#00f2ff;color:#000;}
+body.cb .sh-b{background:#0077BB;color:#fff;}
+.sh-c{background:#bf00ff;color:#fff;}
+body.cb .sh-c{background:#EE7733;color:#000;}
+.sh-d{background:#334455;color:#8899aa;}
+
+/* ── CARDS ── */
+.card{
+  background:var(--card);border:1px solid var(--card-b);
+  padding:14px 12px;border-radius:14px;text-align:center;
+  cursor:pointer;transition:all .2s;color:var(--text);
+  font-family:'Rajdhani',sans-serif;font-size:.88em;font-weight:600;
+  position:relative;overflow:hidden;
+}
+.card::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% -20%,var(--gp),transparent 65%);
+  opacity:0;transition:.25s;pointer-events:none;
+}
+.card:hover{transform:translateY(-6px);border-color:var(--p);box-shadow:0 10px 30px var(--gp);}
+.card:hover::after{opacity:1;}
+.card:active{transform:translateY(-2px) scale(.97);}
+.card b{display:block;font-size:1.25em;color:var(--win);margin:5px 0 2px;font-family:'Orbitron',sans-serif;font-weight:700;}
+.card-name{margin:4px 0;line-height:1.3;letter-spacing:.5px;}
+
+/* ── FOOTER ── */
+.footer{
+  margin-top:24px;padding:20px 24px;border-radius:20px;
+  background:var(--panel);border:1px solid var(--panel-b);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+  position:relative;overflow:hidden;
+}
+.footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--p),var(--s),transparent);}
+.footer-left{font-size:.72em;font-family:'Share Tech Mono',monospace;line-height:1.8;}
+.footer-left .fl-title{color:var(--p);font-size:1.1em;letter-spacing:2px;}
+.footer-left .fl-sub{color:var(--subtext);}
+.footer-left .fl-cred{color:var(--subtext);}
+.footer-left .fl-cred .cname{color:var(--gold);text-shadow:0 0 10px rgba(255,215,0,.3);}
+.footer-right{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.roblox-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:12px 24px;border-radius:40px;
+  background:linear-gradient(135deg,rgba(0,242,255,.12),rgba(191,0,255,.12));
+  border:1px solid var(--panel-b);color:var(--text);text-decoration:none;
+  font-family:'Orbitron',sans-serif;font-size:.68em;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;transition:.3s;position:relative;overflow:hidden;
+}
+.roblox-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gp),var(--gs));opacity:0;transition:.3s;}
+.roblox-btn:hover{border-color:var(--p);box-shadow:0 0 30px var(--gp);transform:translateY(-2px);}
+.roblox-btn:hover::before{opacity:1;}
+.roblox-btn span{position:relative;}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--p),var(--s));border-radius:10px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .trade-grid{grid-template-columns:1fr;}
+  .header{grid-template-columns:1fr;}
+  .mode-bar{justify-content:flex-start;}
+  .site-title{font-size:1.4em;}
+  .panel-val{font-size:2em;}
+  .banner{font-size:.9em;padding:20px 14px;}
+}
+</style>
 </head>
 <body>
+<div class="bg-grid"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+<div class="scanline"></div>
 
-    <div id="banner" class="banner">System Ready</div>
+<div class="wrap">
 
-    <div class="grid">
-        <div class="panel">
-            <p style="text-align:center; color:var(--p); margin:0; font-size:0.8em;">PLAYER INGRESS</p>
-            <div id="yTotal" class="val" style="color:var(--p)">0.00</div>
-            <div id="yList"></div>
-        </div>
-        <div class="panel">
-            <p style="text-align:center; color:var(--s); margin:0; font-size:0.8em;">TARGET OFFER</p>
-            <div id="tTotal" class="val" style="color:var(--s)">0.00</div>
-            <div id="tList"></div>
-        </div>
+  <!-- HEADER -->
+  <div class="header" data-fade="1">
+    <div class="header-left">
+      <div class="site-eyebrow">Boxing League // Value List</div>
+      <div class="site-title">MadeByLoro's Value List</div>
+      <div class="site-sub">Glove Master · Cyber-Void · Trade Calculator</div>
+      <div class="credits-line">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Special thanks to <span class="cred-name">&nbsp;Zebra&nbsp;</span> for contributions
+      </div>
     </div>
-
-    <input type="text" id="search" class="search-box" placeholder="SCANNING DATABASE..." onkeyup="render()">
-
-    <div class="t-row">
-        <button id="btnY" class="btn" style="background:var(--p); color:#000;" onclick="setT('you')">PLAYER SIDE</button>
-        <button id="btnT" class="btn" style="background:#222; color:#fff;" onclick="setT('them')">TARGET SIDE</button>
+    <div class="header-right">
+      <div class="mode-bar">
+        <button class="mdbtn on" id="mdDark" onclick="setTheme('dark')">Dark</button>
+        <button class="mdbtn" id="mdLight" onclick="setTheme('light')">Light</button>
+        <button class="mdbtn" id="mdCB" onclick="toggleCB()">Colorblind</button>
+      </div>
     </div>
+  </div>
 
-    <div class="tier-row">
-        <div class="tier-btn t-all active" onclick="setTier('all')">ALL</div>
-        <div class="tier-btn t-x"  onclick="setTier('x')">X TIER</div>
-        <div class="tier-btn t-ss" onclick="setTier('ss')">SS TIER</div>
-        <div class="tier-btn t-s"  onclick="setTier('s')">S TIER</div>
-        <div class="tier-btn t-a"  onclick="setTier('a')">A TIER</div>
-        <div class="tier-btn t-b"  onclick="setTier('b')">B TIER</div>
-        <div class="tier-btn t-c"  onclick="setTier('c')">C TIER</div>
-        <div class="tier-btn t-d"  onclick="setTier('d')">D TIER</div>
+  <!-- META STRIP -->
+  <div class="meta-strip" data-fade="2">
+    <a class="mbadge" href="https://www.roblox.com/games/3738091713/Boxing-League" target="_blank" rel="noopener">
+      <div class="live-dot"></div>
+      <span>Boxing League — LIVE</span>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    </a>
+    <div class="mbadge">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Last Updated: 06/05/2026
     </div>
+    <div class="mbadge" id="dbBadge">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+      <span id="dbCount">— Items</span>
+    </div>
+  </div>
 
-    <div id="inv" class="inv"></div>
+  <!-- STATS -->
+  <div class="stats-row" data-fade="3">
+    <div class="stat-card">
+      <div class="stat-label">Your Value</div>
+      <div class="stat-val" id="statY" style="color:var(--p)">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Their Value</div>
+      <div class="stat-val" id="statT" style="color:var(--s)">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Difference</div>
+      <div class="stat-val" id="statD" style="font-size:1.2em">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Status</div>
+      <div class="stat-val" id="statS" style="font-size:.85em;color:var(--subtext)">IDLE</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Your Items</div>
+      <div class="stat-val" id="statYC" style="color:var(--p)">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Their Items</div>
+      <div class="stat-val" id="statTC" style="color:var(--s)">0</div>
+    </div>
+  </div>
+
+  <!-- BANNER -->
+  <div id="banner" class="banner" data-fade="4">⚡ SYSTEM READY — START ADDING ITEMS</div>
+
+  <!-- TRADE PANELS -->
+  <div class="trade-grid" data-fade="5">
+    <div class="panel panel-you">
+      <div class="panel-label" style="color:var(--p)">▶ YOUR SIDE</div>
+      <div class="panel-val" id="yTotal" style="color:var(--p)">0</div>
+      <div id="yList"><div class="panel-empty">// no items added yet</div></div>
+    </div>
+    <div class="panel panel-them">
+      <div class="panel-label" style="color:var(--s)">◀ THEIR SIDE</div>
+      <div class="panel-val" id="tTotal" style="color:var(--s)">0</div>
+      <div id="tList"><div class="panel-empty">// no items added yet</div></div>
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-wrap" data-fade="6">
+    <div class="search-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </div>
+    <input type="text" id="search" class="search-box" placeholder="Search items..." oninput="render()">
+  </div>
+
+  <!-- SIDE BUTTONS -->
+  <div class="t-row" data-fade="7">
+    <button id="btnY" class="side-btn side-btn-you" onclick="setT('you')">+ Your Side</button>
+    <button id="btnT" class="side-btn side-btn-them" onclick="setT('them')">+ Their Side</button>
+    <button class="clear-btn" onclick="clearAll()">Clear All</button>
+  </div>
+
+  <!-- TIER FILTER -->
+  <div class="tier-row" data-fade="8">
+    <div class="tier-btn t-all active" onclick="setTier('all')">ALL</div>
+    <div class="tier-btn t-x" onclick="setTier('x')">X TIER</div>
+    <div class="tier-btn t-ss" onclick="setTier('ss')">SS TIER</div>
+    <div class="tier-btn t-s" onclick="setTier('s')">S TIER</div>
+    <div class="tier-btn t-a" onclick="setTier('a')">A TIER</div>
+    <div class="tier-btn t-b" onclick="setTier('b')">B TIER</div>
+    <div class="tier-btn t-c" onclick="setTier('c')">C TIER</div>
+    <div class="tier-btn t-d" onclick="setTier('d')">D TIER</div>
+  </div>
+
+  <!-- INVENTORY -->
+  <div id="inv" class="inv" data-fade="9"></div>
+
+  <!-- FOOTER -->
+  <div class="footer" data-fade="10">
+    <div class="footer-left">
+      <div class="fl-title">MadeByLoro's Value List</div>
+      <div class="fl-sub">Boxing League · Glove Master · Cyber-Void &nbsp;|&nbsp; Updated 06/05/2026</div>
+      <div class="fl-cred">Values are community-estimated · Credits: <span class="cname">Zebra</span></div>
+    </div>
+    <div class="footer-right">
+      <a class="roblox-btn" href="https://www.roblox.com/games/3738091713/Boxing-League" target="_blank" rel="noopener">
+        <span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-3px;margin-right:4px"><path d="M3.94 16.08 7.92 20l12.14-4.08-4-3.96-8.12 4.12zm8.12-8.16L7.98 4 3.94 16.08l4.04.04 4.08-8.2z"/></svg>
+          Play on Roblox
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;margin-left:4px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </span>
+      </a>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
 
 <script>
-    let target = 'you', yItems = [], tItems = [], activeTier = 'all';
+let target='you', yItems=[], tItems=[], activeTier='all', cbOn=false;
+const TIER_ORDER=['x','ss','s','a','b','c','d'];
+const TIER_LABELS={x:'X TIER',ss:'SS TIER',s:'S TIER',a:'A TIER',b:'B TIER',c:'C TIER',d:'D TIER'};
 
-    const data = [
-        // X TIER
-        {n:"Brush [1-10]", v:1900, u:"Currency", t:"x"},
-        {n:"Blackmarket", v:1400, u:"Currency", t:"x"},
-        {n:"Tetro", v:1100, u:"Currency", t:"x"},
-        {n:"M134 [1-5]", v:955, u:"Currency", t:"x"},
-        {n:"M134 [6-10]", v:900, u:"Currency", t:"x"},
-        {n:"M134 Low [11-36]", v:805, u:"Currency", t:"x"},
-        {n:"M134 Mid [37-62]", v:735, u:"Currency", t:"x"},
-        {n:"M134 High [63+]", v:655, u:"Currency", t:"x"},
-        {n:"MP5 [1-5]", v:740, u:"Currency", t:"x"},
-        {n:"MP5 [6-10]", v:665, u:"Currency", t:"x"},
-        {n:"MP5 Low [11-39]", v:565, u:"Currency", t:"x"},
-        {n:"MP5 Mid [40-68]", v:540, u:"Currency", t:"x"},
-        {n:"MP5 High [69+]", v:500, u:"Currency", t:"x"},
-        {n:"BIGGER [1-5]", v:595, u:"Currency", t:"x"},
-        {n:"BIGGER [6-10]", v:540, u:"Currency", t:"x"},
-        {n:"BIGGER Low [11-40]", v:490, u:"Currency", t:"x"},
-        {n:"BIGGER Mid [41-70]", v:425, u:"Currency", t:"x"},
-        {n:"BIGGER High [71+]", v:355, u:"Currency", t:"x"},
-        {n:"Runes [1-5]", v:575, u:"Currency", t:"x"},
-        {n:"Runes [6-10]", v:515, u:"Currency", t:"x"},
-        {n:"Runes Low [11-43]", v:465, u:"Currency", t:"x"},
-        {n:"Runes Mid [44-76]", v:405, u:"Currency", t:"x"},
-        {n:"Runes High [77+]", v:345, u:"Currency", t:"x"},
-        // SS TIER
-        {n:"Kitty", v:350, u:"Currency", t:"ss"},
-        {n:"M1911", v:340, u:"Currency", t:"ss"},
-        {n:"Chainsaw [1-5]", v:295, u:"Currency", t:"ss"},
-        {n:"Chainsaw [6-10]", v:275, u:"Currency", t:"ss"},
-        {n:"Chainsaw Low [11-58]", v:260, u:"Currency", t:"ss"},
-        {n:"Chainsaw Mid [59-105]", v:250, u:"Currency", t:"ss"},
-        {n:"Chainsaw High [106-153]", v:235, u:"Currency", t:"ss"},
-        {n:"Eradese [1-5]", v:280, u:"Currency", t:"ss"},
-        {n:"Eradese [6-10]", v:255, u:"Currency", t:"ss"},
-        {n:"Eradese Low [11-40]", v:225, u:"Currency", t:"ss"},
-        {n:"Eradese Mid [41-70]", v:210, u:"Currency", t:"ss"},
-        {n:"Eradese High [71-100]", v:195, u:"Currency", t:"ss"},
-        {n:"Frostbite [1-5]", v:270, u:"Currency", t:"ss"},
-        {n:"Frostbite [6-10]", v:250, u:"Currency", t:"ss"},
-        {n:"Frostbite Low [11-47]", v:230, u:"Currency", t:"ss"},
-        {n:"Frostbite Mid [48-84]", v:210, u:"Currency", t:"ss"},
-        {n:"Frostbite High [85+]", v:190, u:"Currency", t:"ss"},
-        {n:"Vortex [1-5]", v:190, u:"Currency", t:"ss"},
-        {n:"Vortex [6-10]", v:175, u:"Currency", t:"ss"},
-        {n:"Vortex Low [11-42]", v:145, u:"Currency", t:"ss"},
-        {n:"Vortex Mid [43-74]", v:115, u:"Currency", t:"ss"},
-        {n:"Vortex High [75+]", v:85, u:"Currency", t:"ss"},
-        {n:"Freezer [1-5]", v:210, u:"Currency", t:"ss"},
-        {n:"Freezer [6-10]", v:190, u:"Currency", t:"ss"},
-        {n:"Freezer Low [11-33]", v:160, u:"Currency", t:"ss"},
-        {n:"Freezer Mid [34-55]", v:140, u:"Currency", t:"ss"},
-        {n:"Freezer High [56+]", v:110, u:"Currency", t:"ss"},
-        {n:"X-RAGE [1-5]", v:190, u:"Currency", t:"ss"},
-        {n:"X-RAGE [6-10]", v:160, u:"Currency", t:"ss"},
-        {n:"X-RAGE [11-50]", v:125, u:"Currency", t:"ss"},
-        {n:"X-RAGE [51-100]", v:105, u:"Currency", t:"ss"},
-        {n:"X-RAGE [101-200]", v:100, u:"Currency", t:"ss"},
-        {n:"X-RAGE [201-300]", v:90, u:"Currency", t:"ss"},
-        {n:"X-RAGE [301-400]", v:80, u:"Currency", t:"ss"},
-        {n:"X-RAGE [401-500]", v:70, u:"Currency", t:"ss"},
-        {n:"X-RAGE [501+]", v:60, u:"Currency", t:"ss"},
-        // S TIER
-        {n:"Chocos", v:65, u:"Currency", t:"s"},
-        {n:"Bear [1-10]", v:57.5, u:"Currency", t:"s"},
-        {n:"Bear [10-100]", v:55, u:"Currency", t:"s"},
-        {n:"Bear [100-200]", v:52.5, u:"Currency", t:"s"},
-        {n:"Bear [200-300]", v:50, u:"Currency", t:"s"},
-        {n:"Bear [300+]", v:47.5, u:"Currency", t:"s"},
-        {n:"Nuclear [1-10]", v:52.5, u:"Currency", t:"s"},
-        {n:"Nuclear [10-50]", v:43.75, u:"Currency", t:"s"},
-        {n:"Nuclear [50-100]", v:40, u:"Currency", t:"s"},
-        {n:"Nuclear [100-200]", v:37.5, u:"Currency", t:"s"},
-        {n:"Nuclear [200-300]", v:35, u:"Currency", t:"s"},
-        {n:"Nuclear [300-400]", v:32.5, u:"Currency", t:"s"},
-        {n:"Nuclear [400+]", v:30, u:"Currency", t:"s"},
-        {n:"Cyberfly [BLK]", v:40, u:"Currency", t:"s"},
-        {n:"Cyberfly [RED]", v:20, u:"Currency", t:"s"},
-        {n:"Cyberfly [PUR]", v:16, u:"Currency", t:"s"},
-        {n:"Cyberfly [BLU]", v:15, u:"Currency", t:"s"},
-        {n:"Cyberfly [ORG]", v:12, u:"Currency", t:"s"},
-        {n:"Cyberfly [PNK]", v:11, u:"Currency", t:"s"},
-        {n:"Cyberfly [GRN]", v:8, u:"Currency", t:"s"},
-        {n:"Cyberfly [YLW]", v:7.5, u:"Currency", t:"s"},
-        {n:"Cyberfly", v:6.5, u:"Currency", t:"s"},
-        {n:"Mecha", v:19, u:"Currency", t:"s"},
-        {n:"Envoided", v:9.75, u:"Currency", t:"s"},
-        {n:"Runic", v:8, u:"Currency", t:"s"},
-        {n:"Death", v:7.5, u:"Currency", t:"s"},
-        {n:"Pneumatic", v:7, u:"Currency", t:"s"},
-        {n:"Everfrost", v:4.5, u:"Currency", t:"s"},
-        {n:"Mutation", v:3.5, u:"Currency", t:"s"},
-        // A TIER
-        {n:"Korone [1-10]", v:65, u:"Currency", t:"a"},
-        {n:"Korone [10-100]", v:55, u:"Currency", t:"a"},
-        {n:"Korone [100-500]", v:45, u:"Currency", t:"a"},
-        {n:"Korone [500+]", v:35, u:"Currency", t:"a"},
-        {n:"Chronos [1-10]", v:45, u:"Currency", t:"a"},
-        {n:"Chronos [10-50]", v:40, u:"Currency", t:"a"},
-        {n:"Chronos [50-100]", v:37.5, u:"Currency", t:"a"},
-        {n:"Chronos [100-200]", v:36.25, u:"Currency", t:"a"},
-        {n:"Chronos [200-300]", v:35, u:"Currency", t:"a"},
-        {n:"Chronos [300-400]", v:33.75, u:"Currency", t:"a"},
-        {n:"Chronos [400+]", v:32.5, u:"Currency", t:"a"},
-        {n:"Shrimple [1-10]", v:18.75, u:"Currency", t:"a"},
-        {n:"Shrimple [10-50]", v:16.25, u:"Currency", t:"a"},
-        {n:"Shrimple [50-100]", v:13.75, u:"Currency", t:"a"},
-        {n:"Shrimple [100-200]", v:12.5, u:"Currency", t:"a"},
-        {n:"Shrimple [200-400]", v:11.25, u:"Currency", t:"a"},
-        {n:"Shrimple [400+]", v:10, u:"Currency", t:"a"},
-        {n:"Creature [1-10]", v:12.5, u:"Currency", t:"a"},
-        {n:"Creature [10-100]", v:10, u:"Currency", t:"a"},
-        {n:"Creature [100-200]", v:7.5, u:"Currency", t:"a"},
-        {n:"Creature [200-300]", v:6.25, u:"Currency", t:"a"},
-        {n:"Creature [300-400]", v:5, u:"Currency", t:"a"},
-        {n:"Creature [400+]", v:3.75, u:"Currency", t:"a"},
-        {n:"Brute", v:4.75, u:"Currency", t:"a"},
-        {n:"Overheaven", v:3.75, u:"Currency", t:"a"},
-        {n:"The World", v:3.25, u:"Currency", t:"a"},
-        {n:"Tiki", v:2.75, u:"Currency", t:"a"},
-        // B TIER
-        {n:"Violin [1-10]", v:10, u:"Currency", t:"b"},
-        {n:"Violin [10-50]", v:6.25, u:"Currency", t:"b"},
-        {n:"Violin [50-100]", v:5, u:"Currency", t:"b"},
-        {n:"Violin [100-200]", v:3.75, u:"Currency", t:"b"},
-        {n:"Violin [200+]", v:2.5, u:"Currency", t:"b"},
-        {n:"Roadster", v:3.25, u:"Currency", t:"b"},
-        {n:"Dubstep", v:2.5, u:"Currency", t:"b"},
-        {n:"Poopatary", v:1.5, u:"Currency", t:"b"},
-        {n:"Core [BLK]", v:1.5, u:"Currency", t:"b"},
-        {n:"Core [ORN]", v:0.8, u:"Currency", t:"b"},
-        {n:"Core [PNK]", v:0.8, u:"Currency", t:"b"},
-        {n:"Core [PUR]", v:0.8, u:"Currency", t:"b"},
-        {n:"Core [GRN]", v:0.8, u:"Currency", t:"b"},
-        {n:"Core [RED]", v:0.8, u:"Currency", t:"b"},
-        {n:"Core [YLW]", v:0.8, u:"Currency", t:"b"},
-        {n:"Core [BLU]", v:0.8, u:"Currency", t:"b"},
-        {n:"Purgatory", v:1.25, u:"Currency", t:"b"},
-        {n:"Motorcycle", v:0.5, u:"Currency", t:"b"},
-        {n:"Downdraught", v:0.6, u:"Currency", t:"b"},
-        {n:"Dragon Slayer", v:1, u:"Currency", t:"b"},
-        {n:"Poopium", v:0.6, u:"Currency", t:"b"},
-        {n:"Bloxy", v:0.75, u:"Currency", t:"b"},
-        {n:"Widow", v:0.6, u:"Currency", t:"b"},
-        {n:"Core", v:0.4, u:"Currency", t:"b"},
-        {n:"Ciel", v:0.45, u:"Currency", t:"b"},
-        // C TIER
-        {n:"Big [1-10]", v:13.75, u:"Currency", t:"c"},
-        {n:"Big [10-100]", v:10, u:"Currency", t:"c"},
-        {n:"Big [100-500]", v:8.75, u:"Currency", t:"c"},
-        {n:"Big [500-1000]", v:6.75, u:"Currency", t:"c"},
-        {n:"Big [1000-2000]", v:5, u:"Currency", t:"c"},
-        {n:"Big [2000-3000]", v:4.25, u:"Currency", t:"c"},
-        {n:"Big [3000-4000]", v:3.75, u:"Currency", t:"c"},
-        {n:"Big [4000+]", v:3, u:"Currency", t:"c"},
-        {n:"Spacial [1-10]", v:10, u:"Currency", t:"c"},
-        {n:"Spacial [10-100]", v:7.5, u:"Currency", t:"c"},
-        {n:"Spacial [100-500]", v:6.25, u:"Currency", t:"c"},
-        {n:"Spacial [500-1000]", v:4, u:"Currency", t:"c"},
-        {n:"Spacial [1000-2000]", v:3.75, u:"Currency", t:"c"},
-        {n:"Spacial [2000-3000]", v:2.5, u:"Currency", t:"c"},
-        {n:"Spacial [3000+]", v:2, u:"Currency", t:"c"},
-        {n:"Synthwave [1-10]", v:8.75, u:"Currency", t:"c"},
-        {n:"Synthwave [10-100]", v:6.25, u:"Currency", t:"c"},
-        {n:"Synthwave [100-500]", v:4.5, u:"Currency", t:"c"},
-        {n:"Synthwave [500-1000]", v:3.5, u:"Currency", t:"c"},
-        {n:"Synthwave [1000-2000]", v:2.5, u:"Currency", t:"c"},
-        {n:"Synthwave [2000+]", v:2, u:"Currency", t:"c"},
-        {n:"Chess [1-10]", v:6.25, u:"Currency", t:"c"},
-        {n:"Chess [10-100]", v:3.75, u:"Currency", t:"c"},
-        {n:"Chess [100-500]", v:2.5, u:"Currency", t:"c"},
-        {n:"Chess [500-1000]", v:1.75, u:"Currency", t:"c"},
-        {n:"Chess [1000-4000]", v:1.25, u:"Currency", t:"c"},
-        {n:"Chess [4000+]", v:0.75, u:"Currency", t:"c"},
-        {n:"X Raw [1-10]", v:5, u:"Currency", t:"c"},
-        {n:"X Raw [10-100]", v:3.5, u:"Currency", t:"c"},
-        {n:"X Raw [100-500]", v:2, u:"Currency", t:"c"},
-        {n:"X Raw [500+]", v:1.5, u:"Currency", t:"c"},
-        {n:"Earth", v:1, u:"Currency", t:"c"},
-        {n:"Reactor", v:1.1, u:"Currency", t:"c"},
-        {n:"Chains", v:0.45, u:"Currency", t:"c"},
-        {n:"Platinum", v:0.4, u:"Currency", t:"c"},
-        {n:"Za Warudo", v:0.4, u:"Currency", t:"c"},
-        {n:"Accelerator", v:0.2, u:"Currency", t:"c"},
-        {n:"Chaser", v:0.3, u:"Currency", t:"c"},
-        {n:"Danger", v:0.35, u:"Currency", t:"c"},
-        {n:"The Po0p", v:0.3, u:"Currency", t:"c"},
-        {n:"Dumbfounded", v:0.2, u:"Currency", t:"c"},
-        {n:"Poison", v:0.25, u:"Currency", t:"c"},
-        {n:"Spooky Slash", v:0.25, u:"Currency", t:"c"},
-        {n:"Spooky Splash", v:0.2, u:"Currency", t:"c"},
-        {n:"Diamond", v:0.2, u:"Currency", t:"c"},
-        {n:"Roux Vuitton", v:0.2, u:"Currency", t:"c"},
-        {n:"Meltdown", v:0.2, u:"Currency", t:"c"},
-        {n:"Aperture", v:0.15, u:"Currency", t:"c"},
-        {n:"Enchanted", v:0.15, u:"Currency", t:"c"},
-        // D TIER
-        {n:"Wildcard", v:3.75, u:"Currency", t:"d"},
-        {n:"Primesoul", v:0.25, u:"Currency", t:"d"},
-        {n:"Void", v:0.25, u:"Currency", t:"d"},
-        {n:"Amethyst", v:0.2, u:"Currency", t:"d"},
-        {n:"Champion", v:6.25, u:"Blox", t:"d"},
-        {n:"Gold", v:6.25, u:"Blox", t:"d"},
-        {n:"Dos", v:5, u:"Blox", t:"d"},
-        {n:"Chains", v:3.5, u:"Blox", t:"d"},
-        {n:"Blueprint", v:3.5, u:"Blox", t:"d"},
-        {n:"Flashstep", v:3, u:"Blox", t:"d"},
-        {n:"Cursed", v:3, u:"Blox", t:"d"},
-        {n:"M68", v:3, u:"Blox", t:"d"},
-        {n:"Scales", v:2.5, u:"Blox", t:"d"},
-        {n:"Builderman", v:2.5, u:"Blox", t:"d"},
-        {n:"Slaughter", v:2.5, u:"Blox", t:"d"},
-        {n:"Sapphire", v:2.25, u:"Blox", t:"d"},
-        {n:"All Sys Color", v:1.6, u:"Blox", t:"d"},
-        {n:"Grim", v:2, u:"Blox", t:"d"},
-        {n:"Vampy", v:2, u:"Blox", t:"d"},
-        {n:"Robux", v:2, u:"Blox", t:"d"},
-        {n:"Tux", v:2, u:"Blox", t:"d"},
-        {n:"Magnetron", v:1.8, u:"Blox", t:"d"},
-        {n:"Desolate", v:1.8, u:"Blox", t:"d"},
-        {n:"Exodus", v:1.8, u:"Blox", t:"d"},
-        {n:"Evilseer", v:1.6, u:"Blox", t:"d"},
-        {n:"Megalodon", v:1.6, u:"Blox", t:"d"},
-        {n:"Murder", v:1.6, u:"Blox", t:"d"},
-        {n:"Pumpky", v:1.6, u:"Blox", t:"d"},
-        {n:"Mirage", v:1.5, u:"Blox", t:"d"},
-        {n:"Warning", v:1.4, u:"Blox", t:"d"},
-        {n:"Hologram", v:1.4, u:"Blox", t:"d"},
-        {n:"Gifty", v:1.4, u:"Blox", t:"d"},
-        {n:"Fleurs", v:1.4, u:"Blox", t:"d"},
-        {n:"Beeeee", v:1.4, u:"Blox", t:"d"},
-        {n:"Neon", v:1.2, u:"Blox", t:"d"},
-        {n:"Banana", v:1.2, u:"Blox", t:"d"},
-        {n:"Pixel", v:1.2, u:"Blox", t:"d"},
-        {n:"BloxVuitton", v:1, u:"Blox", t:"d"},
-        {n:"Flames", v:1, u:"Blox", t:"d"},
-        {n:"Yin Yang", v:1, u:"Blox", t:"d"},
-        {n:"Vozenilek", v:1, u:"Blox", t:"d"},
-        {n:"Emerald", v:1, u:"Blox", t:"d"},
-        {n:"Ruby", v:0.75, u:"Blox", t:"d"},
-        {n:"Punk", v:0.75, u:"Blox", t:"d"},
-        {n:"Uno", v:0.5, u:"Blox", t:"d"},
-        {n:"Full Metal", v:0.5, u:"Blox", t:"d"},
-    ];
+// Smart number formatter — no trailing .00
+function fmt(v){
+  if(v===Math.floor(v)) return v.toLocaleString();
+  // show up to 2 decimals, trimming zeros
+  return parseFloat(v.toFixed(2)).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:2});
+}
 
-    const tierColors = { x:'lx', ss:'lss', s:'ls', a:'la', b:'lb', c:'lc', d:'ld' };
+const data=[
+  {n:"Brush [1-10]",v:1900,u:"Currency",t:"x"},
+  {n:"Blackmarket",v:1400,u:"Currency",t:"x"},
+  {n:"Tetro",v:1100,u:"Currency",t:"x"},
+  {n:"M134 [1-5]",v:955,u:"Currency",t:"x"},
+  {n:"M134 [6-10]",v:900,u:"Currency",t:"x"},
+  {n:"M134 Low [11-36]",v:805,u:"Currency",t:"x"},
+  {n:"M134 Mid [37-62]",v:735,u:"Currency",t:"x"},
+  {n:"M134 High [63+]",v:655,u:"Currency",t:"x"},
+  {n:"MP5 [1-5]",v:740,u:"Currency",t:"x"},
+  {n:"MP5 [6-10]",v:665,u:"Currency",t:"x"},
+  {n:"MP5 Low [11-39]",v:565,u:"Currency",t:"x"},
+  {n:"MP5 Mid [40-68]",v:540,u:"Currency",t:"x"},
+  {n:"MP5 High [69+]",v:500,u:"Currency",t:"x"},
+  {n:"BIGGER [1-5]",v:595,u:"Currency",t:"x"},
+  {n:"BIGGER [6-10]",v:540,u:"Currency",t:"x"},
+  {n:"BIGGER Low [11-40]",v:490,u:"Currency",t:"x"},
+  {n:"BIGGER Mid [41-70]",v:425,u:"Currency",t:"x"},
+  {n:"BIGGER High [71+]",v:355,u:"Currency",t:"x"},
+  {n:"Runes [1-5]",v:575,u:"Currency",t:"x"},
+  {n:"Runes [6-10]",v:515,u:"Currency",t:"x"},
+  {n:"Runes Low [11-43]",v:465,u:"Currency",t:"x"},
+  {n:"Runes Mid [44-76]",v:405,u:"Currency",t:"x"},
+  {n:"Runes High [77+]",v:345,u:"Currency",t:"x"},
+  {n:"Kitty",v:350,u:"Currency",t:"ss"},
+  {n:"M1911",v:340,u:"Currency",t:"ss"},
+  {n:"Chainsaw [1-5]",v:295,u:"Currency",t:"ss"},
+  {n:"Chainsaw [6-10]",v:275,u:"Currency",t:"ss"},
+  {n:"Chainsaw Low [11-58]",v:260,u:"Currency",t:"ss"},
+  {n:"Chainsaw Mid [59-105]",v:250,u:"Currency",t:"ss"},
+  {n:"Chainsaw High [106-153]",v:235,u:"Currency",t:"ss"},
+  {n:"Eradese [1-5]",v:280,u:"Currency",t:"ss"},
+  {n:"Eradese [6-10]",v:255,u:"Currency",t:"ss"},
+  {n:"Eradese Low [11-40]",v:225,u:"Currency",t:"ss"},
+  {n:"Eradese Mid [41-70]",v:210,u:"Currency",t:"ss"},
+  {n:"Eradese High [71-100]",v:195,u:"Currency",t:"ss"},
+  {n:"Frostbite [1-5]",v:270,u:"Currency",t:"ss"},
+  {n:"Frostbite [6-10]",v:250,u:"Currency",t:"ss"},
+  {n:"Frostbite Low [11-47]",v:230,u:"Currency",t:"ss"},
+  {n:"Frostbite Mid [48-84]",v:210,u:"Currency",t:"ss"},
+  {n:"Frostbite High [85+]",v:190,u:"Currency",t:"ss"},
+  {n:"Vortex [1-5]",v:190,u:"Currency",t:"ss"},
+  {n:"Vortex [6-10]",v:175,u:"Currency",t:"ss"},
+  {n:"Vortex Low [11-42]",v:145,u:"Currency",t:"ss"},
+  {n:"Vortex Mid [43-74]",v:115,u:"Currency",t:"ss"},
+  {n:"Vortex High [75+]",v:85,u:"Currency",t:"ss"},
+  {n:"Freezer [1-5]",v:210,u:"Currency",t:"ss"},
+  {n:"Freezer [6-10]",v:190,u:"Currency",t:"ss"},
+  {n:"Freezer Low [11-33]",v:160,u:"Currency",t:"ss"},
+  {n:"Freezer Mid [34-55]",v:140,u:"Currency",t:"ss"},
+  {n:"Freezer High [56+]",v:110,u:"Currency",t:"ss"},
+  {n:"X-RAGE [1-5]",v:190,u:"Currency",t:"ss"},
+  {n:"X-RAGE [6-10]",v:160,u:"Currency",t:"ss"},
+  {n:"X-RAGE [11-50]",v:125,u:"Currency",t:"ss"},
+  {n:"X-RAGE [51-100]",v:105,u:"Currency",t:"ss"},
+  {n:"X-RAGE [101-200]",v:100,u:"Currency",t:"ss"},
+  {n:"X-RAGE [201-300]",v:90,u:"Currency",t:"ss"},
+  {n:"X-RAGE [301-400]",v:80,u:"Currency",t:"ss"},
+  {n:"X-RAGE [401-500]",v:70,u:"Currency",t:"ss"},
+  {n:"X-RAGE [501+]",v:60,u:"Currency",t:"ss"},
+  {n:"Chocos",v:65,u:"Currency",t:"s"},
+  {n:"Bear [1-10]",v:57.5,u:"Currency",t:"s"},
+  {n:"Bear [10-100]",v:55,u:"Currency",t:"s"},
+  {n:"Bear [100-200]",v:52.5,u:"Currency",t:"s"},
+  {n:"Bear [200-300]",v:50,u:"Currency",t:"s"},
+  {n:"Bear [300+]",v:47.5,u:"Currency",t:"s"},
+  {n:"Nuclear [1-10]",v:52.5,u:"Currency",t:"s"},
+  {n:"Nuclear [10-50]",v:43.75,u:"Currency",t:"s"},
+  {n:"Nuclear [50-100]",v:40,u:"Currency",t:"s"},
+  {n:"Nuclear [100-200]",v:37.5,u:"Currency",t:"s"},
+  {n:"Nuclear [200-300]",v:35,u:"Currency",t:"s"},
+  {n:"Nuclear [300-400]",v:32.5,u:"Currency",t:"s"},
+  {n:"Nuclear [400+]",v:30,u:"Currency",t:"s"},
+  {n:"Cyberfly [BLK]",v:40,u:"Currency",t:"s"},
+  {n:"Cyberfly [RED]",v:20,u:"Currency",t:"s"},
+  {n:"Cyberfly [PUR]",v:16,u:"Currency",t:"s"},
+  {n:"Cyberfly [BLU]",v:15,u:"Currency",t:"s"},
+  {n:"Cyberfly [ORG]",v:12,u:"Currency",t:"s"},
+  {n:"Cyberfly [PNK]",v:11,u:"Currency",t:"s"},
+  {n:"Cyberfly [GRN]",v:8,u:"Currency",t:"s"},
+  {n:"Cyberfly [YLW]",v:7.5,u:"Currency",t:"s"},
+  {n:"Cyberfly",v:6.5,u:"Currency",t:"s"},
+  {n:"Mecha",v:19,u:"Currency",t:"s"},
+  {n:"Envoided",v:9.75,u:"Currency",t:"s"},
+  {n:"Runic",v:8,u:"Currency",t:"s"},
+  {n:"Death",v:7.5,u:"Currency",t:"s"},
+  {n:"Pneumatic",v:7,u:"Currency",t:"s"},
+  {n:"Everfrost",v:4.5,u:"Currency",t:"s"},
+  {n:"Mutation",v:3.5,u:"Currency",t:"s"},
+  {n:"Korone [1-10]",v:65,u:"Currency",t:"a"},
+  {n:"Korone [10-100]",v:55,u:"Currency",t:"a"},
+  {n:"Korone [100-500]",v:45,u:"Currency",t:"a"},
+  {n:"Korone [500+]",v:35,u:"Currency",t:"a"},
+  {n:"Chronos [1-10]",v:45,u:"Currency",t:"a"},
+  {n:"Chronos [10-50]",v:40,u:"Currency",t:"a"},
+  {n:"Chronos [50-100]",v:37.5,u:"Currency",t:"a"},
+  {n:"Chronos [100-200]",v:36.25,u:"Currency",t:"a"},
+  {n:"Chronos [200-300]",v:35,u:"Currency",t:"a"},
+  {n:"Chronos [300-400]",v:33.75,u:"Currency",t:"a"},
+  {n:"Chronos [400+]",v:32.5,u:"Currency",t:"a"},
+  {n:"Shrimple [1-10]",v:18.75,u:"Currency",t:"a"},
+  {n:"Shrimple [10-50]",v:16.25,u:"Currency",t:"a"},
+  {n:"Shrimple [50-100]",v:13.75,u:"Currency",t:"a"},
+  {n:"Shrimple [100-200]",v:12.5,u:"Currency",t:"a"},
+  {n:"Shrimple [200-400]",v:11.25,u:"Currency",t:"a"},
+  {n:"Shrimple [400+]",v:10,u:"Currency",t:"a"},
+  {n:"Creature [1-10]",v:12.5,u:"Currency",t:"a"},
+  {n:"Creature [10-100]",v:10,u:"Currency",t:"a"},
+  {n:"Creature [100-200]",v:7.5,u:"Currency",t:"a"},
+  {n:"Creature [200-300]",v:6.25,u:"Currency",t:"a"},
+  {n:"Creature [300-400]",v:5,u:"Currency",t:"a"},
+  {n:"Creature [400+]",v:3.75,u:"Currency",t:"a"},
+  {n:"Brute",v:4.75,u:"Currency",t:"a"},
+  {n:"Overheaven",v:3.75,u:"Currency",t:"a"},
+  {n:"The World",v:3.25,u:"Currency",t:"a"},
+  {n:"Tiki",v:2.75,u:"Currency",t:"a"},
+  {n:"Violin [1-10]",v:10,u:"Currency",t:"b"},
+  {n:"Violin [10-50]",v:6.25,u:"Currency",t:"b"},
+  {n:"Violin [50-100]",v:5,u:"Currency",t:"b"},
+  {n:"Violin [100-200]",v:3.75,u:"Currency",t:"b"},
+  {n:"Violin [200+]",v:2.5,u:"Currency",t:"b"},
+  {n:"Roadster",v:3.25,u:"Currency",t:"b"},
+  {n:"Dubstep",v:2.5,u:"Currency",t:"b"},
+  {n:"Poopatary",v:1.5,u:"Currency",t:"b"},
+  {n:"Core [BLK]",v:1.5,u:"Currency",t:"b"},
+  {n:"Core [ORN]",v:0.8,u:"Currency",t:"b"},
+  {n:"Core [PNK]",v:0.8,u:"Currency",t:"b"},
+  {n:"Core [PUR]",v:0.8,u:"Currency",t:"b"},
+  {n:"Core [GRN]",v:0.8,u:"Currency",t:"b"},
+  {n:"Core [RED]",v:0.8,u:"Currency",t:"b"},
+  {n:"Core [YLW]",v:0.8,u:"Currency",t:"b"},
+  {n:"Core [BLU]",v:0.8,u:"Currency",t:"b"},
+  {n:"Purgatory",v:1.25,u:"Currency",t:"b"},
+  {n:"Motorcycle",v:0.5,u:"Currency",t:"b"},
+  {n:"Downdraught",v:0.6,u:"Currency",t:"b"},
+  {n:"Dragon Slayer",v:1,u:"Currency",t:"b"},
+  {n:"Poopium",v:0.6,u:"Currency",t:"b"},
+  {n:"Bloxy",v:0.75,u:"Currency",t:"b"},
+  {n:"Widow",v:0.6,u:"Currency",t:"b"},
+  {n:"Core",v:0.4,u:"Currency",t:"b"},
+  {n:"Ciel",v:0.45,u:"Currency",t:"b"},
+  {n:"Big [1-10]",v:13.75,u:"Currency",t:"c"},
+  {n:"Big [10-100]",v:10,u:"Currency",t:"c"},
+  {n:"Big [100-500]",v:8.75,u:"Currency",t:"c"},
+  {n:"Big [500-1000]",v:6.75,u:"Currency",t:"c"},
+  {n:"Big [1000-2000]",v:5,u:"Currency",t:"c"},
+  {n:"Big [2000-3000]",v:4.25,u:"Currency",t:"c"},
+  {n:"Big [3000-4000]",v:3.75,u:"Currency",t:"c"},
+  {n:"Big [4000+]",v:3,u:"Currency",t:"c"},
+  {n:"Spacial [1-10]",v:10,u:"Currency",t:"c"},
+  {n:"Spacial [10-100]",v:7.5,u:"Currency",t:"c"},
+  {n:"Spacial [100-500]",v:6.25,u:"Currency",t:"c"},
+  {n:"Spacial [500-1000]",v:4,u:"Currency",t:"c"},
+  {n:"Spacial [1000-2000]",v:3.75,u:"Currency",t:"c"},
+  {n:"Spacial [2000-3000]",v:2.5,u:"Currency",t:"c"},
+  {n:"Spacial [3000+]",v:2,u:"Currency",t:"c"},
+  {n:"Synthwave [1-10]",v:8.75,u:"Currency",t:"c"},
+  {n:"Synthwave [10-100]",v:6.25,u:"Currency",t:"c"},
+  {n:"Synthwave [100-500]",v:4.5,u:"Currency",t:"c"},
+  {n:"Synthwave [500-1000]",v:3.5,u:"Currency",t:"c"},
+  {n:"Synthwave [1000-2000]",v:2.5,u:"Currency",t:"c"},
+  {n:"Synthwave [2000+]",v:2,u:"Currency",t:"c"},
+  {n:"Chess [1-10]",v:6.25,u:"Currency",t:"c"},
+  {n:"Chess [10-100]",v:3.75,u:"Currency",t:"c"},
+  {n:"Chess [100-500]",v:2.5,u:"Currency",t:"c"},
+  {n:"Chess [500-1000]",v:1.75,u:"Currency",t:"c"},
+  {n:"Chess [1000-4000]",v:1.25,u:"Currency",t:"c"},
+  {n:"Chess [4000+]",v:0.75,u:"Currency",t:"c"},
+  {n:"X Raw [1-10]",v:5,u:"Currency",t:"c"},
+  {n:"X Raw [10-100]",v:3.5,u:"Currency",t:"c"},
+  {n:"X Raw [100-500]",v:2,u:"Currency",t:"c"},
+  {n:"X Raw [500+]",v:1.5,u:"Currency",t:"c"},
+  {n:"Earth",v:1,u:"Currency",t:"c"},
+  {n:"Reactor",v:1.1,u:"Currency",t:"c"},
+  {n:"Chains",v:0.45,u:"Currency",t:"c"},
+  {n:"Platinum",v:0.4,u:"Currency",t:"c"},
+  {n:"Za Warudo",v:0.4,u:"Currency",t:"c"},
+  {n:"Accelerator",v:0.2,u:"Currency",t:"c"},
+  {n:"Chaser",v:0.3,u:"Currency",t:"c"},
+  {n:"Danger",v:0.35,u:"Currency",t:"c"},
+  {n:"The Po0p",v:0.3,u:"Currency",t:"c"},
+  {n:"Dumbfounded",v:0.2,u:"Currency",t:"c"},
+  {n:"Poison",v:0.25,u:"Currency",t:"c"},
+  {n:"Spooky Slash",v:0.25,u:"Currency",t:"c"},
+  {n:"Spooky Splash",v:0.2,u:"Currency",t:"c"},
+  {n:"Diamond",v:0.2,u:"Currency",t:"c"},
+  {n:"Roux Vuitton",v:0.2,u:"Currency",t:"c"},
+  {n:"Meltdown",v:0.2,u:"Currency",t:"c"},
+  {n:"Aperture",v:0.15,u:"Currency",t:"c"},
+  {n:"Enchanted",v:0.15,u:"Currency",t:"c"},
+  {n:"Wildcard",v:3.75,u:"Currency",t:"d"},
+  {n:"Primesoul",v:0.25,u:"Currency",t:"d"},
+  {n:"Void",v:0.25,u:"Currency",t:"d"},
+  {n:"Amethyst",v:0.2,u:"Currency",t:"d"},
+  {n:"Champion",v:6.25,u:"Blox",t:"d"},
+  {n:"Gold",v:6.25,u:"Blox",t:"d"},
+  {n:"Dos",v:5,u:"Blox",t:"d"},
+  {n:"Chains",v:3.5,u:"Blox",t:"d"},
+  {n:"Blueprint",v:3.5,u:"Blox",t:"d"},
+  {n:"Flashstep",v:3,u:"Blox",t:"d"},
+  {n:"Cursed",v:3,u:"Blox",t:"d"},
+  {n:"M68",v:3,u:"Blox",t:"d"},
+  {n:"Scales",v:2.5,u:"Blox",t:"d"},
+  {n:"Builderman",v:2.5,u:"Blox",t:"d"},
+  {n:"Slaughter",v:2.5,u:"Blox",t:"d"},
+  {n:"Sapphire",v:2.25,u:"Blox",t:"d"},
+  {n:"All Sys Color",v:1.6,u:"Blox",t:"d"},
+  {n:"Grim",v:2,u:"Blox",t:"d"},
+  {n:"Vampy",v:2,u:"Blox",t:"d"},
+  {n:"Robux",v:2,u:"Blox",t:"d"},
+  {n:"Tux",v:2,u:"Blox",t:"d"},
+  {n:"Magnetron",v:1.8,u:"Blox",t:"d"},
+  {n:"Desolate",v:1.8,u:"Blox",t:"d"},
+  {n:"Exodus",v:1.8,u:"Blox",t:"d"},
+  {n:"Evilseer",v:1.6,u:"Blox",t:"d"},
+  {n:"Megalodon",v:1.6,u:"Blox",t:"d"},
+  {n:"Murder",v:1.6,u:"Blox",t:"d"},
+  {n:"Pumpky",v:1.6,u:"Blox",t:"d"},
+  {n:"Mirage",v:1.5,u:"Blox",t:"d"},
+  {n:"Warning",v:1.4,u:"Blox",t:"d"},
+  {n:"Hologram",v:1.4,u:"Blox",t:"d"},
+  {n:"Gifty",v:1.4,u:"Blox",t:"d"},
+  {n:"Fleurs",v:1.4,u:"Blox",t:"d"},
+  {n:"Beeeee",v:1.4,u:"Blox",t:"d"},
+  {n:"Neon",v:1.2,u:"Blox",t:"d"},
+  {n:"Banana",v:1.2,u:"Blox",t:"d"},
+  {n:"Pixel",v:1.2,u:"Blox",t:"d"},
+  {n:"BloxVuitton",v:1,u:"Blox",t:"d"},
+  {n:"Flames",v:1,u:"Blox",t:"d"},
+  {n:"Yin Yang",v:1,u:"Blox",t:"d"},
+  {n:"Vozenilek",v:1,u:"Blox",t:"d"},
+  {n:"Emerald",v:1,u:"Blox",t:"d"},
+  {n:"Ruby",v:0.75,u:"Blox",t:"d"},
+  {n:"Punk",v:0.75,u:"Blox",t:"d"},
+  {n:"Uno",v:0.5,u:"Blox",t:"d"},
+  {n:"Full Metal",v:0.5,u:"Blox",t:"d"},
+];
 
-    function setT(t) {
-        target = t;
-        document.getElementById('btnY').style.background = target === 'you' ? 'var(--p)' : '#222';
-        document.getElementById('btnY').style.color = target === 'you' ? '#000' : '#fff';
-        document.getElementById('btnT').style.background = target === 'them' ? 'var(--s)' : '#222';
-        document.getElementById('btnT').style.color = '#fff';
-        render();
-    }
+// Init DB count
+document.getElementById('dbCount').textContent = data.length + ' Items in DB';
 
-    function setTier(tier) {
-        activeTier = tier;
-        document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector('.t-' + tier).classList.add('active');
-        render();
-    }
+function setTheme(m){
+  document.body.classList.toggle('light', m==='light');
+  document.getElementById('mdDark').classList.toggle('on', m==='dark');
+  document.getElementById('mdLight').classList.toggle('on', m==='light');
+}
+function toggleCB(){
+  cbOn=!cbOn;
+  document.body.classList.toggle('cb',cbOn);
+  document.getElementById('mdCB').classList.toggle('on',cbOn);
+}
+function setT(t){
+  target=t;
+  const bY=document.getElementById('btnY');
+  const bT=document.getElementById('btnT');
+  if(t==='you'){
+    bY.className='side-btn side-btn-you';
+    bT.className='side-btn side-btn-them';
+  } else {
+    bY.className='side-btn side-btn-you';
+    bT.className='side-btn side-btn-them them-active';
+    bY.style.background='';bY.style.color='';
+  }
+  if(t==='you'){bY.style.cssText='';bT.style.cssText='';}
+  render();
+}
+function setTier(tier){
+  activeTier=tier;
+  document.querySelectorAll('.tier-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.t-'+tier).classList.add('active');
+  render();
+}
+function clearAll(){
+  yItems=[];tItems=[];upd();
+}
 
-    function render() {
-        const q = document.getElementById('search').value.toLowerCase();
-        const filtered = data
-            .filter(i => (activeTier === 'all' || i.t === activeTier) && i.n.toLowerCase().includes(q))
-            .sort((a, b) => b.v - a.v);
-        document.getElementById('inv').innerHTML = filtered.map(i => `
-            <div class="card" onclick="add('${i.n.replace(/'/g,"\\'")}', ${i.v}, '${i.u}')">
-                <span class="tier-label l${i.t}">${i.t.toUpperCase()} TIER</span><br>
-                <span class="tag">${i.u}</span><br>
-                ${i.n}<br><b>${i.v}</b>
-            </div>
-        `).join('');
-    }
+function cardHTML(i){
+  const safe=i.n.replace(/'/g,"\\'");
+  return `<div class="card" onclick="add('${safe}',${i.v},'${i.u}')">
+    <span class="tier-label l${i.t}">${i.t.toUpperCase()}</span><br>
+    <span class="itag">${i.u}</span>
+    <div class="card-name">${i.n}</div>
+    <b>${fmt(i.v)}</b>
+  </div>`;
+}
 
-    function add(n, v, u) {
-        if (target === 'you') yItems.push({n, v, u}); else tItems.push({n, v, u});
-        upd();
-    }
+function render(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const inv=document.getElementById('inv');
+  if(activeTier==='all'){
+    let html='';
+    TIER_ORDER.forEach(tier=>{
+      const items=data.filter(i=>i.t===tier&&i.n.toLowerCase().includes(q)).sort((a,b)=>b.v-a.v);
+      if(!items.length) return;
+      html+=`<div class="sec-header sh-${tier}">${TIER_LABELS[tier]}<span class="sh-line"></span></div>`;
+      html+=`<div class="cards-grid">${items.map(cardHTML).join('')}</div>`;
+    });
+    inv.innerHTML=html||'<div style="text-align:center;color:var(--subtext);padding:40px;font-family:Orbitron,sans-serif;font-size:.8em;letter-spacing:2px;">NO RESULTS FOUND</div>';
+  } else {
+    const items=data.filter(i=>i.t===activeTier&&i.n.toLowerCase().includes(q)).sort((a,b)=>b.v-a.v);
+    inv.innerHTML=`<div class="cards-grid">${items.map(cardHTML).join('')}</div>`;
+  }
+}
 
-    function remove(side, i) {
-        if (side === 'y') yItems.splice(i, 1); else tItems.splice(i, 1);
-        upd();
-    }
+function add(n,v,u){
+  if(target==='you') yItems.push({n,v,u});
+  else tItems.push({n,v,u});
+  upd();
+}
+function remove(side,i){
+  if(side==='y') yItems.splice(i,1);
+  else tItems.splice(i,1);
+  upd();
+}
 
-    function upd() {
-        const yT = yItems.reduce((a, b) => a + b.v, 0);
-        const tT = tItems.reduce((a, b) => a + b.v, 0);
-        document.getElementById('yTotal').innerText = yT.toFixed(2);
-        document.getElementById('tTotal').innerText = tT.toFixed(2);
-        document.getElementById('yList').innerHTML = yItems.map((it, i) =>
-            `<div class="item" style="border-left-color:var(--p)">${it.n} <span class="tag">${it.v} ${it.u}</span> <span class="rem" onclick="remove('y',${i})">✕</span></div>`
-        ).join('');
-        document.getElementById('tList').innerHTML = tItems.map((it, i) =>
-            `<div class="item" style="border-left-color:var(--s)">${it.n} <span class="tag">${it.v} ${it.u}</span> <span class="rem" onclick="remove('t',${i})">✕</span></div>`
-        ).join('');
-        const b = document.getElementById('banner');
-        const d = tT - yT;
-        if (yT === 0 && tT === 0) { b.innerText = "System Ready"; b.className = "banner"; }
-        else if (d > 0.01) { b.innerText = "PROFIT DETECTED (+" + d.toFixed(2) + ")"; b.className = "banner win-glow"; }
-        else if (d < -0.01) { b.innerText = "DEFICIT WARNING (" + d.toFixed(2) + ")"; b.className = "banner loss-glow"; }
-        else { b.innerText = "STABLE TRADE"; b.className = "banner"; }
-    }
+function upd(){
+  const yT=yItems.reduce((a,b)=>a+b.v,0);
+  const tT=tItems.reduce((a,b)=>a+b.v,0);
+  const diff=tT-yT;
 
-    setT('you');
-    render();
+  document.getElementById('yTotal').textContent=fmt(yT);
+  document.getElementById('tTotal').textContent=fmt(tT);
+  document.getElementById('statY').textContent=fmt(yT);
+  document.getElementById('statT').textContent=fmt(tT);
+  document.getElementById('statYC').textContent=yItems.length;
+  document.getElementById('statTC').textContent=tItems.length;
+
+  const dEl=document.getElementById('statD');
+  if(yT===0&&tT===0){ dEl.textContent='—'; dEl.style.color='var(--subtext)'; }
+  else if(diff>0.001){ dEl.textContent='+'+fmt(diff); dEl.style.color='var(--win)'; }
+  else if(diff<-0.001){ dEl.textContent=fmt(diff); dEl.style.color='var(--loss)'; }
+  else { dEl.textContent='±0'; dEl.style.color='var(--gold)'; }
+
+  const sEl=document.getElementById('statS');
+  const banner=document.getElementById('banner');
+  if(yT===0&&tT===0){
+    banner.textContent='⚡ SYSTEM READY — START ADDING ITEMS';
+    banner.className='banner';
+    sEl.textContent='IDLE'; sEl.style.color='var(--subtext)';
+  } else if(diff>0.001){
+    banner.textContent='✦ PROFIT DETECTED +'+fmt(diff)+' — GOOD TRADE';
+    banner.className='banner win-glow';
+    sEl.textContent='PROFIT'; sEl.style.color='var(--win)';
+  } else if(diff<-0.001){
+    banner.textContent='⚠ DEFICIT '+fmt(diff)+' — LOSING VALUE';
+    banner.className='banner loss-glow';
+    sEl.textContent='LOSS'; sEl.style.color='var(--loss)';
+  } else {
+    banner.textContent='◈ STABLE TRADE — EVEN VALUE';
+    banner.className='banner stable-glow';
+    sEl.textContent='EVEN'; sEl.style.color='var(--gold)';
+  }
+
+  document.getElementById('yList').innerHTML=yItems.length
+    ? yItems.map((it,i)=>`<div class="item" style="border-left-color:var(--p)">
+        <div class="item-info">
+          <span class="item-name">${it.n}</span>
+          <span class="itag">${fmt(it.v)} ${it.u}</span>
+        </div>
+        <button class="rem" onclick="remove('y',${i})">✕</button>
+      </div>`).join('')
+    : '<div class="panel-empty">// no items added yet</div>';
+
+  document.getElementById('tList').innerHTML=tItems.length
+    ? tItems.map((it,i)=>`<div class="item" style="border-left-color:var(--s)">
+        <div class="item-info">
+          <span class="item-name">${it.n}</span>
+          <span class="itag">${fmt(it.v)} ${it.u}</span>
+        </div>
+        <button class="rem" onclick="remove('t',${i})">✕</button>
+      </div>`).join('')
+    : '<div class="panel-empty">// no items added yet</div>';
+}
+
+setT('you');
+render();
 </script>
 </body>
 </html>
