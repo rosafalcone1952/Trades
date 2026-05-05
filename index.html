@@ -3,159 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glove Trade Calculator</title>
+    <title>Glove God Calculator</title>
     <style>
-        body { font-family: sans-serif; background: #0f0f0f; color: #fff; padding: 15px; margin: 0; }
-        .calc-box { display: flex; gap: 10px; margin-top: 10px; }
-        .side { flex: 1; background: #1a1a1a; padding: 15px; border-radius: 10px; border: 2px solid #333; min-height: 150px; }
+        body { font-family: sans-serif; background: #0a0a0a; color: #fff; padding: 10px; margin: 0; }
+        .calc-box { display: flex; gap: 8px; margin-top: 10px; }
+        .side { flex: 1; background: #151515; padding: 12px; border-radius: 8px; border: 2px solid #333; min-height: 120px; }
         .side.you { border-color: #3498db; }
         .side.them { border-color: #e74c3c; }
-        .total { font-size: 1.8em; font-weight: bold; text-align: center; color: #00ff88; margin: 10px 0; }
-        .banner { width: 100%; padding: 20px; border-radius: 10px; text-align: center; font-size: 1.8em; font-weight: bold; margin-bottom: 15px; box-sizing: border-box; }
-        .win { background: #27ae60; } .loss { background: #c0392b; } .fair { background: #f39c12; }
-        .search { width: 100%; padding: 15px; background: #222; border: none; color: white; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box; font-size: 1.1em; }
-        .inventory { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-top: 15px; }
-        .item-card { background: #222; border: 1px solid #444; padding: 10px; border-radius: 6px; cursor: pointer; text-align: center; font-size: 0.85em;}
-        .item-card:hover { background: #333; border-color: #ff3e3e; }
-        .selected-item { background: #333; padding: 8px; margin: 5px 0; border-radius: 5px; display: flex; justify-content: space-between; font-size: 0.9em; }
-        .remove { color: #ff3e3e; font-weight: bold; cursor: pointer; }
-        .toggle-btns { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; }
-        .t-btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .total { font-size: 1.6em; font-weight: bold; text-align: center; color: #00ff88; margin: 5px 0; }
+        .banner { width: 100%; padding: 15px; border-radius: 8px; text-align: center; font-size: 1.5em; font-weight: bold; margin-bottom: 10px; box-sizing: border-box; border: 2px solid rgba(255,255,255,0.1); }
+        .win { background: #1b5e20; border-color: #00ff88; } .loss { background: #b71c1c; border-color: #ff3e3e; } .fair { background: #f39c12; }
+        .search { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: white; border-radius: 5px; margin-bottom: 10px; box-sizing: border-box; font-size: 1em; }
+        .inventory { display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 6px; max-height: 50vh; overflow-y: auto; padding: 5px; }
+        .item-card { background: #1e1e1e; border: 1px solid #333; padding: 8px; border-radius: 4px; cursor: pointer; text-align: center; font-size: 0.7em; transition: 0.2s; }
+        .item-card:hover { border-color: #00ff88; background: #252525; }
+        .selected-item { background: #222; padding: 6px; margin: 4px 0; border-radius: 4px; display: flex; justify-content: space-between; font-size: 0.75em; border-left: 3px solid; }
+        .you .selected-item { border-left-color: #3498db; } .them .selected-item { border-left-color: #e74c3c; }
+        .remove { color: #ff3e3e; font-weight: bold; cursor: pointer; padding: 0 5px; }
+        .toggle-btns { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
+        .t-btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; flex: 1; max-width: 200px; }
     </style>
 </head>
 <body>
-
-    <div id="banner" class="banner fair">ADD ITEMS TO START</div>
-
+    <div id="banner" class="banner fair">ADD ITEMS</div>
     <div class="calc-box">
         <div class="side you">
-            <h3 style="text-align:center; color:#3498db;">YOU GIVE</h3>
+            <h4 style="text-align:center; margin:0; color:#3498db;">YOU GIVE</h4>
             <div id="yTotal" class="total">0.00</div>
             <div id="yList"></div>
         </div>
         <div class="side them">
-            <h3 style="text-align:center; color:#e74c3c;">THEY GIVE</h3>
+            <h4 style="text-align:center; margin:0; color:#e74c3c;">THEY GIVE</h4>
             <div id="tTotal" class="total">0.00</div>
             <div id="tList"></div>
         </div>
     </div>
-
-    <div style="margin-top:20px;">
-        <input type="text" id="search" class="search" placeholder="Search gloves..." onkeyup="render()">
+    <div style="margin-top:15px;">
+        <input type="text" id="search" class="search" placeholder="Search EVERY glove (Serial, Name, Blox)..." onkeyup="render()">
         <div class="toggle-btns">
             <button id="btnY" class="t-btn" style="background:#3498db; color:white;" onclick="target='you';render()">Adding to YOU</button>
             <button id="btnT" class="t-btn" style="background:#444; color:white;" onclick="target='them';render()">Adding to THEM</button>
         </div>
         <div id="inv" class="inventory"></div>
     </div>
-
 <script>
-    let target = 'you';
-    let yItems = [];
-    let tItems = [];
-
+    let target = 'you'; let yItems = []; let tItems = [];
     const data = [
-        { n: "skibidi toilet", v: 1000, d: "Insane" },
-        { n: "Brush [1-10]", v: 1900, d: "Good/Decent" },
-        { n: "Blackmarket", v: 1400, d: "Bad" },
-        { n: "Tetro", v: 1100, d: "Bad/Horrible" },
-        { n: "M134 [1-5]", v: 955, d: "Insane" },
-        { n: "M134 [6-10]", v: 900, d: "Insane" },
-        { n: "M134 Low [11-36]", v: 805, d: "Insane" },
-        { n: "M134 Mid [37-62]", v: 735, d: "Insane" },
-        { n: "M134 High [63+]", v: 655, d: "Insane" },
-        { n: "MP5 [1-5]", v: 740, d: "Insane" },
-        { n: "MP5 [6-10]", v: 665, d: "Insane" },
-        { n: "MP5 Low [11-39]", v: 565, d: "Insane" },
-        { n: "MP5 Mid [40-68]", v: 540, d: "Insane" },
-        { n: "MP5 High [69+]", v: 500, d: "Insane" },
-        { n: "BIGGER [1-5]", v: 595, d: "Decent" },
-        { n: "BIGGER [6-10]", v: 540, d: "Decent" },
-        { n: "BIGGER Low [11-40]", v: 490, d: "Decent" },
-        { n: "BIGGER Mid [41-70]", v: 425, d: "Good/Decent" },
-        { n: "BIGGER High [71+]", v: 355, d: "Good/Decent" },
-        { n: "Runes [1-5]", v: 575, d: "Decent/Mid" },
-        { n: "Frostbite [1-5]", v: 270, d: "Mid" },
-        { n: "Frostbite High [85+]", v: 190, d: "Decent/Mid" },
-        { n: "Freezer [1-5]", v: 210, d: "Decent" },
-        { n: "Eradese [1-5]", v: 280, d: "Good" },
-        { n: "Vortex [1-5]", v: 190, d: "Bad" },
-        { n: "Chainsaw [1-5]", v: 295, d: "Good" },
-        { n: "Kitty", v: 350, d: "Insane" },
-        { n: "M1911", v: 340, d: "Good" },
-        { n: "Chocos", v: 65, d: "Good" },
-        { n: "Bear [1-10]", v: 57.5, d: "Good" },
-        { n: "Nuclear [1-10]", v: 52.5, d: "Decent" },
-        { n: "Cyberfly [BLK]", v: 40, d: "Good/Decent" },
-        { n: "Mecha", v: 19, d: "Decent" },
-        { n: "Death", v: 7.5, d: "Decent/Mid" },
-        { n: "Korone [1-10]", v: 65, d: "Good" },
-        { n: "Chronos [1-10]", v: 45, d: "Good/Decent" },
-        { n: "Shrimple [1-10]", v: 18.75, d: "Mid/Bad" },
-        { n: "Creature [1-10]", v: 12.5, d: "Mid/Bad" },
-        { n: "Brute", v: 4.75, d: "Good/Decent" },
-        { n: "Violin [1-10]", v: 10, d: "Mid/Bad" },
-        { n: "Roadster", v: 3.25, d: "Good" },
-        { n: "Dubstep", v: 2.5, d: "Decent" },
-        { n: "Purgatory", v: 1.25, d: "Decent" },
-        { n: "Big [1-10]", v: 13.75, d: "Mid" },
-        { n: "Spacial [1-10]", v: 10, d: "Mid/Bad" },
-        { n: "Synth [1-10]", v: 8.75, d: "Bad" },
-        { n: "Reactor", v: 1.1, d: "Good/Decent" },
-        { n: "Earth", v: 1, d: "Decent/Mid" },
-        { n: "Wildcard", v: 3.75, d: "Mid/Bad" },
-        { n: "Champion (Blox)", v: 0.125, d: "Decent" },
-        { n: "Gold (Blox)", v: 0.125, d: "Decent" },
-        { n: "Dos (Blox)", v: 0.10, d: "Mid" },
-        { n: "Chains (Blox)", v: 0.07, d: "Good" },
-        { n: "Murder (Blox)", v: 0.03, d: "Good" },
-        { n: "Full Metal (Blox)", v: 0.01, d: "Good" }
+        // BIG TICKETS
+        { n: "Brush [1-10]", v: 1900, d: "Good" }, { n: "Blackmarket", v: 1400, d: "Bad" }, { n: "Tetro", v: 1100, d: "Horrible" }, { n: "skibidi toilet", v: 1000, d: "Insane" },
+        // M134 FULL SERIES
+        { n: "M134 [1-5]", v: 955, d: "Insane" }, { n: "M134 [6-10]", v: 900, d: "Insane" }, { n: "M134 [11-36]", v: 805, d: "Insane" }, { n: "M134 [37-62]", v: 735, d: "Insane" }, { n: "M134 [63-100]", v: 655, d: "Insane" }, { n: "M134 [101+]", v: 550, d: "Good" },
+        // MP5 FULL SERIES
+        { n: "MP5 [1-5]", v: 740, d: "Insane" }, { n: "MP5 [6-10]", v: 665, d: "Insane" }, { n: "MP5 [11-39]", v: 565, d: "Insane" }, { n: "MP5 [40-68]", v: 540, d: "Insane" }, { n: "MP5 [69-100]", v: 500, d: "Insane" }, { n: "MP5 [101+]", v: 420, d: "Good" },
+        // BIGGER FULL SERIES
+        { n: "BIGGER [1-5]", v: 595, d: "Decent" }, { n: "BIGGER [6-10]", v: 540, d: "Decent" }, { n: "BIGGER [11-40]", v: 490, d: "Decent" }, { n: "BIGGER [41-70]", v: 425, d: "Decent" }, { n: "BIGGER [71-100]", v: 355, d: "Decent" }, { n: "BIGGER [101+]", v: 280, d: "Mid" },
+        // RUNES & KITTIES
+        { n: "Runes [1-5]", v: 575, d: "Mid" }, { n: "Runes [6-10]", v: 520, d: "Mid" }, { n: "Runes [11+]", v: 400, d: "Mid" }, { n: "Kitty", v: 350, d: "Insane" }, { n: "M1911", v: 340, d: "Good" },
+        // FROSTBITE FULL SERIES
+        { n: "Frostbite [1-5]", v: 270, d: "Mid" }, { n: "Frostbite [6-10]", v: 255, d: "Mid" }, { n: "Frostbite [11-45]", v: 230, d: "Mid" }, { n: "Frostbite [46-84]", v: 210, d: "Mid" }, { n: "Frostbite [85+]", v: 190, d: "Mid" },
+        // MID TIERS
+        { n: "Chainsaw [1-5]", v: 295, d: "Good" }, { n: "Eradese [1-5]", v: 280, d: "Good" }, { n: "Vortex [1-5]", v: 190, d: "Bad" }, { n: "Freezer [1-5]", v: 210, d: "Decent" }, { n: "Phantom [1-5]", v: 240, d: "Mid" },
+        { n: "Chocos", v: 65, d: "Good" }, { n: "Korone [1-10]", v: 65, d: "Good" }, { n: "Bear [1-10]", v: 57.5, d: "Good" }, { n: "Nuclear [1-10]", v: 52.5, d: "Decent" },
+        { n: "Chronos [1-10]", v: 45, d: "Good" }, { n: "Cyberfly [BLK]", v: 40, d: "Good" }, { n: "Cyberfly [WHT]", v: 35, d: "Decent" }, { n: "Mecha", v: 19, d: "Decent" },
+        // LOW TIERS & SERIALS
+        { n: "Shrimple [1-10]", v: 18.75, d: "Bad" }, { n: "Shrimple [11+]", v: 12, d: "Bad" }, { n: "Big [1-10]", v: 13.75, d: "Mid" }, { n: "Big [11+]", v: 8, d: "Mid" },
+        { n: "Creature [1-10]", v: 12.5, d: "Bad" }, { n: "Violin [1-10]", v: 10, d: "Bad" }, { n: "Spacial [1-10]", v: 10, d: "Bad" }, { n: "Synth [1-10]", v: 8.75, d: "Bad" },
+        { n: "Death", v: 7.5, d: "Mid" }, { n: "Brute", v: 4.75, d: "Good" }, { n: "Wildcard", v: 3.75, d: "Bad" }, { n: "Roadster", v: 3.25, d: "Good" },
+        { n: "Dubstep", v: 2.5, d: "Decent" }, { n: "Reactor", v: 1.1, d: "Good" }, { n: "Earth", v: 1, d: "Mid" }, { n: "Water", v: 0.8, d: "Bad" },
+        // BLOX SERIES (SENSITIVE VALUES)
+        { n: "Champion (Blox)", v: 0.125, d: "Decent" }, { n: "Gold (Blox)", v: 0.125, d: "Decent" }, { n: "Dos (Blox)", v: 0.10, d: "Mid" }, { n: "Chains (Blox)", v: 0.07, d: "Good" },
+        { n: "Murder (Blox)", v: 0.03, d: "Good" }, { n: "Full Metal (Blox)", v: 0.01, d: "Good" }, { n: "Classic (Blox)", v: 0.005, d: "Mid" }
     ];
-
     function calc(v, d) {
         let dm = d.toLowerCase();
-        if (dm.includes("horrible") || dm === "bad") return v - 0.20;
-        if (dm === "mid/bad") return v - 0.10;
-        if (dm === "mid") return v - 0.05;
-        if (dm.includes("good") || dm.includes("insane")) return dm.includes("insane") ? v + 0.20 : v + 0.10;
-        return v;
+        if (dm === "insane") return v + 0.20; if (dm === "good") return v + 0.10;
+        if (dm === "bad") return v - 0.20; if (dm === "mid") return v - 0.05; return v;
     }
-
     function render() {
         const q = document.getElementById('search').value.toLowerCase();
-        document.getElementById('inv').innerHTML = data.filter(i => i.n.toLowerCase().includes(q)).map(i => `
-            <div class="item-card" onclick="add('${i.n}', ${i.v}, '${i.d}')">${i.n}<br><b>${calc(i.v,i.d).toFixed(2)}</b></div>
+        document.getElementById('inv').innerHTML = data.filter(i => i.n.toLowerCase().includes(q)).sort((a,b) => b.v - a.v).map(i => `
+            <div class="item-card" onclick="add('${i.n}', ${i.v}, '${i.d}')">${i.n}<br><b>${calc(i.v,i.d).toFixed(3)}</b></div>
         `).join('');
         document.getElementById('btnY').style.background = target === 'you' ? '#3498db' : '#444';
         document.getElementById('btnT').style.background = target === 'them' ? '#e74c3c' : '#444';
     }
-
     function add(n, v, d) {
         const val = calc(v, d);
         if (target === 'you') yItems.push({n, val}); else tItems.push({n, val});
         update();
     }
-
     function remove(side, i) {
         if (side === 'y') yItems.splice(i, 1); else tItems.splice(i, 1);
         update();
     }
-
     function update() {
-        const yT = yItems.reduce((a, b) => a + b.val, 0);
-        const tT = tItems.reduce((a, b) => a + b.val, 0);
-        document.getElementById('yTotal').innerText = yT.toFixed(2);
-        document.getElementById('tTotal').innerText = tT.toFixed(2);
-        document.getElementById('yList').innerHTML = yItems.map((it, i) => `<div class="selected-item">${it.n} <span class="remove" onclick="remove('y', ${i})">X</span></div>`).join('');
-        document.getElementById('tList').innerHTML = tItems.map((it, i) => `<div class="selected-item">${it.n} <span class="remove" onclick="remove('t', ${i})">X</span></div>`).join('');
-        
-        const b = document.getElementById('banner');
-        const diff = tT - yT;
-        
-        // Math fix is right here: Now anything over a 0.01 difference triggers Win/Loss
+        const yT = yItems.reduce((a, b) => a + b.val, 0); const tT = tItems.reduce((a, b) => a + b.val, 0);
+        document.getElementById('yTotal').innerText = yT.toFixed(3); document.getElementById('tTotal').innerText = tT.toFixed(3);
+        document.getElementById('yList').innerHTML = yItems.map((it, i) => `<div class="selected-item"><span>${it.n}</span> <span class="remove" onclick="remove('y', ${i})">X</span></div>`).join('');
+        document.getElementById('tList').innerHTML = tItems.map((it, i) => `<div class="selected-item"><span>${it.n}</span> <span class="remove" onclick="remove('t', ${i})">X</span></div>`).join('');
+        const b = document.getElementById('banner'); const diff = parseFloat((tT - yT).toFixed(3));
         if (yT === 0 && tT === 0) { b.innerText = "ADD ITEMS"; b.className = "banner fair"; }
-        else if (diff >= 0.02) { b.innerText = "WIN (W)"; b.className = "banner win"; }
-        else if (diff <= -0.02) { b.innerText = "LOSS (L)"; b.className = "banner loss"; }
+        else if (diff >= 0.001) { b.innerText = "WIN (+" + diff.toFixed(3) + ")"; b.className = "banner win"; }
+        else if (diff <= -0.001) { b.innerText = "LOSS (" + diff.toFixed(3) + ")"; b.className = "banner loss"; }
         else { b.innerText = "FAIR TRADE"; b.className = "banner fair"; }
     }
     render();
