@@ -188,15 +188,12 @@ a.mbadge:hover{border-color:var(--p);color:var(--p);box-shadow:0 0 24px var(--gp
 /* SEARCH */
 .search-wrap{position:relative;margin-bottom:14px;}
 .search-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--p);pointer-events:none;}
-.search-box{width:100%;padding:16px 140px 16px 50px;background:rgba(255,32,32,.05);border:1px solid var(--p);border-radius:14px;color:var(--text);font-size:1em;outline:none;transition:box-shadow .35s var(--smooth),background .35s var(--smooth);font-family:'Orbitron',sans-serif;letter-spacing:1px;}
+.search-box{width:100%;padding:16px 56px 16px 50px;background:rgba(255,32,32,.05);border:1px solid var(--p);border-radius:14px;color:var(--text);font-size:1em;outline:none;transition:box-shadow .35s var(--smooth),background .35s var(--smooth);font-family:'Orbitron',sans-serif;letter-spacing:1px;}
 .search-box::placeholder{color:var(--subtext);}
 .search-box:focus{box-shadow:0 0 32px var(--gp),0 0 0 1px var(--p);background:rgba(255,32,32,.09);}
-.search-count{position:absolute;right:90px;top:50%;transform:translateY(-50%);font-family:'Share Tech Mono',monospace;font-size:.65em;color:var(--subtext);pointer-events:none;}
-.search-clear{position:absolute;right:48px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--subtext);cursor:pointer;font-size:1.1em;opacity:.6;transition:opacity .2s,transform .25s var(--spring),color .2s;padding:4px;border-radius:50%;}
+.search-count{position:absolute;right:52px;top:50%;transform:translateY(-50%);font-family:'Share Tech Mono',monospace;font-size:.65em;color:var(--subtext);pointer-events:none;}
+.search-clear{position:absolute;right:16px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--subtext);cursor:pointer;font-size:1.1em;opacity:.6;transition:opacity .2s,transform .25s var(--spring),color .2s;padding:4px;border-radius:50%;}
 .search-clear:hover{opacity:1;color:var(--loss);transform:translateY(-50%) scale(1.3) rotate(90deg);}
-/* Obtainability quick filter */
-.obtain-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);padding:6px 10px;border-radius:7px;border:1px solid var(--card-b);background:var(--card);color:var(--subtext);font-family:'Orbitron',sans-serif;font-size:.55em;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:border-color .2s,color .2s,background .2s;}
-.obtain-toggle.on{background:rgba(255,215,0,.12);border-color:var(--gold);color:var(--gold);}
 
 /* BUTTONS */
 .t-row{display:flex;gap:10px;margin-bottom:14px;}
@@ -215,19 +212,18 @@ a.mbadge:hover{border-color:var(--p);color:var(--p);box-shadow:0 0 24px var(--gp
 .compact-btn{padding:13px 14px;border-radius:12px;border:1px solid var(--card-b);background:var(--card);color:var(--subtext);font-family:'Orbitron',sans-serif;font-size:.55em;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;transition:border-color .25s,color .25s,transform .2s var(--spring);}
 .compact-btn:hover{border-color:var(--p);color:var(--p);transform:translateY(-2px);}
 .compact-btn.on{background:rgba(255,32,32,.12);border-color:var(--p);color:var(--p);}
-/* Export/Copy button */
 .export-btn{padding:13px 14px;border-radius:12px;border:1px solid rgba(255,215,0,.25);background:rgba(255,215,0,.05);color:var(--gold);font-family:'Orbitron',sans-serif;font-size:.55em;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;transition:border-color .25s,background .25s,transform .2s var(--spring),box-shadow .25s;}
 .export-btn:hover{border-color:var(--gold);background:rgba(255,215,0,.12);box-shadow:0 0 16px rgba(255,215,0,.2);transform:translateY(-2px);}
 
 /* FILTERS */
 .filter-area{margin-bottom:18px;}
 .filter-row-label{font-family:'Share Tech Mono',monospace;font-size:.6em;letter-spacing:3px;color:var(--subtext);text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center;gap:6px;}
-.tier-row,.demand-row,.obtain-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px;}
-.tier-btn,.dem-btn,.obt-btn{padding:8px 14px;border:1px solid var(--card-b);border-radius:10px;cursor:pointer;font-weight:700;text-transform:uppercase;font-family:'Orbitron',sans-serif;font-size:.65em;letter-spacing:1px;background:var(--card);color:var(--subtext);position:relative;overflow:hidden;transition:color .25s,border-color .25s,background .3s,box-shadow .3s,transform .22s var(--spring);}
-.tier-btn:hover,.dem-btn:hover,.obt-btn:hover{color:var(--text);border-color:var(--p);transform:translateY(-3px) scale(1.05);}
-.tier-btn:active,.dem-btn:active,.obt-btn:active{transform:scale(0.88)!important;}
-.tier-btn.active,.dem-btn.active,.obt-btn.active{color:#fff!important;transform:translateY(-2px) scale(1.04);box-shadow:0 4px 16px rgba(0,0,0,0.3);}
-.tier-btn.t-all.active,.dem-btn.d-all.active,.obt-btn.o-all.active{background:var(--p);border-color:var(--p);box-shadow:0 0 18px var(--gp);}
+.tier-row,.demand-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px;}
+.tier-btn,.dem-btn{padding:8px 14px;border:1px solid var(--card-b);border-radius:10px;cursor:pointer;font-weight:700;text-transform:uppercase;font-family:'Orbitron',sans-serif;font-size:.65em;letter-spacing:1px;background:var(--card);color:var(--subtext);position:relative;overflow:hidden;transition:color .25s,border-color .25s,background .3s,box-shadow .3s,transform .22s var(--spring);}
+.tier-btn:hover,.dem-btn:hover{color:var(--text);border-color:var(--p);transform:translateY(-3px) scale(1.05);}
+.tier-btn:active,.dem-btn:active{transform:scale(0.88)!important;}
+.tier-btn.active,.dem-btn.active{color:#fff!important;transform:translateY(-2px) scale(1.04);box-shadow:0 4px 16px rgba(0,0,0,0.3);}
+.tier-btn.t-all.active,.dem-btn.d-all.active{background:var(--p);border-color:var(--p);box-shadow:0 0 18px var(--gp);}
 .tier-btn.t-x.active{background:#ff0000;border-color:#ff0000;box-shadow:0 0 22px rgba(255,0,0,.6);}
 .tier-btn.t-ss.active{background:#ff6600;border-color:#ff6600;color:#000!important;}
 .tier-btn.t-s.active{background:#ffcc00;border-color:#ffcc00;color:#000!important;}
@@ -244,21 +240,12 @@ body.cb .tier-btn.t-c.active{background:#EE7733;border-color:#EE7733;color:#000!
 .dem-btn.d-mid.active{background:var(--d-mid);border-color:var(--d-mid);color:#000!important;}
 .dem-btn.d-bad.active{background:var(--d-bad);border-color:var(--d-bad);}
 .dem-btn.d-horrible.active{background:var(--d-horrible);border-color:var(--d-horrible);}
-.obt-btn.o-limited.active{background:#9900cc;border-color:#9900cc;}
-.obt-btn.o-obtainable.active{background:#00cc66;border-color:#00cc66;color:#000!important;}
-.obt-btn.o-blox.active{background:var(--gold);border-color:var(--gold);color:#000!important;}
 
 /* TREND BADGES */
 .trend-badge{display:inline-flex;align-items:center;gap:3px;font-size:.58em;padding:2px 6px;border-radius:5px;font-family:'Share Tech Mono',monospace;font-weight:700;border:1px solid currentColor;opacity:.85;vertical-align:middle;margin-left:4px;}
 .trend-up{color:#00ff88;background:rgba(0,255,136,.08);}
 .trend-down{color:var(--loss);background:rgba(255,102,0,.08);}
 .trend-stable{color:var(--gold);background:rgba(255,215,0,.08);}
-
-/* OBTAINABILITY BADGE */
-.obtain-badge{display:inline-flex;align-items:center;gap:3px;font-size:.58em;padding:2px 6px;border-radius:5px;font-family:'Share Tech Mono',monospace;font-weight:700;border:1px solid currentColor;opacity:.85;}
-.ob-limited{color:#ff2d78;background:rgba(255,45,120,.08);}
-.ob-obtainable{color:#00cc66;background:rgba(0,204,102,.08);}
-.ob-blox{color:var(--gold);background:rgba(255,215,0,.08);}
 
 /* TIER/DEMAND LABELS */
 .tier-label{font-size:.58em;padding:2px 7px;border-radius:4px;font-weight:900;display:inline-block;font-family:'Orbitron',sans-serif;letter-spacing:1px;}
@@ -479,7 +466,7 @@ body.cb .sh-c{background:#EE7733;color:#000;}.sh-d{background:#334455;color:#889
   </a>
   <div class="mbadge">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-    Last Updated: 06/05/2026
+    Last Updated: 08/05/2026
   </div>
   <div class="mbadge">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
@@ -607,7 +594,6 @@ body.cb .sh-c{background:#EE7733;color:#000;}.sh-d{background:#334455;color:#889
   <input type="text" id="search" class="search-box" placeholder="Search items..." oninput="render()">
   <span class="search-count" id="searchCount"></span>
   <button class="search-clear" id="searchClear" onclick="clearSearch()" style="display:none">✕</button>
-  <button class="obtain-toggle" id="obtainToggle" onclick="toggleObtainView()" title="Show only obtainable">🔓</button>
 </div>
 
 <div class="t-row" data-fade="9">
@@ -641,13 +627,6 @@ body.cb .sh-c{background:#EE7733;color:#000;}.sh-d{background:#334455;color:#889
     <div class="dem-btn d-bad ripple-host" onclick="setDemand('bad',this)">▽ Bad</div>
     <div class="dem-btn d-horrible ripple-host" onclick="setDemand('horrible',this)">⚠ Horrible</div>
   </div>
-  <div class="filter-row-label">// Obtainability</div>
-  <div class="obtain-row">
-    <div class="obt-btn o-all active ripple-host" onclick="setObtain('all',this)">ALL</div>
-    <div class="obt-btn o-limited ripple-host" onclick="setObtain('limited',this)">🔒 Limited</div>
-    <div class="obt-btn o-obtainable ripple-host" onclick="setObtain('obtainable',this)">🔓 Obtainable</div>
-    <div class="obt-btn o-blox ripple-host" onclick="setObtain('blox',this)">💎 Blox Shop</div>
-  </div>
 </div>
 
 <div id="inv" class="inv" data-fade="11"></div>
@@ -655,7 +634,7 @@ body.cb .sh-c{background:#EE7733;color:#000;}.sh-d{background:#334455;color:#889
 <div class="footer" data-fade="12">
   <div class="footer-left">
     <div class="fl-title">MadeByLoro's Value List</div>
-    <div class="fl-sub">Boxing League · Glove Master · Cyber-Void &nbsp;|&nbsp; Updated 06/05/2026</div>
+    <div class="fl-sub">Boxing League · Glove Master · Cyber-Void &nbsp;|&nbsp; Updated 08/05/2026</div>
     <div class="fl-cred">Values are community-estimated · Contributors: <span class="cname">Zebra</span>, <span class="cname">JustListenTo_Metal</span></div>
   </div>
   <div>
@@ -677,7 +656,7 @@ body.cb .sh-c{background:#EE7733;color:#000;}.sh-d{background:#334455;color:#889
 const BLOX_TO_CURRENCY = 50;
 function toCurrency(item){ return item.u==='Blox' ? item.v/BLOX_TO_CURRENCY : item.v; }
 
-let target='you', yItems=[], tItems=[], activeTier='all', activeDemand='all', activeObtain='all';
+let target='you', yItems=[], tItems=[], activeTier='all', activeDemand='all';
 let cbOn=false, compactMode=false, recents=[], wishlist=[], wishlistVisible=false;
 let ySortKey='val', ySortDir='desc', tSortKey='val', tSortDir='desc';
 let renderTimeout=null;
@@ -687,26 +666,18 @@ const DEMAND_SCORE={insane:100,good:80,decent:60,mid:40,bad:20,horrible:5};
 const DEMAND_COLOR={insane:'var(--d-insane)',good:'var(--d-good)',decent:'var(--d-decent)',mid:'var(--d-mid)',bad:'var(--d-bad)',horrible:'var(--d-horrible)'};
 const DEMAND_ICONS={insane:'🔥',good:'✦',decent:'◈',mid:'◇',bad:'▽',horrible:'⚠'};
 const DEMAND_LABELS={insane:'Insane',good:'Good',decent:'Decent',mid:'Mid',bad:'Bad',horrible:'Horrible'};
-/* Trend data: simulated history for items (up/down/stable) — in production this would come from a DB */
 const TREND_DATA = {
   'M134 [1-5]':'up','M134 [6-10]':'up','M134 Low [11-36]':'up','MP5 [1-5]':'up','MP5 [6-10]':'up',
-  'Kitty':'up','M1911':'stable','Chainsaw [1-5]':'down','Chainsaw [6-10]':'down',
+  'Kitty':'up','M1911':'stable',
+  'Chainsaw [1-5]':'stable','Chainsaw [6-10]':'stable',
   'X-RAGE [201-300]':'up','X-RAGE [101-200]':'stable','Chocos':'up','Bear [1-10]':'stable',
-  'Korone [1-10]':'up','Chronos [1-10]':'stable','Vortex [1-5]':'down','Vortex [6-10]':'down',
-  'Frostbite [1-5]':'stable','BIGGER [1-5]':'up','Runes [1-5]':'stable',
+  'Korone [1-10]':'up','Chronos [1-10]':'stable',
+  'Vortex [1-5]':'down','Vortex [6-10]':'down',
+  'Frostbite [1-5]':'down',
+  'BIGGER [1-5]':'up','Runes [1-5]':'stable',
   'Roadster':'up','Bloxy':'stable','Champion':'up','Gold':'stable'
 };
-/* Obtainability: 'limited' | 'obtainable' | 'blox' */
-const OBTAIN_DATA = {};
-/* D-tier Blox items are blox shop */
-/* Heuristic: if unit===Blox => blox shop; X tier => limited; SS/S common => obtainable; rest mixed */
-function getObtain(item){
-  if(item.u==='Blox') return 'blox';
-  if(item.t==='x'||item.t==='ss') return 'limited';
-  return 'obtainable';
-}
 
-/* Value history simulation — 6 data points */
 function getHistory(item){
   const base = toCurrency(item);
   const trend = TREND_DATA[item.n];
@@ -745,45 +716,45 @@ function popNumber(id){
 }
 
 /* ═══════════════════════════════════════
-   DATA
+   DATA — Updated 08/05/2026
    ═══════════════════════════════════════ */
 const data=[
   {n:"Brush [1-10]",v:1900,u:"Currency",t:"x",d:"good"},
   {n:"Blackmarket",v:1400,u:"Currency",t:"x",d:"bad"},
   {n:"Tetro",v:1100,u:"Currency",t:"x",d:"bad"},
-  {n:"M134 [1-5]",v:955,u:"Currency",t:"x",d:"insane"},
-  {n:"M134 [6-10]",v:900,u:"Currency",t:"x",d:"insane"},
-  {n:"M134 Low [11-36]",v:805,u:"Currency",t:"x",d:"insane"},
-  {n:"M134 Mid [37-62]",v:735,u:"Currency",t:"x",d:"insane"},
-  {n:"M134 High [63+]",v:655,u:"Currency",t:"x",d:"insane"},
-  {n:"MP5 [1-5]",v:740,u:"Currency",t:"x",d:"insane"},
-  {n:"MP5 [6-10]",v:665,u:"Currency",t:"x",d:"insane"},
-  {n:"MP5 Low [11-39]",v:565,u:"Currency",t:"x",d:"insane"},
-  {n:"MP5 Mid [40-68]",v:540,u:"Currency",t:"x",d:"insane"},
-  {n:"MP5 High [69+]",v:500,u:"Currency",t:"x",d:"insane"},
-  {n:"BIGGER [1-5]",v:595,u:"Currency",t:"x",d:"decent"},
-  {n:"BIGGER [6-10]",v:540,u:"Currency",t:"x",d:"decent"},
-  {n:"BIGGER Low [11-40]",v:490,u:"Currency",t:"x",d:"decent"},
-  {n:"BIGGER Mid [41-70]",v:425,u:"Currency",t:"x",d:"good"},
-  {n:"BIGGER High [71+]",v:355,u:"Currency",t:"x",d:"good"},
+  {n:"M134 [1-5]",v:1100,u:"Currency",t:"x",d:"insane"},
+  {n:"M134 [6-10]",v:1000,u:"Currency",t:"x",d:"insane"},
+  {n:"M134 Low [11-36]",v:875,u:"Currency",t:"x",d:"insane"},
+  {n:"M134 Mid [37-62]",v:800,u:"Currency",t:"x",d:"insane"},
+  {n:"M134 High [63+]",v:700,u:"Currency",t:"x",d:"insane"},
+  {n:"MP5 [1-5]",v:750,u:"Currency",t:"x",d:"insane"},
+  {n:"MP5 [6-10]",v:675,u:"Currency",t:"x",d:"insane"},
+  {n:"MP5 Low [11-39]",v:575,u:"Currency",t:"x",d:"insane"},
+  {n:"MP5 Mid [40-68]",v:550,u:"Currency",t:"x",d:"insane"},
+  {n:"MP5 High [69+]",v:510,u:"Currency",t:"x",d:"insane"},
+  {n:"BIGGER [1-5]",v:675,u:"Currency",t:"x",d:"insane"},
+  {n:"BIGGER [6-10]",v:640,u:"Currency",t:"x",d:"insane"},
+  {n:"BIGGER Low [11-40]",v:525,u:"Currency",t:"x",d:"insane"},
+  {n:"BIGGER Mid [41-70]",v:500,u:"Currency",t:"x",d:"insane"},
+  {n:"BIGGER High [71+]",v:425,u:"Currency",t:"x",d:"insane"},
   {n:"Runes [1-5]",v:575,u:"Currency",t:"x",d:"decent"},
   {n:"Runes [6-10]",v:515,u:"Currency",t:"x",d:"decent"},
   {n:"Runes Low [11-43]",v:465,u:"Currency",t:"x",d:"decent"},
   {n:"Runes Mid [44-76]",v:405,u:"Currency",t:"x",d:"decent"},
   {n:"Runes High [77+]",v:345,u:"Currency",t:"x",d:"decent"},
-  {n:"Kitty",v:350,u:"Currency",t:"ss",d:"insane"},
-  {n:"M1911",v:340,u:"Currency",t:"ss",d:"good"},
-  {n:"Chainsaw [1-5]",v:295,u:"Currency",t:"ss",d:"good"},
-  {n:"Chainsaw [6-10]",v:275,u:"Currency",t:"ss",d:"good"},
-  {n:"Chainsaw Low [11-58]",v:260,u:"Currency",t:"ss",d:"good"},
-  {n:"Chainsaw Mid [59-105]",v:250,u:"Currency",t:"ss",d:"good"},
-  {n:"Chainsaw High [106-153]",v:235,u:"Currency",t:"ss",d:"good"},
-  {n:"Eradese [1-5]",v:280,u:"Currency",t:"ss",d:"good"},
-  {n:"Eradese [6-10]",v:255,u:"Currency",t:"ss",d:"good"},
-  {n:"Eradese Low [11-40]",v:225,u:"Currency",t:"ss",d:"good"},
-  {n:"Eradese Mid [41-70]",v:210,u:"Currency",t:"ss",d:"good"},
-  {n:"Eradese High [71-100]",v:195,u:"Currency",t:"ss",d:"good"},
-  {n:"Frostbite [1-5]",v:270,u:"Currency",t:"ss",d:"mid"},
+  {n:"Kitty",v:400,u:"Currency",t:"ss",d:"good"},
+  {n:"M1911",v:340,u:"Currency",t:"ss",d:"mid"},
+  {n:"Chainsaw [1-5]",v:305,u:"Currency",t:"ss",d:"good"},
+  {n:"Chainsaw [6-10]",v:285,u:"Currency",t:"ss",d:"good"},
+  {n:"Chainsaw Low [11-58]",v:270,u:"Currency",t:"ss",d:"good"},
+  {n:"Chainsaw Mid [59-105]",v:260,u:"Currency",t:"ss",d:"good"},
+  {n:"Chainsaw High [106-153]",v:245,u:"Currency",t:"ss",d:"good"},
+  {n:"Eradese [1-5]",v:290,u:"Currency",t:"ss",d:"good"},
+  {n:"Eradese [6-10]",v:265,u:"Currency",t:"ss",d:"good"},
+  {n:"Eradese Low [11-40]",v:235,u:"Currency",t:"ss",d:"good"},
+  {n:"Eradese Mid [41-70]",v:220,u:"Currency",t:"ss",d:"good"},
+  {n:"Eradese High [71-100]",v:205,u:"Currency",t:"ss",d:"good"},
+  {n:"Frostbite [1-5]",v:300,u:"Currency",t:"ss",d:"mid"},
   {n:"Frostbite [6-10]",v:250,u:"Currency",t:"ss",d:"mid"},
   {n:"Frostbite Low [11-47]",v:230,u:"Currency",t:"ss",d:"mid"},
   {n:"Frostbite Mid [48-84]",v:210,u:"Currency",t:"ss",d:"decent"},
@@ -808,11 +779,11 @@ const data=[
   {n:"X-RAGE [401-500]",v:70,u:"Currency",t:"ss",d:"good"},
   {n:"X-RAGE [501+]",v:60,u:"Currency",t:"ss",d:"good"},
   {n:"Chocos",v:65,u:"Currency",t:"s",d:"good"},
-  {n:"Bear [1-10]",v:57.5,u:"Currency",t:"s",d:"good"},
-  {n:"Bear [10-100]",v:55,u:"Currency",t:"s",d:"good"},
-  {n:"Bear [100-200]",v:52.5,u:"Currency",t:"s",d:"good"},
-  {n:"Bear [200-300]",v:50,u:"Currency",t:"s",d:"good"},
-  {n:"Bear [300+]",v:47.5,u:"Currency",t:"s",d:"good"},
+  {n:"Bear [1-10]",v:60,u:"Currency",t:"s",d:"good"},
+  {n:"Bear [10-100]",v:57.5,u:"Currency",t:"s",d:"good"},
+  {n:"Bear [100-200]",v:55,u:"Currency",t:"s",d:"good"},
+  {n:"Bear [200-300]",v:52.5,u:"Currency",t:"s",d:"good"},
+  {n:"Bear [300+]",v:50,u:"Currency",t:"s",d:"good"},
   {n:"Nuclear [1-10]",v:52.5,u:"Currency",t:"s",d:"decent"},
   {n:"Nuclear [10-50]",v:43.75,u:"Currency",t:"s",d:"decent"},
   {n:"Nuclear [50-100]",v:40,u:"Currency",t:"s",d:"decent"},
@@ -999,11 +970,6 @@ function trendBadge(name){
   const map={up:'<span class="trend-badge trend-up">▲ Rising</span>',down:'<span class="trend-badge trend-down">▼ Falling</span>',stable:'<span class="trend-badge trend-stable">◆ Stable</span>'};
   return map[t]||'';
 }
-function obtainBadge(item){
-  const o=getObtain(item);
-  const map={limited:'<span class="obtain-badge ob-limited">🔒 Limited</span>',obtainable:'<span class="obtain-badge ob-obtainable">🔓 Obtainable</span>',blox:'<span class="obtain-badge ob-blox">💎 Blox Shop</span>'};
-  return map[o]||'';
-}
 function calcAvgDemand(items){
   if(!items.length)return null;
   const avg=items.reduce((a,b)=>a+DEMAND_SCORE[b.d],0)/items.length;
@@ -1073,10 +1039,6 @@ function setT(t,el){
 /* ── FILTERS ── */
 function setTier(tier,el){activeTier=tier;document.querySelectorAll('.tier-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');animRender();}
 function setDemand(d,el){activeDemand=d;document.querySelectorAll('.dem-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');animRender();}
-function setObtain(o,el){activeObtain=o;document.querySelectorAll('.obt-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');animRender();}
-
-let showObtainableOnly=false;
-function toggleObtainView(){showObtainableOnly=!showObtainableOnly;document.getElementById('obtainToggle').classList.toggle('on',showObtainableOnly);animRender();}
 
 function animRender(){
   const inv=document.getElementById('inv');
@@ -1118,9 +1080,7 @@ function render(){
     const tierOk=activeTier==='all'||i.t===activeTier;
     const demOk=activeDemand==='all'||i.d===activeDemand;
     const qOk=i.n.toLowerCase().includes(ql);
-    const obtOk=activeObtain==='all'||getObtain(i)===activeObtain;
-    const obtViewOk=!showObtainableOnly||(getObtain(i)==='obtainable');
-    return tierOk&&demOk&&qOk&&obtOk&&obtViewOk;
+    return tierOk&&demOk&&qOk;
   };
   const inv=document.getElementById('inv');const gc=compactMode?'cards-grid compact':'cards-grid';
   let totalShown=0;
@@ -1137,13 +1097,13 @@ function render(){
     const items=data.filter(filter).sort((a,b)=>b.v-a.v);totalShown=items.length;
     inv.innerHTML=items.length?`<div class="${gc}">${items.map((i,idx)=>cardHTML(i,q,idx*15)).join('')}</div>`:'<div style="text-align:center;color:var(--subtext);padding:40px;font-family:Orbitron,sans-serif;font-size:.8em;letter-spacing:2px;">NO RESULTS FOUND</div>';
   }
-  document.getElementById('searchCount').textContent=q||activeTier!=='all'||activeDemand!=='all'||activeObtain!=='all'?totalShown+' shown':'';
+  document.getElementById('searchCount').textContent=q||activeTier!=='all'||activeDemand!=='all'?totalShown+' shown':'';
 }
 
 /* ── POPUP ── */
 function openPopup(name){
   const item=data.find(i=>i.n===name);if(!item)return;
-  const isBlox=item.u==='Blox';const cv=toCurrency(item);const trend=TREND_DATA[name];
+  const isBlox=item.u==='Blox';const cv=toCurrency(item);
   const hist=getHistory(item);const maxH=Math.max(...hist);
   const tierColors={x:'#ff0000,#fff',ss:'#ff6600,#000',s:'#ffcc00,#000',a:'#00cc66,#000',b:'#00aadd,#000',c:'#9900cc,#fff',d:'#334455,#8899aa'};
   const[tc,tt]=tierColors[item.t].split(',');
@@ -1161,7 +1121,6 @@ function openPopup(name){
     </div>
     <div class="popup-grid">
       <div class="popup-field"><div class="popup-field-label">Demand</div><div class="popup-field-val">${demandBadge(item.d)}</div></div>
-      <div class="popup-field"><div class="popup-field-label">Obtainability</div><div class="popup-field-val">${obtainBadge(item)}</div></div>
       <div class="popup-field"><div class="popup-field-label">Trend</div><div class="popup-field-val">${trendBadge(name)||'<span style="color:var(--subtext);font-size:.75em">Unknown</span>'}</div></div>
       <div class="popup-field"><div class="popup-field-label">Demand Score</div><div class="popup-field-val" style="color:${DEMAND_COLOR[item.d]};font-family:'Orbitron',sans-serif">${DEMAND_SCORE[item.d]} / 100</div></div>
     </div>
@@ -1296,8 +1255,6 @@ function buildWarnings(yT,tT){
     if(diff>0&&pct>0.5)warnings.push({type:'info',icon:'✦',text:`Big profit trade — you receive ${fmt(diff)} Cur more value. Might be hard to accept.`});
     const yBadDem=yItems.filter(i=>['bad','horrible'].includes(i.d)).length;
     if(yBadDem>0)warnings.push({type:'caution',icon:'📉',text:`${yBadDem} item${yBadDem>1?'s':''} on your side have bad/horrible demand — may be hard to re-trade`});
-    const tLimited=tItems.filter(i=>getObtain(i)==='limited').length;
-    if(tLimited>0)warnings.push({type:'info',icon:'🔒',text:`${tLimited} limited item${tLimited>1?'s':''} on their side — verify authenticity before accepting`});
   }
   return warnings;
 }
@@ -1374,7 +1331,7 @@ function upd(){
   /* SORTED TRADE SIDES */
   const ySorted=sortItems(yItems,ySortKey,ySortDir);const tSorted=sortItems(tItems,tSortKey,tSortDir);
   document.getElementById('yList').innerHTML=ySorted.length
-    ?ySorted.map((it,i)=>{const cv=toCurrency(it);const isBlox=it.u==='Blox';const origI=yItems.indexOf(it);
+    ?ySorted.map((it,i)=>{const cv=toCurrency(it);const isBlox=it.u==='Blox';
       return `<div class="item item-enter" style="border-left-color:var(--p);animation-delay:${i*25}ms">
         <div class="item-info">
           <span class="demand-badge db-${it.d}" style="font-size:.55em;flex-shrink:0">${DEMAND_ICONS[it.d]}</span>
