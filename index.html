@@ -462,7 +462,7 @@ body.cb .sh-c{background:#EE7733;color:#000;}.sh-d{background:#334455;color:#889
 <div class="meta-strip" data-fade="2">
   <a class="mbadge" href="https://www.roblox.com/games/3738091713/Boxing-League" target="_blank" rel="noopener">
     <div class="live-dot"></div><span>Boxing League — LIVE</span>
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
   </a>
   <div class="mbadge">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -1130,8 +1130,8 @@ function openPopup(name){
       <div class="ph-chart">${histBars}</div>
     </div>
     <div class="popup-actions">
-      <button class="popup-add-y ripple-host" onclick="add('${safe}',${item.v},'${item.u}','${item.d}','${item.t}',null);closePopup()">+ Your Side</button>
-      <button class="popup-add-t ripple-host" onclick="addToThem('${safe}',${item.v},'${item.u}','${item.d}','${item.t}');closePopup()">+ Their Side</button>
+      <button class="popup-add-y ripple-host" onclick="add('${safe}',${item.v},'${item.u}','${item.d}','${item.t}',null,'you');closePopup()">+ Your Side</button>
+      <button class="popup-add-t ripple-host" onclick="add('${safe}',${item.v},'${item.u}','${item.d}','${item.t}',null,'them');closePopup()">+ Their Side</button>
       <button class="popup-wish-btn ripple-host" onclick="addWishFromPopup('${safe}',${item.v},'${item.u}')">★ Wishlist</button>
     </div>
   `;
@@ -1140,19 +1140,19 @@ function openPopup(name){
 }
 function closePopup(){document.getElementById('popupOverlay').classList.remove('open');document.body.style.overflow='';}
 function closePopupOnBg(e){if(e.target===document.getElementById('popupOverlay'))closePopup();}
-function addToThem(n,v,u,d,t,cardEl){
-  const prev=target;target='them';add(n,v,u,d,t,cardEl);target=prev;
-}
 
 /* ── ADD / REMOVE ── */
-function add(n,v,u,d,t,cardEl){
-  if(!target){showToast('⚠ SELECT A SIDE FIRST');return;}
+/* FIX: add() now accepts optional forceSide param — popup buttons pass 'you'/'them' directly,
+   bypassing the need to have a side pre-selected in the main UI */
+function add(n,v,u,d,t,cardEl,forceSide){
+  const side=forceSide||target;
+  if(!side){showToast('⚠ SELECT A SIDE FIRST');return;}
   if(cardEl){cardEl.classList.add('card-flash');cardEl.addEventListener('animationend',()=>cardEl.classList.remove('card-flash'),{once:true});}
   const item={n,v,u,d,t};
-  if(target==='you')yItems.push(item);else tItems.push(item);
+  if(side==='you')yItems.push(item);else tItems.push(item);
   recents=recents.filter(r=>r.n!==n);recents.unshift(item);if(recents.length>6)recents.pop();
   const dv=u==='Blox'?fmt(v)+' Blox':fmt(v)+' Cur';
-  showToast(`+ ${n} (${dv}) → ${target==='you'?'YOUR':'THEIR'} SIDE`);upd();
+  showToast(`+ ${n} (${dv}) → ${side==='you'?'YOUR':'THEIR'} SIDE`);upd();
 }
 function remove(side,i,el){
   if(el){
@@ -1160,6 +1160,10 @@ function remove(side,i,el){
     setTimeout(()=>{el.style.maxHeight='0';el.style.padding='0';el.style.margin='0';},50);
     setTimeout(()=>{if(side==='y')yItems.splice(i,1);else tItems.splice(i,1);upd();},280);
   } else {if(side==='y')yItems.splice(i,1);else tItems.splice(i,1);upd();}
+}
+/* FIX: addToThem now just calls add() with forceSide='them' instead of swapping target */
+function addToThem(n,v,u,d,t,cardEl){
+  add(n,v,u,d,t,cardEl,'them');
 }
 function addRecent(n,v,u,d,t){
   const item={n,v,u,d,t};
