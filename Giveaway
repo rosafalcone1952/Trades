@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpinLobby - Realtime Giveaway Wheel</title>
+    <!-- Tailwind CSS for beautiful styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Canvas Confetti for winning celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .spinning {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-white font-sans min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- SUPABASE CONFIGURATION (Replace these with your actual keys!) -->
+    <script>
+        const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+        const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    </script>
+
+    <!-- ==================== VIEW 1: HOST WHEEL SCREEN ==================== -->
+    <div id="host-view" class="hidden w-full max-w-4xl text-center flex flex-col items-center">
+        <h1 class="text-4xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">
+            SpinLobby Live Wheel
+        </h1>
+        
+        <!-- Timer Status -->
+        <div id="timer-display" class="bg-slate-800 px-4 py-2 rounded-full text-sm font-semibold mb-6 border border-slate-700">
+            Lobby Closes in: <span id="countdown" class="text-pink-500 font-mono">05:00</span>
+        </div>
+
+        <div class="flex flex-col md:flex-row items-center justify-center gap-12 w-full">
+            <!-- Wheel Container -->
+            <div class="relative w-80 h-80 md:w-96 md:h-96 flex items-center justify-center">
+                <!-- Pointer Arrow -->
+                <div class="absolute -top-4 z-10 text-pink-500 text-4xl">▼</div>
+                <!-- Canvas drawing the wheel segments -->
+                <canvas id="wheelCanvas" width="400" height="400" class="w-full h-full rounded-full border-4 border-slate-700 shadow-2xl transition-transform duration-[5000ms] ease-out"></canvas>
+                <!-- Center Pin -->
+                <div class="absolute w-12 h-12 bg-white rounded-full border-4 border-slate-700 shadow-lg flex items-center justify-center text-slate-900 font-bold text-lg">
+                    ★
+                </div>
+            </div>
+
+            <!-- Dashboard / Live Entries -->
+            <div class="flex-1 bg-slate-800/50 p-6 rounded-2xl border border-slate-700 w-full max-w-sm">
+                <h2 class="text-xl font-bold mb-4 flex justify-between">
+                    <span>Entrants</span>
+                    <span id="entrant-count" class="bg-pink-500/20 text-pink-400 px-2.5 py-0.5 rounded-full text-sm">0 Joined</span>
+                </h2>
+                <div id="entrants-list" class="h-48 overflow-y-auto space-y-2 text-left pr-2 text-slate-300 scrollbar-thin">
+                    <p class="text-slate-500 text-center py-12">Waiting for entrants to join...</p>
+                </div>
+                <button id="spin-btn" disabled class="w-full mt-6 bg-gradient-to-r from-pink-500 to-violet-500 hover:from-pink-600 hover:to-violet-600 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-bold py-3 px-6 rounded-xl shadow-lg transition duration-200">
+                    LOCK LOBBY & SPIN!
+                </button>
+            </div>
+        </div>
+        
+        <!-- Entry Link for Host to Share -->
+        <div class="mt-8 p-4 bg-slate-800 rounded-xl border border-slate-700 w-full max-w-md">
+            <p class="text-xs text-slate-400 mb-1">Share this link with your audience:</p>
+            <input id="share-link" type="text" readonly class="w-full bg-slate-950 text-slate-300 text-sm p-2 rounded border border-slate-700 text-center select-all cursor-pointer">
+        </div>
+    </div>
+
+
+    <!-- ==================== VIEW 2: PARTICIPANT ENTRY SCREEN ==================== -->
+    <div id="participant-view" class="hidden w-full max-w-md bg-slate-800 p-8 rounded-3xl border border-slate-700 shadow-2xl text-center">
+        <h1 class="text-3xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">
+            Join the Giveaway!
+        </h1>
+        <p class="text-slate-400 mb-6 text-sm">Type your username below to throw your name into the wheel.</p>
+
+        <!-- Active Entry Form -->
+        <div id="join-form">
+            <input id="user-input" type="text" placeholder="Enter your username..." class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 focus:outline-none focus:border-pink-500 text-white placeholder-slate-500 text-center mb-4 transition">
+            <button id="submit-btn" class="w-full bg-gradient-to-r from-pink-500 to-violet-500 hover:from-pink-600 hover:to-violet-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition">
+                Enter Giveaway
+            </button>
+        </div>
+
+        <!-- Success Message -->
+        <div id="success-msg" class="hidden">
+            <div class="text-green-400 text-5xl mb-4">🎉</div>
+            <h2 class="text-xl font-bold mb-2">You are in the draw!</h2>
+            <p class="text-slate-400 text-sm">Watch the host's screen. Good luck!</p>
+        </div>
+
+        <!-- Expired Link Message -->
+        <div id="expired-msg" class="hidden">
+            <div class="text-red-400 text-5xl mb-4">⏰</div>
+            <h2 class="text-xl font-bold mb-2">Lobby Closed!</h2>
+            <p class="text-slate-400 text-sm">Sorry, entries are locked for this giveaway.</p>
+        </div>
+    </div>
+
+
+    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+    <script>
+        // Check if user is Host or Entrant based on URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const lobbyId = urlParams.get('lobby');
+        const isParticipant = urlParams.has('join');
+
+        // Setup UI views
+        if (isParticipant) {
+            document.getElementById('participant-view').classList.remove('hidden');
+            setupParticipantView();
+        } else {
+            document.getElementById('host-view').classList.remove('hidden');
+            setupHostView();
+        }
+
+        let entrants = [];
+        let lobbyEndTime = null;
+
+        // ------------------ PARTICIPANT CODE ------------------
+        function setupParticipantView() {
+            // Check if the timer has expired from the URL parameters (simplified for demo)
+            const expiresAt = urlParams.get('expires');
+            if (expiresAt && new Date().getTime() > parseInt(expiresAt)) {
+                document.getElementById('join-form').classList.add('hidden');
+                document.getElementById('expired-msg').classList.remove('hidden');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submit-btn');
+            const userInput = document.getElementById('user-input');
+
+            submitBtn.addEventListener('click', async () => {
+                const name = userInput.value.trim();
+                if (!name) return alert('Please enter a username!');
+
+                submitBtn.disabled = true;
+                submitBtn.innerText = "Submitting...";
+
+                // Insert into Supabase
+                const { error } = await supabase
+                    .from('entries')
+                    .insert([{ username: name }]);
+
+                if (error) {
+                    alert('Error entering giveaway: ' + error.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Enter Giveaway";
+                } else {
+                    document.getElementById('join-form').classList.add('hidden');
+                    document.getElementById('success-msg').classList.remove('hidden');
+                }
+            });
+        }
+
+        // ------------------ HOST CODE ------------------
+        function setupHostView() {
+            const canvas = document.getElementById('wheelCanvas');
+            const ctx = canvas.getContext('2d');
+            const spinBtn = document.getElementById('spin-btn');
+            const entrantsList = document.getElementById('entrants-list');
+            const entrantCount = document.getElementById('entrant-count');
+            const shareLinkInput = document.getElementById('share-link');
+
+            // Generate temporary expiration time (5 minutes from now)
+            const duration = 5 * 60 * 1000; 
+            lobbyEndTime = new Date().getTime() + duration;
+
+            // Generate share link
+            const baseUrl = window.location.origin + window.location.pathname;
+            const joinUrl = `${baseUrl}?join=true&expires=${lobbyEndTime}`;
+            shareLinkInput.value = joinUrl;
+
+            // 1. Live Countdown Timer
+            const timerInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const timeLeft = lobbyEndTime - now;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer-display').innerHTML = `<span class="text-red-500 font-bold">⏰ LOBBY LOCKED</span>`;
+                    if (entrants.length > 0) spinBtn.disabled = false;
+                } else {
+                    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                    document.getElementById('countdown').innerText = 
+                        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }, 1000);
+
+            // 2. Real-Time Listener to Supabase
+            supabase
+                .channel('schema-db-changes')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'entries' }, (payload) => {
+                    const newEntry = payload.new.username;
+                    // Prevent duplicate UI entries locally
+                    if (!entrants.includes(newEntry)) {
+                        entrants.push(newEntry);
+                        updateUI();
+                    }
+                })
+                .subscribe();
+
+            function updateUI() {
+                // Update counter
+                entrantCount.innerText = `${entrants.length} Joined`;
+
+                // Update text list
+                if (entrants.length === 0) {
+                    entrantsList.innerHTML = `<p class="text-slate-500 text-center py-12">Waiting for entrants...</p>`;
+                } else {
+                    entrantsList.innerHTML = entrants.map(name => `
+                        <div class="bg-slate-700/50 px-3 py-2 rounded-lg border border-slate-600/50 font-medium text-slate-200">
+                            👤 ${name}
+                        </div>
+                    `).join('');
+                }
+
+                // Enable spinning if lobby is still open or manually bypassable
+                if (entrants.length > 0) {
+                    spinBtn.disabled = false;
+                }
+
+                drawWheel();
+            }
+
+            // 3. Drawing the Wheel on Canvas
+            const colors = ['#ec4899', '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+            function drawWheel() {
+                const numSegments = entrants.length || 1;
+                const arc = (2 * Math.PI) / numSegments;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = 0; i < numSegments; i++) {
+                    const angle = i * arc;
+                    ctx.fillStyle = entrants.length ? colors[i % colors.length] : '#334155';
+                    ctx.beginPath();
+                    ctx.moveTo(200, 200);
+                    ctx.arc(200, 200, 200, angle, angle + arc);
+                    ctx.lineTo(200, 200);
+                    ctx.fill();
+
+                    // Draw Text
+                    ctx.save();
+                    ctx.translate(200, 200);
+                    ctx.rotate(angle + arc / 2);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 14px sans-serif';
+                    ctx.textAlign = 'right';
+                    const nameText = entrants.length ? entrants[i] : "SpinLobby";
+                    ctx.fillText(nameText.substring(0, 15), 180, 5);
+                    ctx.restore();
+                }
+            }
+
+            // Initial Draw
+            drawWheel();
+
+            // 4. Spin Action
+            let isSpinning = false;
+            spinBtn.addEventListener('click', () => {
+                if (isSpinning || entrants.length === 0) return;
+                isSpinning = true;
+                spinBtn.disabled = true;
+
+                // Stop the countdown timer early
+                clearInterval(timerInterval);
+                document.getElementById('timer-display').innerHTML = `<span class="text-red-500 font-bold">🔒 ENTRIES LOCKED</span>`;
+
+                // Calculate a random winner segment
+                const winnerIndex = Math.floor(Math.random() * entrants.length);
+                const numSegments = entrants.length;
+                const arcSize = 360 / numSegments;
+                
+                // Align the winning segment with the top arrow (which is at 270 degrees / -90 degrees)
+                const targetAngle = 270 - (winnerIndex * arcSize) - (arcSize / 2);
+                const extraSpins = 5 * 360; // Spin 5 times before stopping
+                const totalRotation = extraSpins + targetAngle;
+
+                canvas.style.transform = `rotate(${totalRotation}deg)`;
+
+                // Wait for the transition to finish
+                setTimeout(() => {
+                    isSpinning = false;
+                    const winner = entrants[winnerIndex];
+                    
+                    // Celebrate!
+                    confetti({
+                        particleCount: 150,
+                        spread: 80,
+                        origin: { y: 0.6 }
+                    });
+
+                    alert(`🎉 Winner is: ${winner}!`);
+                    spinBtn.disabled = false;
+                    canvas.style.transition = 'none';
+                    canvas.style.transform = `rotate(${targetAngle % 360}deg)`;
+                    setTimeout(() => {
+                        canvas.style.transition = 'transform 5000ms ease-out';
+                    }, 50);
+                }, 5000);
+            });
+        }
+    </script>
+</body>
+</html>
